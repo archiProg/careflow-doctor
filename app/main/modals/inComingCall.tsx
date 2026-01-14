@@ -1,0 +1,94 @@
+import { emitSocket } from "@/utilitys/socket";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+export default function IncomingCall() {
+  const { consultId } = useLocalSearchParams<{
+    consultId: string;
+  }>();
+  const router = useRouter();
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      router.back();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft((t) => t - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
+  const acceptCase = () => {
+    emitSocket("doctor:accept", { caseId: consultId });
+
+    router.replace({
+      pathname: "/main/pages/preCallPage",
+      params: {
+        consultId: consultId,
+        type: "doctor",
+      },
+    });
+  };
+
+  const rejectCase = () => {
+    emitSocket("doctor:reject", { caseId: consultId });
+
+
+    router.back();
+  };
+
+  return (
+    <SafeAreaView className="flex-1 justify-end bg-black/40">
+      {/* Bottom Sheet */}
+      <View className="bg-white rounded-t-3xl px-6 pt-6 pb-8">
+        {/* Handle */}
+        <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
+
+        {/* Title */}
+        <Text className="text-xl font-bold text-center text-gray-900">
+          พบคนไข้ใหม่
+        </Text>
+
+        {/* Description */}
+        <Text className="text-center text-gray-500 mt-2">
+          ระบบพบเคสที่ตรงกับคุณ
+        </Text>
+
+        {/* Countdown */}
+        <View className="mt-4 mb-6 items-center">
+          <Text className="text-sm text-gray-500">กรุณายืนยันภายใน</Text>
+          <Text className="text-4xl font-bold text-blue-600 mt-1">
+            {timeLeft}
+          </Text>
+          <Text className="text-sm text-gray-500">วินาที</Text>
+        </View>
+
+        {/* Accept Button */}
+        <Pressable
+          onPress={acceptCase}
+          className="bg-green-500 py-4 rounded-2xl active:scale-95"
+        >
+          <Text className="text-white text-center text-lg font-semibold">
+            ยืนยัน
+          </Text>
+        </Pressable>
+
+        {/* Reject Button */}
+        <Pressable
+          onPress={rejectCase}
+          className="bg-red-500 py-4 rounded-2xl mt-3 active:scale-95"
+        >
+          <Text className="text-white text-center text-lg font-semibold">
+            ปฏิเสธ
+          </Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+}
