@@ -87,15 +87,15 @@ export default function ControlButtons({
   };
 
   return (
-    <View className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+    <View className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
       <View className="flex-row items-center gap-4 px-4 py-2 rounded-full bg-black/40 backdrop-blur-md">
         {/* LEAVE */}
-        <Pressable onPress={onLeave} className="p-3 rounded-full bg-red-600">
+        {/* <Pressable onPress={onLeave} className="p-3 rounded-full bg-red-600">
           <FontAwesome name="phone" size={18} color="white" />
-        </Pressable>
+        </Pressable> */}
 
         {/* SPEAKER */}
-        <Pressable
+        {/* <Pressable
           onPress={toggleSpeaker}
           className={`p-3 rounded-full ${isSpeakerOn ? "bg-white/10" : "bg-red-600"
             }`}
@@ -105,7 +105,7 @@ export default function ControlButtons({
             size={18}
             color="white"
           />
-        </Pressable>
+        </Pressable> */}
 
         {/* MIC */}
         <Pressable

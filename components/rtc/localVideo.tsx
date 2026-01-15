@@ -12,8 +12,8 @@ interface LocalVideoProps {
 }
 
 const { width, height } = Dimensions.get("window");
-const PIP_WIDTH = width * 0.25; // 25% ของหน้าจอ
-const PIP_HEIGHT = (PIP_WIDTH / 3) * 4; // 4:3 ratio
+const PIP_WIDTH = width * 0.2;
+const PIP_HEIGHT = (PIP_WIDTH / 3) * 4;
 
 function LocalVideo({
   localID = "",
@@ -30,8 +30,8 @@ function LocalVideo({
     <View
       style={{
         position: "absolute",
-        top: 40,
-        right: 16,
+        top: 8,
+        right: 8,
         width: PIP_WIDTH,
         height: PIP_HEIGHT,
         borderRadius: 12,

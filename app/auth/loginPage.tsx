@@ -113,8 +113,8 @@ const LoginPage = () => {
   };
 
   const handleLanguageSelector = () => {
-    router.replace({
-      pathname: "/pages/settings/languagePage",
+    router.push({
+      pathname: "/main/pages/settings/languagePage",
       params: {
         reference_page: "loginPage",
       },

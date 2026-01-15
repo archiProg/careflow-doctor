@@ -21,6 +21,7 @@ const StartupPage = () => {
   };
 
   const initApp = async (): Promise<boolean> => {
+    Provider.Token = "";
     const email = await AsyncStorage.getItem("email");
     const password = await AsyncStorage.getItem("password");
     if (email != null && password != null) {
@@ -136,13 +137,13 @@ const StartupPage = () => {
               router.replace("/");
             }
           } else {
-            router.replace("/main/pages/auth/loginPage");
+            router.replace("/auth/loginPage");
           }
         } else {
-          router.replace("/main/pages/auth/loginPage");
+          router.replace("/auth/loginPage");
         }
       } else {
-        router.replace("/main/pages/auth/loginPage");
+        router.replace("/auth/loginPage");
       }
     };
 

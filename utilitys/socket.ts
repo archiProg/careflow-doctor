@@ -50,3 +50,9 @@ export const emitSocket = (event: string, data?: any) => {
 
   s.emit(event, data);
 };
+
+
+export const closeSocket = () => {
+  socket?.disconnect();
+  socket = null;
+};

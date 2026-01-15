@@ -19,13 +19,13 @@ function PeerVideo({
   hasVideo,
 }: PeerVideoProps) {
   return (
-    <View className="relative aspect-video rounded-xl overflow-hidden bg-black">
+    <View className="relative h-full overflow-hidden bg-black">
       {/* Video */}
       {stream && hasVideo ? (
         <RTCView
           key={stream?.toURL()}
           streamURL={stream.toURL()}
-          objectFit="cover"
+          // objectFit="cover"
           style={{
             flex: 1,
             width: "100%",
@@ -42,7 +42,7 @@ function PeerVideo({
       )}
 
       {/* Footer */}
-      <View className="flex-row items-center gap-1 absolute bottom-0 left-0 min-h-[35px] px-2 py-1 bg-black/50 rounded-tr-md z-20">
+      <View className="flex-row items-center gap-1 absolute top-0 left-0 min-h-[35px] px-2 py-1 bg-black/50 rounded-br-md z-20">
         <Text className="text-white text-xs">
           {peerUsername.slice(0, 5)}
         </Text>

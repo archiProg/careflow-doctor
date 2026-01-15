@@ -1,3 +1,4 @@
+import Provider from "@/services/providerService";
 import { RootState } from "@/stores";
 import { setConsultId, setConsultInfo } from "@/stores/consultSlice";
 import {
@@ -16,56 +17,59 @@ export default function MainLayout() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getSocket();
+        if (Provider.Token != "") {
+            getSocket();
+            listenSocket({
+                "case:offer": (data) => {
+                    console.log("📨 case:offer", data)
+                    dispatch(setConsultInfo(data));
+                    dispatch(setConsultId(data.caseId));
+                    router.push({
+                        pathname: "/main/modals/inComingCall",
+                        params: {
+                            consultId: data.caseId,
+                        },
+                    });
+                },
+                "case:ended": (data) => console.log("📴 case:ended", data),
+                "case:cancelled": (data) => console.log("❌ case:cancelled", data),
+                "case:resume": (data) => {
+                    console.log("📨 case:resume", data)
+                    dispatch(setConsultInfo(data));
+                    dispatch(setConsultId(data.caseId));
+                    router.push({
+                        pathname: "/main/modals/reComingCall",
+                        params: {
+                            consultId: data.caseId,
+                        },
+                    });
+                },
+                "doctor:status": (data) => console.log("🩺 doctor:status", data),
+                "force-logout": () => {
+                    console.log("🚪 force-logout");
+                },
+            });
+
+            return () => {
+                offSocket("case:offer");
+                offSocket("case:ended");
+                offSocket("case:cancelled");
+                offSocket("case:resume");
+                offSocket("doctor:status");
+                offSocket("force-logout");
+            };
+        }
     }, []);
 
-    useEffect(() => {
-        listenSocket({
-            "case:offer": (data) => {
-                console.log("📨 case:offer", data)
-                dispatch(setConsultInfo(data));
-                dispatch(setConsultId(data.caseId));
-                router.push({
-                    pathname: "/main/modals/inComingCall",
-                    params: {
-                        consultId: data.caseId,
-                    },
-                });
-            },
-            "case:ended": (data) => console.log("📴 case:ended", data),
-            "case:cancelled": (data) => console.log("❌ case:cancelled", data),
-            "case:resume": (data) => {
-                console.log("📨 case:resume", data)
-                dispatch(setConsultInfo(data));
-                dispatch(setConsultId(data.caseId));
-                router.push({
-                    pathname: "/main/modals/reComingCall",
-                    params: {
-                        consultId: data.caseId,
-                    },
-                });
-            },
-            "doctor:status": (data) => console.log("🩺 doctor:status", data),
-            "force-logout": () => {
-                console.log("🚪 force-logout");
-            },
-        });
 
-        return () => {
-            offSocket("case:offer");
-            offSocket("case:ended");
-            offSocket("case:cancelled");
-            offSocket("case:resume");
-            offSocket("doctor:status");
-            offSocket("force-logout");
-        };
-    }, []);
 
     useEffect(() => {
-        if (status === "start_work") {
-            emitSocket("doctor:set-availability", { available: true });
-        } else if (status === "paused_work" || status === "end_work") {
-            emitSocket("doctor:set-availability", { available: false });
+        if (Provider.Token != "") {
+            if (status === "start_work") {
+                emitSocket("doctor:set-availability", { available: true });
+            } else if (status === "paused_work" || status === "end_work") {
+                emitSocket("doctor:set-availability", { available: false });
+            }
         }
     }, [status]);
 
@@ -85,5 +89,20 @@ export default function MainLayout() {
                 animation: "slide_from_bottom",
             }}
         />
+        <Stack.Screen
+            name="/main/modals/reComingCall"
+            options={{
+                presentation: "transparentModal",
+                animation: "slide_from_bottom",
+            }}
+        />
+        <Stack.Screen
+            name="/main/pages/settingsPage"
+            options={{
+                presentation: "transparentModal",
+                animation: "slide_from_bottom",
+            }}
+        />
+
     </Stack>;
 }

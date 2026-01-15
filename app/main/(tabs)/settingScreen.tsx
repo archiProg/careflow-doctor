@@ -1,5 +1,6 @@
 import Provider from "@/services/providerService";
 import { RootState } from "@/stores";
+import { closeSocket } from "@/utilitys/socket";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -29,7 +30,9 @@ export default function SettingsScreen() {
     );
     const logout = async () => {
         try {
+            Provider.Token = "";
             await AsyncStorage.multiRemove(["email", "password", "token", "user"]);
+            closeSocket();
             router.replace("/");
         } catch (error) {
             console.error("Logout error:", error);
@@ -102,7 +105,7 @@ export default function SettingsScreen() {
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
-                        <Pressable className="flex-row items-center justify-between px-6 py-4">
+                        <Pressable className="flex-row items-center justify-between px-6 py-4" onPress={() => router.push("/main/pages/settings/changePasswordPage")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="lock" size={20} color="#6B7280" />
                                 <Text className="ml-4 text-gray-800">Change Password</Text>
@@ -145,6 +148,15 @@ export default function SettingsScreen() {
                                 <View className={`w-5 h-5 rounded-full bg-white mt-1 ${biometric ? 'ml-6' : 'ml-1'}`} />
                             </View>
                         </Pressable> */}
+                    </View>
+                    <View className="bg-white">
+                        <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100" onPress={() => router.push("/main/pages/settings/languagePage")}>
+                            <View className="flex-row items-center">
+                                <FontAwesome name="language" size={20} color="#6B7280" />
+                                <Text className="ml-4 text-gray-800">Language</Text>
+                            </View>
+                            <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
+                        </Pressable>
                     </View>
                 </View>
 

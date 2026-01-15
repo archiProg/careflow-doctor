@@ -1,3 +1,4 @@
+import { RootState } from "@/stores";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   Icon,
@@ -5,13 +6,16 @@ import {
   NativeTabs,
   VectorIcon,
 } from "expo-router/unstable-native-tabs";
-
+import { useDispatch, useSelector } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 const TabLayout = () => {
   const { t } = useTranslation();
 
-
+  const dispatch = useDispatch();
+  const activeTab = useSelector(
+    (state: RootState) => state.tab.activeTab
+  );
   return (
     <NativeTabs tintColor="#2563EB" backgroundColor="#FFFFFF">
       <NativeTabs.Trigger name="homeScreen">

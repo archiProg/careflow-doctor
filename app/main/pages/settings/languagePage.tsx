@@ -5,16 +5,17 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  BackHandler,
   Pressable,
   ScrollView,
   Text,
   TouchableOpacity,
   useColorScheme,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const LanguageSelector = () => {
+const LanguagePage = () => {
   const colorScheme = useColorScheme();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [defaultLanguage, setDefaultLanguage] = useState("en");
@@ -46,15 +47,26 @@ const LanguageSelector = () => {
   };
 
   const handleBack = () => {
-
-    if (reference_page === "settingDoctor") {
-      router.replace("/pages/auth/loginPage");
-
-    } else if (reference_page === "loginPage") {
-      router.replace("/pages/auth/loginPage");
-
-    }
+    router.back();
   };
+
+
+  //back handler
+  useEffect(() => {
+    const backAction = () => {
+      handleBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+
 
   useEffect(() => {
     if (Provider.Language) {
@@ -154,4 +166,4 @@ const LanguageSelector = () => {
   );
 };
 
-export default LanguageSelector;
+export default LanguagePage;
