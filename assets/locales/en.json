@@ -35,5 +35,6 @@
   "start_work": "Start",
   "apply_language": "Apply",
   "select_language": "Select Your Language",
-  "choose_language": "Choose your preferred language to continue"
+  "choose_language": "Choose your preferred language to continue",
+  "patient_diagnose": "Diagnose"
 }

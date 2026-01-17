@@ -1,16 +1,22 @@
 // src/app/videoCall.tsx
+import MenuCard from "@/components/menuCard";
 import PatientDataCard from "@/components/patientDataCard";
+import PatientForm from "@/components/patientForm";
 import ControlButtons from "@/components/rtc/controlButtons";
 import LocalVideo from "@/components/rtc/localVideo";
 import VideoGrid from "@/components/rtc/videoGrid";
 import { user_role } from "@/constants/enums";
+import { TEXT } from "@/constants/styles";
 import { usePeerConnection } from "@/hooks/usePeerConnection";
 import { PeerReducer } from "@/reducers/peerReducer";
 import Provider from "@/services/providerService";
+import { PatientDataForm } from "@/types/patientData";
 import { emitSocket, getSocket } from "@/utilitys/socket";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { BlurView } from 'expo-blur';
 import { useKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Skeleton } from "moti/skeleton";
 import React, {
   useCallback,
   useEffect,
@@ -18,12 +24,11 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Dimensions, Image, Pressable, ScrollView, Text, View } from "react-native";
-import BlurView from 'react-native-blur-effect';
 import InCallManager from "react-native-incall-manager";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { mediaDevices, MediaStream } from "react-native-webrtc";
-
 
 const { height: screenHeight } = Dimensions.get("window");
 const videoHeight = Math.max((screenHeight / 3), 280); // h-1/3
@@ -31,11 +36,22 @@ const videoHeight = Math.max((screenHeight / 3), 280); // h-1/3
 const overlayTop = videoHeight - 8; // เลื่อน overlay ขึ้น 16px
 
 
-const patientMocData = [
-  { title: "Weight", value: "55", unit: "kg" },
-  { title: "Height", value: "160", unit: "cm" },
-  { title: "BMI", value: "21.5", unit: "bpm" },
-  { title: "Heart Rate", value: "72", unit: "Sys/Dia" },
+const patientMockData = [
+  { title: "", value: "", unit: "" },
+  { title: "", value: "", unit: "" },
+  { title: "", value: "", unit: "" },
+  { title: "", value: "", unit: "" },
+];
+
+const patientData = [
+  { title: "weight", value: "60", unit: "kg" },
+  { title: "height", value: "170", unit: "cm" },
+  { title: "heart rate", value: "60", unit: "bpm" },
+  { title: "blood pressure", value: "120/80", unit: "Sys/Dia" },
+  { title: "weight", value: "60", unit: "kg" },
+  { title: "height", value: "170", unit: "cm" },
+  { title: "heart rate", value: "60", unit: "bpm" },
+  { title: "blood pressure", value: "120/80", unit: "Sys/Dia" },
 ];
 
 
@@ -47,10 +63,10 @@ export default function DoctorCall() {
     video: string;
   }>();
   useKeepAwake();
+  const { t } = useTranslation();
   const socket = getSocket();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [loading, setLoading] = useState(true);
   const [statusReq, setStatusReq] = useState(false);
   const [streamReady, setStreamReady] = useState(false);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -60,6 +76,7 @@ export default function DoctorCall() {
   const streamRef = useRef<MediaStream | null>(null);
   const peerConnections = useRef<Record<string, any>>({});
   const [numColumns, setNumColumns] = useState(2);
+  const [activeMenu, setActiveMenu] = useState<"patient" | "diagnosis" | "menu" | "review">("menu");
 
   const {
     createPeer,
@@ -133,10 +150,7 @@ export default function DoctorCall() {
           setIsMicOn(false);
           setIsVideoOn(false);
           emitSocket("doctor:end-case", { caseId: roomId });
-          // safeSendWs({
-          //   cmd: ws_cmd.CALL_END,
-          //   params: { consult_id: roomId },
-          // });
+
           if (Provider.Profile?.role == user_role.d) {
             router.replace({
               pathname: "/main/pages/summarizePage",
@@ -144,13 +158,6 @@ export default function DoctorCall() {
                 consult_id: roomId,
               },
             });
-          } else {
-            //   router.replace({
-            //     pathname: "/patient/Success",
-            //     params: {
-            //       consult_id: roomId,
-            //     },
-            //   });
           }
           cleanupConnections();
         },
@@ -270,7 +277,7 @@ export default function DoctorCall() {
     };
   }, [streamReady, roomId, userName, audio, video]);
 
-  /* AUDIO MANAGEMENT (InCallManager) */
+
   useEffect(() => {
     if (!streamReady) return;
 
@@ -300,6 +307,20 @@ export default function DoctorCall() {
     };
   }, [streamReady]);
 
+
+  const handlePatientSubmit = (data: PatientDataForm) => {
+    console.log('ข้อมูลผู้ป่วยที่บันทึก:', data);
+
+    // ตัวอย่าง: ส่งข้อมูลไป API
+    // fetch('https://example.com/api/patient', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(data),
+    // });
+
+    Alert.alert('ข้อมูลถูกส่งไปเรียบร้อย', JSON.stringify(data, null, 2));
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-black h-full">
       <View className="h-1/3">
@@ -324,7 +345,7 @@ export default function DoctorCall() {
         )}
       </View>
 
-      <View
+      {activeMenu === "menu" && <View
         className="flex flex-col justify-between absolute left-0 right-0 bg-white rounded-t-[16px]"
         style={{
           top: overlayTop,
@@ -332,18 +353,16 @@ export default function DoctorCall() {
         }}
       >
         <ScrollView className="p-4 mt-[16px]">
-          <View className="flex-row items-center bg-white p-4">
+          <View className="flex-1 flex-row items-center mx-4">
             {/* Profile Image */}
-            <View className="relative h-32 min-w-32 bg-[#EEEEEE] rounded-[16px]">
+            <View className="relative h-20 min-w-20 bg-black/70 rounded-xl">
               {Provider.Profile?.profile_image_url ? (
                 <Image
                   source={{
                     uri: Provider.HostApi + Provider.Profile.profile_image_url,
-
                   }}
                   style={{ height: "100%", borderRadius: 16 }}
                   resizeMode="contain"
-
                 />
               ) : (
                 <View className="w-full h-full rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 items-center justify-center">
@@ -354,7 +373,7 @@ export default function DoctorCall() {
             </View>
 
             {/* Profile Info */}
-            <View className="flex-1 ml-4">
+            <View className="flex-1 ml-2">
               <Text className={`text-black dark:text-white my-1`}>
                 Mr. John Tao
               </Text>
@@ -363,45 +382,24 @@ export default function DoctorCall() {
               >
                 Age: 30
               </Text>
-
-              {statusReq ? (
-                <Text className="text-gray-500 dark:text-gray-400 mb-1">
-                  PMH : ไม่มี
-                </Text>
-              ) : (
-                <View className="flex-row items-center">
-                  <Text className="text-gray-500 dark:text-gray-400 mb-1">
-                    PMH : </Text>
-                  <View className="p-4 flex flex-row flex-wrap">
-                    <Text>First Text Element</Text>
-                    <BlurView backgroundColor="rgba(255, 255, 255, 0.62)" blurRadius={4} />
-                  </View>
-                </View>
-
-              )}
             </View>
           </View>
           <View className="flex-row border-t border-gray-200 m-4" />
           <View>
-            {statusReq ? (
-              <View className="p-4 flex flex-row flex-wrap justify-between">
-                {patientMocData.map((item, index) => (
-                  <PatientDataCard key={index} data={item} loading={loading} />
-                ))}
-              </View>
-            ) : (
-              <View className="flex flex-cols items-center m-4">
-                <View className="p-4 flex flex-row flex-wrap justify-between">
-                  {patientMocData.map((item, index) => (
-                    <PatientDataCard key={index} data={item} loading={false} />
-                  ))}
-                  < BlurView backgroundColor="rgba(255, 255, 255, 0.62)" blurRadius={4} />
-                </View>
-                <Pressable className="flex-1 items-center justify-center bg-[#33AAE1] py-4 px-8 h-[64px] rounded-[16px]" onPress={() => setStatusReq(true)}>
-                  <Text className="text-white">Request Patient Consent</Text>
-                </Pressable>
-              </View>
-            )}
+            {/* menu */}
+            <View>
+              <MenuCard
+                title="Patient Data"
+                detail="View patient data"
+                icon="user-md"
+                onPress={() => { setActiveMenu("patient") }}
+              /><MenuCard
+                title="Diagnosis"
+                detail="Clinical assessment"
+                icon="stethoscope"
+                onPress={() => { setActiveMenu("diagnosis") }}
+              />
+            </View>
           </View>
 
         </ScrollView>
@@ -414,7 +412,140 @@ export default function DoctorCall() {
             <Text className="text-white">End case</Text>
           </View>
         </Pressable>
-      </View>
-    </SafeAreaView>
+      </View >
+      }
+      {(activeMenu === "diagnosis" || activeMenu === "review") &&
+        <View className="flex flex-col justify-between absolute left-0 right-0 bg-white rounded-t-[16px]"
+          style={{
+            top: overlayTop,
+            bottom: insets.bottom,
+          }}
+        >
+          <View className="p-4 flex-row items-center">
+            {activeMenu === "review" ? <View className="w-10" /> : <Pressable onPress={() => setActiveMenu("menu")} className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
+              <FontAwesome5 name="angle-left" size={24} color="black" />
+            </Pressable>}
+
+            {/* Center Title */}
+            <View className="flex-1 items-center">
+              <Text className={`${TEXT.subtitle} font-semibold text-gray-900`}>
+                Diagnosis
+              </Text>
+            </View>
+
+            {/* Spacer to balance left icon */}
+            <View className="w-10" />
+          </View>
+          <PatientForm onSubmit={handlePatientSubmit} onReview={() => setActiveMenu("review")} onCancel={() => setActiveMenu("diagnosis")} />
+
+        </View>}
+      {activeMenu === "patient" &&
+        <View className="flex flex-col absolute left-0 right-0 bg-white rounded-t-[16px]"
+          style={{
+            top: overlayTop,
+            bottom: insets.bottom,
+          }}
+        >
+          <View className="p-4 flex-row items-center">
+            <Pressable onPress={() => setActiveMenu("menu")} className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
+              <FontAwesome5 name="angle-left" size={24} color="black" />
+            </Pressable>
+
+            {/* Center Title */}
+            <View className="flex-1 items-center">
+              <Text className={`${TEXT.subtitle} font-semibold text-gray-900`}>
+                Patient Data
+              </Text>
+            </View>
+
+            {/* Spacer to balance left icon */}
+            <View className="w-10" />
+          </View>
+
+          <ScrollView className="flex-1">
+            <View className="flex-row items-center mx-4">
+              {/* Profile Image */}
+              <View className="relative h-20 min-w-20 bg-black/70 rounded-xl">
+                {Provider.Profile?.profile_image_url ? (
+                  <Image
+                    source={{
+                      uri: Provider.HostApi + Provider.Profile.profile_image_url,
+                    }}
+                    style={{ height: "100%", borderRadius: 16 }}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <View className="w-full h-full rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 items-center justify-center">
+                    <FontAwesome name="user-md" size={32} color="" />
+                  </View>
+                )}
+
+              </View>
+              <View className="flex-1 ml-2">
+                <Text className={`text-black dark:text-white my-1`}>
+                  Mr. John Tao
+                </Text>
+                <Text
+                  className={`text-gray-500 dark:text-gray-400 mb-1`}
+                >
+                  Age: 30
+                </Text>
+
+                {statusReq ? (
+                  <Text className="text-gray-500 dark:text-gray-400 mb-1">
+                    PMH : ไม่มี
+                  </Text>
+                ) : (
+                  <View className="flex-row items-center">
+                    <Text className="text-gray-500 dark:text-gray-400 mb-1">
+                      PMH : </Text>
+                    <View className="px-2 flex flex-row flex-wrap">
+                      <View className="rounded-xl overflow-hidden">
+                        <Skeleton width={100} radius={4} colorMode="light" />
+                      </View>
+                      <BlurView
+                        intensity={100}
+                        tint="light"
+                        className="absolute top-0 left-0 right-0 bottom-0 rounded-xl overflow-hidden justify-center"
+                      />
+                    </View>
+                  </View>
+                )}
+              </View>
+            </View>
+            <View className="flex-row border-t border-gray-200 m-4" />
+
+            {statusReq ? (
+              <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4 pb-4">
+                {patientData.map((item, index) => (
+                  <PatientDataCard key={index} data={item} loading={false} />
+                ))}
+              </View>
+            ) : (
+              <View>
+                <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
+                  {patientMockData.map((item, index) => (
+                    <PatientDataCard key={index} data={item} loading={false} />
+                  ))}
+                </View>
+                <BlurView
+                  intensity={100}
+                  tint="light"
+                  className="absolute top-0 left-0 right-0 bottom-0 rounded-xl overflow-hidden p-5 mx-4 justify-center"
+                />
+                <View className="absolute top-0 left-0 right-0 bottom-0 items-center justify-center mx-4">
+                  <Pressable
+                    className="items-center justify-center bg-[#33AAE1] py-4 px-8 rounded-[16px] shadow-lg"
+                    onPress={() => setStatusReq(true)}
+                  >
+                    <Text className="text-white">Request Patient Consent</Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
+          </ScrollView>
+
+        </View>}
+    </SafeAreaView >
   );
 }

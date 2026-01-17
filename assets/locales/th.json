@@ -35,5 +35,6 @@
   "start_work": "เริ่มงาน",
   "apply_language": "ยืนยัน",
   "select_language": "เลือกภาษา",
-  "choose_language": "เลือกภาษาที่คุณต้องการเพื่อดำเนินการต่อ"
+  "choose_language": "เลือกภาษาที่คุณต้องการเพื่อดำเนินการต่อ",
+  "patient_diagnose": "วินิจฉัย"
 }
