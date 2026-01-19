@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Pressable, Text, TextInput, TextInputProps, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { BackHandler, Pressable, ScrollView, Text, TextInput, TextInputProps, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ChangePasswordScreen() {
@@ -96,7 +96,7 @@ export default function ChangePasswordScreen() {
                 </Pressable>
             </View>
 
-            <View className="flex-1 p-5 pb-10">
+            <ScrollView className="flex-1 p-5 pb-10">
                 {/* Header */}
 
                 <View className="items-center mb-8">
@@ -134,32 +134,15 @@ export default function ChangePasswordScreen() {
                     />
                 </View>
 
-                {/* Password Requirements */}
-                <View className="bg-blue-50 rounded-xl p-4 mb-6">
-                    <Text className="text-gray-700 font-semibold mb-2">รหัสผ่านต้องมี:</Text>
-                    <View className="flex-row items-center mb-1">
-                        <FontAwesome name="check-circle" size={16} color="#3B82F6" />
-                        <Text className="text-gray-600 ml-2">ความยาวอย่างน้อย 8 ตัวอักษร</Text>
-                    </View>
-                    <View className="flex-row items-center mb-1">
-                        <FontAwesome name="check-circle" size={16} color="#3B82F6" />
-                        <Text className="text-gray-600 ml-2">ตัวอักษรพิมพ์ใหญ่และพิมพ์เล็ก</Text>
-                    </View>
-                    <View className="flex-row items-center">
-                        <FontAwesome name="check-circle" size={16} color="#3B82F6" />
-                        <Text className="text-gray-600 ml-2">ตัวเลขและอักขระพิเศษ</Text>
-                    </View>
-                </View>
-
-                {/* Submit Button */}
-                <TouchableOpacity
-                    className="bg-blue-500 rounded-xl py-4 items-center shadow-lg active:bg-blue-600"
-                    onPress={handleChangePassword}
-                >
-                    <Text className="text-white font-bold text-lg">ยืนยันการเปลี่ยนรหัสผ่าน</Text>
-                </TouchableOpacity>
-
-            </View>
+            </ScrollView>
+            {/* Submit Button */}
+            <TouchableOpacity
+                disabled={currentPassword === '' || newPassword === '' || confirmPassword === ''}
+                className={`bg-blue-500 rounded-xl py-4 m-4 items-center shadow-lg active:bg-blue-600 ${currentPassword === '' || newPassword === '' || confirmPassword === '' ? 'opacity-50' : ''}`}
+                onPress={handleChangePassword}
+            >
+                <Text className="text-white font-bold text-lg">ยืนยันการเปลี่ยนรหัสผ่าน</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }

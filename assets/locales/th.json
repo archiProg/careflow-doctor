@@ -102,5 +102,7 @@
   "version": "เวอร์ชั่น",
   "account": "บัญชี",
   "preferences": "ตั้งค่า",
-  "legal": "กฎหมาย"
+  "legal": "กฎหมาย",
+  "manage_profile_description": "จัดการข้อมูลโปรไฟล์ของคุณ",
+  "manage_profile": "จัดการโปรไฟล์"
 }

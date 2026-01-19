@@ -110,7 +110,7 @@ const SearchPatient = () => {
             />
           </View>
           {/* Bottom Fixed Button */}
-          <View className="flex-row justify-between  pt-4 bg-white dark:bg-gray-900    ">
+          <View className="flex-row justify-between   pt-4  dark:bg-gray-900    ">
             <Pressable
               onPress={() => {
                 if (status === "start_work") {
@@ -312,7 +312,7 @@ const SearchPatient = () => {
           </ScrollView>
 
           {/* Bottom Fixed Button */}
-          <View className="px-6 pb-6 pt-4 bg-white dark:bg-gray-900">
+          <View className="px-6   pt-4">
             <Pressable
               onPress={StartWork}
               className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"

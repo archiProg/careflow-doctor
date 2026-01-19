@@ -104,5 +104,7 @@
   "version": "Version",
   "account": "Account",
   "preferences": "Preferences",
-  "legal": "Legal"
+  "legal": "Legal",
+  "manage_profile_description": "Manage your profile information",
+  "manage_profile": "Manage Profile"
 }

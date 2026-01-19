@@ -97,7 +97,7 @@ export default function SettingsScreen() {
                         {t('account')}
                     </Text>
                     <View className="bg-white">
-                        <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
+                        <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100" onPress={() => router.push("/main/pages/settings/manageProfile")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="user" size={20} color="#6B7280" />
                                 <Text className="ml-4 text-gray-800">{t('manage-profile')}</Text>
