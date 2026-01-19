@@ -2,13 +2,16 @@ import Provider from "@/services/providerService";
 import { RootState } from "@/stores";
 import { setConsultId, setConsultInfo } from "@/stores/consultSlice";
 import {
+    closeSocket,
     emitSocket,
     getSocket,
     listenSocket,
     offSocket,
 } from "@/utilitys/socket";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
+import { Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function MainLayout() {
@@ -46,8 +49,23 @@ export default function MainLayout() {
                 },
                 "doctor:status": (data) => console.log("🩺 doctor:status", data),
                 "force-logout": () => {
-                    console.log("🚪 force-logout");
+                    Alert.alert(
+                        "ออกจากระบบ",
+                        "บัญชีของคุณถูกออกจากระบบจากอุปกรณ์อื่น",
+                        [
+                            {
+                                text: "ตกลง",
+                                onPress: async () => {
+                                    await AsyncStorage.multiRemove(["email", "password", "token", "user"]);
+                                    closeSocket();
+                                    dispatch(setConsultId(null));
+                                    router.replace("/");
+                                },
+                            },
+                        ]
+                    );
                 },
+
             });
 
             return () => {
