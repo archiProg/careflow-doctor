@@ -43,7 +43,7 @@ const DoctorHomeScreen = () => {
     const paused = await AsyncStorage.getItem("paused_work");
 
     if (!start || !times) {
-      setDescription("ยังไม่ได้เริ่มงาน");
+      setDescription(t("home-screen-not-work"));
       dispatch(setStatus("end_work"));
 
       return;
@@ -63,7 +63,7 @@ const DoctorHomeScreen = () => {
       AsyncStorage.removeItem("times_work");
       AsyncStorage.removeItem("paused_work");
       dispatch(resetWork());
-      setDescription("ยังไม่ได้เริ่มงาน");
+      setDescription(t("home-screen-not-work"));
       dispatch(setStatus("end_work"));
 
       return;
@@ -73,8 +73,8 @@ const DoctorHomeScreen = () => {
     const e = FormatWorkTime(endDate.toISOString()).split(" ");
     setDescription(
       sameDay
-        ? `Shift ${s.slice(1).join(" ")} - ${e.slice(1).join(" ")}`
-        : `Shift ${s.slice(1).join(" ")} - ${e.slice(1).join(" ")} (Tomorrow)`
+        ? `${t("home-screen-shift")} ${s.slice(1).join(" ")} - ${e.slice(1).join(" ")}`
+        : `${t("home-screen-shift")} ${s.slice(1).join(" ")} - ${e.slice(1).join(" ")} (${t("home-screen-tomorrow")})`
     );
 
 
@@ -115,7 +115,7 @@ const DoctorHomeScreen = () => {
       return (
         <View className="bg-green-500 px-3 py-1 rounded-full flex-row items-center">
           <View className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
-          <Text className="text-white text-xs font-semibold">Active</Text>
+          <Text className="text-white text-xs font-semibold">{t("active")}</Text>
         </View>
       );
     }
@@ -127,13 +127,13 @@ const DoctorHomeScreen = () => {
             size={10}
             color={colorScheme === "dark" ? "#fff" : "#000"}
           />
-          <Text className="text-white text-xs pl-2 font-semibold">Paused</Text>
+          <Text className="text-white text-xs pl-2 font-semibold">{t("paused")}</Text>
         </View>
       );
     }
     return (
       <View className="bg-gray-400 dark:bg-gray-600 px-3 py-1 rounded-full">
-        <Text className="text-white text-xs font-semibold">Offline</Text>
+        <Text className="text-white text-xs font-semibold">{t("offline")}</Text>
       </View>
     );
   };
@@ -145,13 +145,13 @@ const DoctorHomeScreen = () => {
         <View className="pt-4 pb-6">
           <Text className="text-gray-500 dark:text-gray-400 text-md mb-1">
             {new Date().getHours() < 12
-              ? "Good Morning"
+              ? t("home-screen-good-morning")
               : new Date().getHours() < 18
-                ? "Good Afternoon"
-                : "Good Evening"}
+                ? t("home-screen-good-afternoon")
+                : t("home-screen-good-evening")}
           </Text>
           <Text className="text-3xl font-bold text-black dark:text-white">
-            Welcome Back
+            {t("home-screen-welcome")}
           </Text>
         </View>
 
@@ -188,15 +188,12 @@ const DoctorHomeScreen = () => {
             {/* Profile Info */}
             <View className="flex-1 ml-4">
               <Text className={`${CARD.title} text-black dark:text-white mb-1`}>
-                {Provider.Profile?.name || "Doctor"}
+                {Provider.Profile?.name}
               </Text>
               <Text
                 className={`${CARD.subtitle} text-gray-500 dark:text-gray-400 mb-2`}
               >
-                {Provider.Profile?.role
-                  ? Provider.Profile.role[0].toUpperCase() +
-                  Provider.Profile.role.slice(1)
-                  : "Medical Professional"}
+                {t("home-screen-role-doctor")}
               </Text>
               {getStatusBadge()}
             </View>
@@ -208,6 +205,7 @@ const DoctorHomeScreen = () => {
           <Card
             title={t("doctor_title_search")}
             subtitle={description}
+            detailLabel={t("detail")}
             urldetail={`/main/pages/searchPatientPage`}
             className="bg-blue-500 text-white"
             actions={
@@ -215,16 +213,16 @@ const DoctorHomeScreen = () => {
                 ? [
                   status === "start_work"
                     ? {
-                      label: "Pause",
+                      label: t("paused"),
                       onPress: () => dispatch(paused_work()),
                     }
                     : {
-                      label: "Resume",
+                      label: t("resume"),
                       onPress: () => dispatch(resume_work()),
                     },
-                  { label: "End", onPress: () => dispatch(resetWork()) },
+                  { label: t("end"), onPress: () => dispatch(resetWork()) },
                 ]
-                : [{ label: "Start", onPress: handleStartWork }]
+                : [{ label: t("start"), onPress: handleStartWork }]
             }
           />
         </View>

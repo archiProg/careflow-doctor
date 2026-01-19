@@ -16,14 +16,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MediaStream, RTCView } from "react-native-webrtc";
 
 import { useKeepAwake } from "expo-keep-awake";
+import { useTranslation } from "react-i18next";
 const PreCallPage: React.FC = () => {
-  // ป้องกันหน้าจอหลับ
   useKeepAwake();
   const { consultId, type } = useLocalSearchParams<{
     consultId: string;
     type: string;
   }>();
   const router = useRouter();
+  const { t } = useTranslation();
   const [settings, setSettings] = useState({ audio: true, video: true });
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const toggleAudio = () => setSettings(p => ({ ...p, audio: !p.audio }));
@@ -130,7 +131,7 @@ const PreCallPage: React.FC = () => {
             }}
             className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"
           >
-            <Text className="text-white font-bold text-lg">เข้าร่วม</Text>
+            <Text className="text-white font-bold text-lg">{t("joinCall")}</Text>
           </Pressable>
         </View>
       </View>

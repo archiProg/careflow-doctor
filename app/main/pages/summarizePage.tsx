@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,10 +14,8 @@ const SummarizeScreen = () => {
     router.replace("/main/(tabs)/homeScreen");
   };
 
-  const handleViewDetails = () => {
-    // นำทางไปหน้ารายละเอียด
-    console.log("View details for:", consult_id);
-  };
+
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView className="flex-1 bg-gradient-to-br from-green-50 to-blue-50">
@@ -35,15 +34,12 @@ const SummarizeScreen = () => {
 
           {/* Main Message */}
           <Text className="text-3xl font-bold text-gray-800 text-center mb-4">
-            บันทึกสำเร็จ!
+            {t('summarize-success')}!
           </Text>
 
           <Text className="text-base text-gray-600 text-center leading-6 mb-8">
-            ข้อมูลการปรึกษาของคุณได้รับการบันทึกเรียบร้อยแล้ว{"\n"}
-            สามารถดูรายละเอียดได้ตลอดเวลา
+            {t('summarize-success-message')}
           </Text>
-
-          {/* Consult ID Box */}
 
 
           {/* Action Buttons */}
@@ -52,7 +48,7 @@ const SummarizeScreen = () => {
             onPress={handleSubmit}
           >
             <Text className="text-white text-base font-semibold text-center">
-              กลับหน้าหลัก
+              {t('back-to-home')}
             </Text>
           </TouchableOpacity>
         </View>

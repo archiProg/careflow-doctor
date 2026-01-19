@@ -1,6 +1,7 @@
 import { PatientDataForm } from '@/types/patientData';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Alert,
     Dimensions,
@@ -35,10 +36,11 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
     const [medication, setMedication] = useState<string>('');
     const [needHospital, setNeedHospital] = useState<boolean>(false);
     const insets = useSafeAreaInsets();
+    const { t } = useTranslation();
 
     const handleSave = () => {
         if (!symptoms.trim()) {
-            Alert.alert('แจ้งเตือน', 'กรุณากรอกอาการผู้ป่วย');
+            Alert.alert(t('notification'), t('patient-form-notification'));
             return;
         }
 
@@ -54,23 +56,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
             onSetPatientDataForm(data);
         }
 
-        // Alert.alert('บันทึกสำเร็จ', 'บันทึกข้อมูลผู้ป่วยเรียบร้อยแล้ว');
-        // resetForm();
     };
 
-    const resetForm = () => {
-        setSymptoms('');
-        setDoctorNote('');
-        setMedication('');
-        setNeedHospital(false);
-    };
 
-    const handleReset = () => {
-        Alert.alert('ยืนยันการล้างข้อมูล', 'คุณต้องการล้างข้อมูลทั้งหมดหรือไม่?', [
-            { text: 'ยกเลิก', style: 'cancel' },
-            { text: 'ล้างข้อมูล', style: 'destructive', onPress: resetForm },
-        ]);
-    };
+
 
     return (
         <View className="flex-1 bg-gray-50">
@@ -89,7 +78,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                อาการผู้ป่วย
+                                {t("symptoms")}
                             </Text>
                         </View>
                         <TextInput
@@ -104,11 +93,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                         />
                     </View>
 
-                    {/* ความคิดเห็นของแพทย์ */}
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                ความคิดเห็นของแพทย์
+                                {t("doctorNote")}
                             </Text>
                         </View>
                         <TextInput
@@ -127,7 +115,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                ยาที่สั่งจ่าย
+                                {t("medication")}
                             </Text>
                         </View>
                         <TextInput
@@ -158,7 +146,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                         </View>
                         <View className="flex-1 mr-3">
                             <Text className="text-blue-900 text-base font-semibold mb-1">
-                                ควรส่งตัวไปโรงพยาบาล
+                                {t("needHospital")}
                             </Text>
                         </View>
 
@@ -172,7 +160,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                             activeOpacity={0.8}
                         >
                             <Text className="text-white text-base font-semibold ml-2">
-                                ดำเนินการ
+                                {t("review")}
                             </Text>
                         </TouchableOpacity>
                     </View>

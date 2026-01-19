@@ -139,14 +139,14 @@ export default function DoctorCall() {
   }, []);
 
   const handleLeave = useCallback(() => {
-    Alert.alert("Leave", "Are you sure you want to leave the call?", [
+    Alert.alert(t('leave'), t('leave-call-description'), [
       {
-        text: "Cancel",
+        text: t('cancel'),
         onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
       {
-        text: "OK",
+        text: t('ok'),
         onPress: () => {
           setIsMicOn(false);
           setIsVideoOn(false);
@@ -395,7 +395,7 @@ export default function DoctorCall() {
               <Text
                 className={`text-gray-500 dark:text-gray-400 mb-1`}
               >
-                Age: 30
+                {t('age')}: 30
               </Text>
             </View>
           </View>
@@ -404,13 +404,13 @@ export default function DoctorCall() {
             {/* menu */}
             <View>
               <MenuCard
-                title="Patient Data"
-                detail="View patient data"
+                title={t('patient-data')}
+                detail={t('view-patient-data')}
                 icon="user-md"
                 onPress={() => { setActiveMenu("patient") }}
               /><MenuCard
-                title="Diagnosis"
-                detail="Clinical assessment"
+                title={t('diagnosis')}
+                detail={t('clinical-assessment')}
                 icon="stethoscope"
                 onPress={() => { setActiveMenu("diagnosis") }}
               />
@@ -424,7 +424,7 @@ export default function DoctorCall() {
         >
           <View className="flex-row items-center gap-2">
             <FontAwesome name="phone" size={18} color="white" />
-            <Text className="text-white">End case</Text>
+            <Text className="text-white">{t('end-case')}</Text>
           </View>
         </Pressable>
       </View >
@@ -444,7 +444,7 @@ export default function DoctorCall() {
             {/* Center Title */}
             <View className="flex-1 items-center">
               <Text className={`${TEXT.subtitle} font-semibold text-gray-900`}>
-                Diagnosis
+                {t('diagnosis')}
               </Text>
             </View>
 
@@ -469,7 +469,7 @@ export default function DoctorCall() {
             {/* Center Title */}
             <View className="flex-1 items-center">
               <Text className={`${TEXT.subtitle} font-semibold text-gray-900`}>
-                Patient Data
+                {t('patient-data')}
               </Text>
             </View>
 
@@ -503,17 +503,16 @@ export default function DoctorCall() {
                 <Text
                   className={`text-gray-500 dark:text-gray-400 mb-1`}
                 >
-                  Age: 30
+                  {t('age')}: 30
                 </Text>
 
                 {statusReq ? (
-                  <Text className="text-gray-500 dark:text-gray-400 mb-1">
-                    PMH : ไม่มี
+                  <Text className="text-gray-500 dark:text-gray-400 mb-1">PMH : ไม่มี
                   </Text>
                 ) : (
                   <View className="flex-row items-center">
                     <Text className="text-gray-500 dark:text-gray-400 mb-1">
-                      PMH : </Text>
+                      {t('pmh')}: </Text>
                     <View className="px-2 flex flex-row flex-wrap">
                       <View className="rounded-xl overflow-hidden">
                         <Skeleton width={100} radius={4} colorMode="light" />
@@ -553,7 +552,7 @@ export default function DoctorCall() {
                     className="items-center justify-center bg-[#33AAE1] py-4 px-8 rounded-[16px] shadow-lg"
                     onPress={() => setStatusReq(true)}
                   >
-                    <Text className="text-white">Request Patient Consent</Text>
+                    <Text className="text-white">{t('request-patient-consent')}</Text>
                   </Pressable>
                 </View>
               </View>

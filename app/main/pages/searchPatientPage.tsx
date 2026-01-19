@@ -1,5 +1,6 @@
 import MatchingLoader from "@/components/matchingLoader";
 import { BG } from "@/constants/styles";
+import i18n from "@/services/i18nService";
 import Provider from "@/services/providerService";
 import { AppDispatch, RootState } from "@/stores/index";
 import {
@@ -14,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BackHandler,
   Pressable,
@@ -27,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const SearchPatient = () => {
   const colorScheme = useColorScheme();
-
+  const { t } = useTranslation();
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
@@ -97,13 +99,13 @@ const SearchPatient = () => {
               type="doctor"
               title={
                 status === "start_work"
-                  ? "กำลังรอคนไข้"
-                  : "หยุดรับคนไข้ชั่วคราว"
+                  ? t("waiting-for-patient")
+                  : t("search-pause-work")
               }
               subtitle={
                 status === "start_work"
-                  ? "พร้อมรับคนไข้ ระบบกำลังจับคู่คนไข้ให้คุณ"
-                  : "คุณสามารถเริ่มรับคนไข้ได้อีกครั้ง"
+                  ? t("waiting-for-patient-description")
+                  : t("search-pause-work-description")
               }
             />
           </View>
@@ -136,7 +138,7 @@ const SearchPatient = () => {
               className="flex-1 flex-row bg-gray-500 h-14 rounded-2xl justify-center items-center active:scale-95 shadow-lg ml-2"
             >
               <FontAwesome name="stop" size={16} color="white" />
-              <Text className="text-white font-bold text-lg ml-2">End</Text>
+              <Text className="text-white font-bold text-lg ml-2">{t("end")}</Text>
             </Pressable>
           </View>
         </View>
@@ -146,28 +148,28 @@ const SearchPatient = () => {
             {/* Header */}
             <View className="pt-4 pb-8">
               <Text className="text-3xl font-bold text-black dark:text-white">
-                กำหนดเวลางาน
+                {t("set-work-time")}
               </Text>
               <Text className="text-gray-500 dark:text-gray-400 mt-2">
-                เลือกเวลาเริ่มต้นและระยะเวลาทำงาน
+                {t("set-work-time-description")}
               </Text>
             </View>
 
             {/* Start Time Card */}
             <View className="mb-6">
               <Text className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3 ml-1">
-                เวลาเริ่มงาน
+                {t("set-work-time-start")}
               </Text>
               <Pressable className="bg-white dark:bg-gray-800 p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-sm active:scale-98">
                 <View className="items-center">
                   <Text className="text-4xl font-bold text-black dark:text-white mb-1">
-                    {startDate.toLocaleTimeString("th-TH", {
+                    {startDate.toLocaleTimeString(i18n.language, {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </Text>
                   <Text className="text-base text-gray-500 dark:text-gray-400">
-                    {startDate.toLocaleDateString("th-TH", {
+                    {startDate.toLocaleDateString(i18n.language, {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -180,7 +182,7 @@ const SearchPatient = () => {
             {/* Duration Card */}
             <View className="mb-8">
               <Text className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3 ml-1">
-                ระยะเวลาทำงาน
+                {t("set-work-time-duration")}
               </Text>
               <View className="bg-white dark:bg-gray-800 p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-sm">
                 {/* Display Total Time */}
@@ -190,14 +192,14 @@ const SearchPatient = () => {
                     {String(minutes).padStart(2, "0")}
                   </Text>
                   <Text className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    ชั่วโมง : นาที
+                    {t("hour")} : {t("minute")}
                   </Text>
                 </View>
 
                 {/* Hour Controls */}
                 <View className="mb-4">
                   <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">
-                    ชั่วโมง
+                    {t("hour")}
                   </Text>
                   <View className="flex-row items-center justify-center gap-4">
                     <Pressable
@@ -229,7 +231,7 @@ const SearchPatient = () => {
                 {/* Minute Controls */}
                 <View>
                   <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">
-                    นาที
+                    {t("minute")}
                   </Text>
                   <View className="flex-row items-center justify-center gap-4">
                     <Pressable
@@ -268,7 +270,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      1 ชม.
+                      1 {i18n.language === "th" ? "ชม." : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -279,7 +281,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      2 ชม.
+                      2 {i18n.language === "th" ? "ชม." : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -290,7 +292,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      4 ชม.
+                      4 {i18n.language === "th" ? "ชม." : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -301,7 +303,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      8 ชม.
+                      8 {i18n.language === "th" ? "ชม." : "hr"}.
                     </Text>
                   </Pressable>
                 </View>
@@ -315,7 +317,7 @@ const SearchPatient = () => {
               onPress={StartWork}
               className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"
             >
-              <Text className="text-white font-bold text-lg">เริ่มทำงาน</Text>
+              <Text className="text-white font-bold text-lg">{t("start")}</Text>
             </Pressable>
           </View>
         </View>

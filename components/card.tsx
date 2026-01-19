@@ -96,13 +96,12 @@ const Card: React.FC<CardProps> = ({
             {/* Title */}
             <View className="flex-1">
               <Text
-                className={`text-white font-bold leading-tight ${
-                  size === "sm"
+                className={`text-white font-bold leading-tight ${size === "sm"
                     ? "text-lg"
                     : size === "lg"
                       ? "text-3xl"
                       : "text-2xl"
-                }`}
+                  }`}
               >
                 {title}
               </Text>
