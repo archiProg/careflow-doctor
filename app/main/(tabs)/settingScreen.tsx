@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Image,
     Pressable,
@@ -19,6 +20,7 @@ import { useSelector } from "react-redux";
 
 
 export default function SettingsScreen() {
+    const { t } = useTranslation();
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
     const [biometric, setBiometric] = useState(false);
@@ -84,10 +86,7 @@ export default function SettingsScreen() {
                         <Text
                             className={`text-gray-500 dark:text-gray-400 mb-2`}
                         >
-                            {Provider.Profile?.role
-                                ? Provider.Profile.role[0].toUpperCase() +
-                                Provider.Profile.role.slice(1)
-                                : "Medical Professional"}
+                            {t('role-doctor')}
                         </Text>
                     </View>
                 </View>
@@ -95,20 +94,20 @@ export default function SettingsScreen() {
                 {/* Account */}
                 <View className="mt-6">
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
-                        Account
+                        {t('account')}
                     </Text>
                     <View className="bg-white">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
                             <View className="flex-row items-center">
                                 <FontAwesome name="user" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Manage Profile</Text>
+                                <Text className="ml-4 text-gray-800">{t('manage-profile')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
                         <Pressable className="flex-row items-center justify-between px-6 py-4" onPress={() => router.push("/main/pages/settings/changePasswordPage")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="lock" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Change Password</Text>
+                                <Text className="ml-4 text-gray-800">{t('change-password')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
@@ -118,13 +117,13 @@ export default function SettingsScreen() {
                 {/* Preferences */}
                 <View className="mt-6">
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
-                        Preferences
+                        {t('preferences')}
                     </Text>
                     <View className="bg-white">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
                             <View className="flex-row items-center">
                                 <FontAwesome name="bell" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Notifications</Text>
+                                <Text className="ml-4 text-gray-800">{t('notifications')}</Text>
                             </View>
                             <View className={`w-12 h-7 rounded-full ${notifications ? 'bg-blue-500' : 'bg-gray-300'}`}>
                                 <View className={`w-5 h-5 rounded-full bg-white mt-1 ${notifications ? 'ml-6' : 'ml-1'}`} />
@@ -153,7 +152,7 @@ export default function SettingsScreen() {
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100" onPress={() => router.push("/main/pages/settings/languagePage")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="language" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Language</Text>
+                                <Text className="ml-4 text-gray-800">{t('language')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
@@ -163,20 +162,20 @@ export default function SettingsScreen() {
                 {/* Legal */}
                 <View className="mt-6">
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
-                        Legal
+                        {t('legal')}
                     </Text>
                     <View className="bg-white">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
                             <View className="flex-row items-center">
                                 <FontAwesome name="shield" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Privacy Policy</Text>
+                                <Text className="ml-4 text-gray-800">{t('privacy-policy')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
                         <Pressable className="flex-row items-center justify-between px-6 py-4">
                             <View className="flex-row items-center">
                                 <FontAwesome name="file-text-o" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">Terms & Conditions</Text>
+                                <Text className="ml-4 text-gray-800">{t('terms-conditions')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
@@ -191,14 +190,14 @@ export default function SettingsScreen() {
                         }}
                         className="bg-red-500 py-4 rounded-lg items-center"
                     >
-                        <Text className="text-white font-semibold text-base">Logout</Text>
+                        <Text className="text-white font-semibold text-base">{t('logout')}</Text>
                     </Pressable>
                 </View>
 
                 {/* Version */}
                 <View className="items-center py-6 mb-20" >
                     <Text className="text-gray-400 text-sm">
-                        Version {appVersion}
+                        {t('version')} {appVersion}
                     </Text>
                 </View>
             </ScrollView>

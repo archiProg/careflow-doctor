@@ -193,7 +193,7 @@ const DoctorHomeScreen = () => {
               <Text
                 className={`${CARD.subtitle} text-gray-500 dark:text-gray-400 mb-2`}
               >
-                {t("home-screen-role-doctor")}
+                {t("role-doctor")}
               </Text>
               {getStatusBadge()}
             </View>

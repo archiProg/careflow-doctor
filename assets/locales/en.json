@@ -47,7 +47,7 @@
   "home-screen-shift": "Shift",
   "home-screen-welcome": "Welcome",
   "home-screen-not-work": "Not Working",
-  "home-screen-role-doctor": "Doctor",
+  "role-doctor": "Doctor",
   "active": "Active",
   "offline": "Offline",
   "resume": "Resume",
@@ -93,5 +93,16 @@
   "clinical-assessment": "Clinical Assessment",
   "summarize-success": "Success!",
   "summarize-success-message": "Your consultation data has been saved successfully",
-  "back-to-home": "Back to home"
+  "back-to-home": "Back to home",
+  "change-password": "Change Password",
+  "notifications": "Notification",
+  "language": "Language",
+  "privacy-policy": "Privacy Policy",
+  "terms-conditions": "Terms & Conditions",
+  "logout": "Logout",
+  "manage-profile": "Manage Profile",
+  "version": "Version",
+  "account": "Account",
+  "preferences": "Preferences",
+  "legal": "Legal"
 }

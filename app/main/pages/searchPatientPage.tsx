@@ -128,7 +128,7 @@ const SearchPatient = () => {
               />
 
               <Text className="text-white font-bold text-lg ml-2">
-                {status === "start_work" ? "Pause" : "Resume"}
+                {status === "start_work" ? t("paused") : t("resume")}
               </Text>
             </Pressable>
             <Pressable
@@ -270,7 +270,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      1 {i18n.language === "th" ? "ชม." : "hr"}.
+                      1 {i18n.language === "th" ? "ชม" : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -281,7 +281,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      2 {i18n.language === "th" ? "ชม." : "hr"}.
+                      2 {i18n.language === "th" ? "ชม" : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -292,7 +292,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      4 {i18n.language === "th" ? "ชม." : "hr"}.
+                      4 {i18n.language === "th" ? "ชม" : "hr"}.
                     </Text>
                   </Pressable>
                   <Pressable
@@ -303,7 +303,7 @@ const SearchPatient = () => {
                     }}
                   >
                     <Text className="text-center text-sm font-medium text-black dark:text-white">
-                      8 {i18n.language === "th" ? "ชม." : "hr"}.
+                      8 {i18n.language === "th" ? "ชม" : "hr"}.
                     </Text>
                   </Pressable>
                 </View>

@@ -47,7 +47,7 @@
   "home-screen-tomorrow": "พรุ่งนี้",
   "home-screen-welcome": "ยินดีต้อนรับ",
   "home-screen-shift": "เวลาทำงาน",
-  "home-screen-role-doctor": "แพทย์",
+  "role-doctor": "แพทย์",
   "resume": "ทำงานต่อ",
   "end": "จบงาน",
   "start": "เริ่มงาน",
@@ -91,5 +91,16 @@
   "clinical-assessment": "การวินิจฉัย",
   "summarize-success": "บันทึกสำเร็จ!",
   "summarize-success-message": "ข้อมูลการปรึกษาของคุณได้รับการบันทึกเรียบร้อยแล้ว",
-  "back-to-home": "กลับหน้าหลัก"
+  "back-to-home": "กลับหน้าหลัก",
+  "change-password": "เปลี่ยนรหัสผ่าน",
+  "notifications": "แจ้งเตือน",
+  "language": "ภาษา",
+  "privacy-policy": "นโยบายความเป็นส่วนตัว",
+  "terms-conditions": "เงื่อนไขการใช้บริการ",
+  "logout": "ออกจากระบบ",
+  "manage-profile": "จัดการโปรไฟล์",
+  "version": "เวอร์ชั่น",
+  "account": "บัญชี",
+  "preferences": "ตั้งค่า",
+  "legal": "กฎหมาย"
 }
