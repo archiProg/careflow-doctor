@@ -5,6 +5,7 @@ import PatientForm from "@/components/patientForm";
 import ControlButtons from "@/components/rtc/controlButtons";
 import LocalVideo from "@/components/rtc/localVideo";
 import VideoGrid from "@/components/rtc/videoGrid";
+import SumDiagnosisComp from "@/components/sumDiagnosisComp";
 import { user_role } from "@/constants/enums";
 import { TEXT } from "@/constants/styles";
 import { usePeerConnection } from "@/hooks/usePeerConnection";
@@ -76,8 +77,8 @@ export default function DoctorCall() {
   const streamRef = useRef<MediaStream | null>(null);
   const peerConnections = useRef<Record<string, any>>({});
   const [numColumns, setNumColumns] = useState(2);
-  const [activeMenu, setActiveMenu] = useState<"patient" | "diagnosis" | "menu" | "review">("menu");
-
+  const [activeMenu, setActiveMenu] = useState<"patient" | "diagnosis" | "menu" | "sumDiagnosis">("menu");
+  const [patientDataForm, setPatientDataForm] = useState<PatientDataForm | null>(null);
   const {
     createPeer,
     createOffer,
@@ -319,6 +320,20 @@ export default function DoctorCall() {
     // });
 
     Alert.alert('ข้อมูลถูกส่งไปเรียบร้อย', JSON.stringify(data, null, 2));
+    setActiveMenu("menu");
+  };
+
+  const onSetPatientDataForm = (data: PatientDataForm) => {
+    if (data) {
+      setPatientDataForm({
+        ...data,
+        userName: Object.entries(peers).map(([key, value]) => value.username).join(", "),
+      });
+      setActiveMenu("sumDiagnosis");
+    }
+    else {
+      alert("กรุณากรอกข้อมูลผู้ป่วย");
+    }
   };
 
   return (
@@ -414,7 +429,7 @@ export default function DoctorCall() {
         </Pressable>
       </View >
       }
-      {(activeMenu === "diagnosis" || activeMenu === "review") &&
+      {(activeMenu === "diagnosis" || activeMenu === "sumDiagnosis") &&
         <View className="flex flex-col justify-between absolute left-0 right-0 bg-white rounded-t-[16px]"
           style={{
             top: overlayTop,
@@ -422,7 +437,7 @@ export default function DoctorCall() {
           }}
         >
           <View className="p-4 flex-row items-center">
-            {activeMenu === "review" ? <View className="w-10" /> : <Pressable onPress={() => setActiveMenu("menu")} className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
+            {activeMenu === "sumDiagnosis" ? <View className="w-10" /> : <Pressable onPress={() => setActiveMenu("menu")} className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
               <FontAwesome5 name="angle-left" size={24} color="black" />
             </Pressable>}
 
@@ -436,8 +451,8 @@ export default function DoctorCall() {
             {/* Spacer to balance left icon */}
             <View className="w-10" />
           </View>
-          <PatientForm onSubmit={handlePatientSubmit} onReview={() => setActiveMenu("review")} onCancel={() => setActiveMenu("diagnosis")} />
-
+          {activeMenu === "diagnosis" && <PatientForm onSetPatientDataForm={onSetPatientDataForm} onReview={() => setActiveMenu("sumDiagnosis")} onCancel={() => setActiveMenu("diagnosis")} />}
+          {activeMenu === "sumDiagnosis" && <SumDiagnosisComp patientDataForm={patientDataForm!} onSend={handlePatientSubmit} onCancel={() => setActiveMenu("diagnosis")} />}
         </View>}
       {activeMenu === "patient" &&
         <View className="flex flex-col absolute left-0 right-0 bg-white rounded-t-[16px]"

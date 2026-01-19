@@ -71,7 +71,7 @@ export default function ReComingCall() {
         {/* Accept Button */}
         <Pressable
           onPress={acceptCase}
-          className="bg-green-500 py-4 rounded-2xl active:scale-95"
+          className="bg-blue-500 py-4 rounded-2xl active:scale-95"
         >
           <Text className="text-white text-center text-lg font-semibold">
             ยืนยัน
@@ -81,7 +81,7 @@ export default function ReComingCall() {
         {/* Reject Button */}
         <Pressable
           onPress={rejectCase}
-          className="bg-red-500 py-4 rounded-2xl mt-3 active:scale-95"
+          className="bg-red-300 py-4 rounded-2xl mt-3 active:scale-95"
         >
           <Text className="text-white text-center text-lg font-semibold">
             ปฏิเสธ
