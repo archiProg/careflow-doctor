@@ -72,6 +72,7 @@
   "doctorNote": "ความคิดเห็นของแพทย์",
   "medication": "ยาที่สั่งจ่าย",
   "needHospital": "ควรไปโรงพยาบาล",
+  "sendedHospital": "ส่งโรงพยาบาล",
   "review": "ทบทวน",
   "cancel": "ยกเลิก",
   "joinCall": "เข้าร่วม",
