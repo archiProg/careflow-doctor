@@ -13,3 +13,21 @@ export interface DiagnosisRecord {
 }
 
 
+
+export interface VitalSigns {
+  bloodPressure: string;
+  heartRate: number;
+  temperature: number;
+  oxygenSaturation: string;
+}
+
+export interface PatientMedicalHistory {
+  date: string;
+  symptoms: string;
+  diagnosis: string;
+  medication: string;
+  needHospital: boolean;
+  doctorNote: string;
+  vitalSigns: VitalSigns;
+}
+
