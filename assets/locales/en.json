@@ -106,5 +106,6 @@
   "preferences": "Preferences",
   "legal": "Legal",
   "manage_profile_description": "Manage your profile information",
-  "manage_profile": "Manage Profile"
+  "manage_profile": "Manage Profile",
+  "sendedHospital": "Send to Hospital"
 }
