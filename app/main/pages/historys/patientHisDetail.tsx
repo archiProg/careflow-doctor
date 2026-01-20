@@ -1,4 +1,4 @@
-import { TEXT } from "@/constants/styles";
+import { TEXT_SIZE } from "@/constants/styles";
 import Provider from "@/services/providerService";
 import { DiagnosisRecord } from "@/types/diagnosisHistory";
 import { FontAwesome } from "@expo/vector-icons";
@@ -21,7 +21,6 @@ const PatientHisDetail = () => {
         router.back();
     };
 
-
     //back handler
     useEffect(() => {
         const backAction = () => {
@@ -38,7 +37,7 @@ const PatientHisDetail = () => {
     }, []);
 
     return (
-        <SafeAreaView className="flex-1 h-full bg-white">
+        <SafeAreaView className="flex-1 h-full bg-secondary ">
             <View className="flex w-full p-5 justify-start items-start">
                 <Pressable
                     className="flex-row items-center justify-start px-3 rounded-full"
@@ -54,44 +53,76 @@ const PatientHisDetail = () => {
                     />
                 </Pressable>
             </View>
-            <View className="flex-1 bg-white">
-                <View className="flex-1">
-                    <ScrollView
-                        className="flex-1"
-                        contentContainerClassName="p-4 pb-24"
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <View className="flex-1 bg-gray-100 rounded-[16px] p-4 shadow-lg">
-                            <View className="flex-1 justify-center items-center">
-                                <Text className={`${TEXT.subtitle} text-blue-500`}>{t('summarize-diagnosis')}</Text>
-                            </View>
 
-                            <View className="flex-1 my-8 gap-y-8">
-                                <View className="flex-row">
-                                    <Text className={`text-gray-600 text-md text-blue-500`}>{t('patient')} : </Text>
-                                    <Text className="flex-1">{record.patientName}</Text>
-                                </View>
-                                <View className="flex-row">
-                                    <Text className={`text-gray-600 text-md text-blue-500`}>{t('doctor-check')} : </Text>
-                                    <Text className="flex-1">{Provider.Profile?.name} </Text>
-                                </View>
-                                <View className="flex-row">
-                                    <Text className={`text-gray-600 text-md text-blue-500`}>{t('symptoms')} : </Text>
-                                    <Text className="flex-1">{record?.symptoms}</Text>
-                                </View>
-                                <View className="flex-row">
-                                    <Text className={`text-gray-600 text-md text-blue-500`}>{t('medication')} : </Text>
-                                    <Text className="flex-1">{record?.medication}</Text>
-                                </View>
-                                <View className="flex-row">
-                                    <Text className={`text-gray-600 text-md text-blue-500`}>{t('doctorNote')} : </Text>
-                                    <Text className="flex-1">{record?.doctorNote}</Text>
-                                </View>
-                            </View>
+            {/* Content */}
+            <ScrollView
+                className="flex-1 px-6"
+                showsVerticalScrollIndicator={false}
+                contentContainerClassName="pb-8"
+            >
+                {/* Card Container */}
+                <View className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    {/* Header Section */}
+                    <View className="bg-blue-500 px-6 py-8">
+                        <Text className="text-2xl font-bold text-white text-center">
+                            {t('summarize-diagnosis')}
+                        </Text>
+                    </View>
+
+                    {/* Content Section */}
+                    <View className="p-6">
+                        {/* Patient Info */}
+                        <View className="rounded-2xl p-5 mb-4 border-l-4 border-blue-500">
+                            <Text className={`${TEXT_SIZE.medium} font-semibold text-blue-700 mb-1`}>
+                                {t('patient')}
+                            </Text>
+                            <Text className="text-lg text-gray-900 font-medium">
+                                {record.patientName}
+                            </Text>
                         </View>
-                    </ScrollView>
+
+                        {/* Doctor Info */}
+                        <View className="bg-emerald-50 rounded-2xl p-5 mb-4 border-l-4 border-emerald-500">
+                            <Text className="text-sm font-semibold text-emerald-700 mb-1">
+                                {t('doctor-check')}
+                            </Text>
+                            <Text className="text-lg text-gray-900 font-medium">
+                                {Provider.Profile?.name}
+                            </Text>
+                        </View>
+
+                        {/* Symptoms */}
+                        <View className="bg-amber-50 rounded-2xl p-5 mb-4 border-l-4 border-amber-500">
+                            <Text className="text-sm font-semibold text-amber-700 mb-2">
+                                {t('symptoms')}
+                            </Text>
+                            <Text className="text-base text-gray-800 leading-6">
+                                {record?.symptoms}
+                            </Text>
+                        </View>
+
+                        {/* Medication */}
+                        <View className="bg-purple-50 rounded-2xl p-5 mb-4 border-l-4 border-purple-500">
+                            <Text className="text-sm font-semibold text-purple-700 mb-2">
+                                {t('medication')}
+                            </Text>
+                            <Text className="text-base text-gray-800 leading-6">
+                                {record?.medication}
+                            </Text>
+                        </View>
+
+                        {/* Doctor Note */}
+                        <View className="bg-indigo-50 rounded-2xl p-5 border-l-4 border-indigo-500">
+                            <Text className="text-sm font-semibold text-indigo-700 mb-2">
+                                {t('doctorNote')}
+                            </Text>
+                            <Text className="text-base text-gray-800 leading-6">
+                                {record?.doctorNote}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
