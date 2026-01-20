@@ -1,4 +1,5 @@
 // src/app/videoCall.tsx
+import DiagnosisHistoryPatientComp from '@/components/DiagnosisHistoryPatientComp';
 import MenuCard from "@/components/menuCard";
 import PatientDataCard from "@/components/patientDataCard";
 import PatientForm from "@/components/patientForm";
@@ -6,12 +7,12 @@ import ControlButtons from "@/components/rtc/controlButtons";
 import LocalVideo from "@/components/rtc/localVideo";
 import VideoGrid from "@/components/rtc/videoGrid";
 import SumDiagnosisComp from "@/components/sumDiagnosisComp";
-import DiagnosisHistoryPatientComp from '@/components/DiagnosisHistoryPatientComp';
 import { user_role } from "@/constants/enums";
 import { TEXT } from "@/constants/styles";
 import { usePeerConnection } from "@/hooks/usePeerConnection";
 import { PeerReducer } from "@/reducers/peerReducer";
 import Provider from "@/services/providerService";
+import { PatientMedicalHistory } from '@/types/diagnosisHistory';
 import { PatientDataForm } from "@/types/patientData";
 import { emitSocket, getSocket } from "@/utilitys/socket";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -27,11 +28,10 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Dimensions, Image, Pressable, ScrollView, Text, View , TouchableOpacity} from "react-native";
+import { Alert, Dimensions, Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import InCallManager from "react-native-incall-manager";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { mediaDevices, MediaStream } from "react-native-webrtc";
-import { PatientMedicalHistory } from '@/types/diagnosisHistory';
 
 const { height: screenHeight } = Dimensions.get("window");
 const videoHeight = Math.max((screenHeight / 3), 280); // h-1/3
@@ -57,50 +57,50 @@ const patientData = [
   { title: "blood pressure", value: "120/80", unit: "Sys/Dia" },
 ];
 
- const medicalHistory: PatientMedicalHistory[] = [
-    {
-      date: "2024-01-14T14:20:00Z",
-      symptoms: "เจ็บหน้าอกรุนแรง หายใจลำบาก เหงื่อออก",
-      diagnosis: "สงสัยโรคหัวใจ - ต้องส่งโรงพยาบาลเพื่อตรวจเพิ่มเติมด่วน",
-      medication: "Aspirin 300mg, NTG sublingual",
-      needHospital: true,
-      doctorNote: "ผู้ป่วยมีอาการฉุกเฉิน แนะนำส่ง ER ทันที",
-      vitalSigns: {
-        bloodPressure: "150/95",
-        heartRate: 110,
-        temperature: 37.8,
-        oxygenSaturation: "92%"
-      }
-    },
-    {
-      date: "2023-11-02T09:10:00Z",
-      symptoms: "เวียนหัว หน้ามืด เป็นลม",
-      diagnosis: "ความดันโลหิตต่ำ",
-      medication: "ORS, พักผ่อน",
-      needHospital: false,
-      doctorNote: "แนะนำดื่มน้ำมากขึ้น และพักผ่อนให้เพียงพอ",
-      vitalSigns: {
-        bloodPressure: "90/60",
-        heartRate: 72,
-        temperature: 36.6,
-        oxygenSaturation: "98%"
-      }
-    },
-    {
-      date: "2023-08-19T16:45:00Z",
-      symptoms: "ไอ เจ็บคอ มีไข้",
-      diagnosis: "ติดเชื้อทางเดินหายใจส่วนบน",
-      medication: "Paracetamol, Amoxicillin",
-      needHospital: false,
-      doctorNote: "ให้ยาครบตามกำหนด หากไม่ดีขึ้นให้กลับมาตรวจ",
-      vitalSigns: {
-        bloodPressure: "120/80",
-        heartRate: 85,
-        temperature: 38.2,
-        oxygenSaturation: "97%"
-      }
+const medicalHistory: PatientMedicalHistory[] = [
+  {
+    date: "2024-01-14T14:20:00Z",
+    symptoms: "เจ็บหน้าอกรุนแรง หายใจลำบาก เหงื่อออก",
+    diagnosis: "สงสัยโรคหัวใจ - ต้องส่งโรงพยาบาลเพื่อตรวจเพิ่มเติมด่วน",
+    medication: "Aspirin 300mg, NTG sublingual",
+    needHospital: true,
+    doctorNote: "ผู้ป่วยมีอาการฉุกเฉิน แนะนำส่ง ER ทันที",
+    vitalSigns: {
+      bloodPressure: "150/95",
+      heartRate: 110,
+      temperature: 37.8,
+      oxygenSaturation: "92%"
     }
-  ];
+  },
+  {
+    date: "2023-11-02T09:10:00Z",
+    symptoms: "เวียนหัว หน้ามืด เป็นลม",
+    diagnosis: "ความดันโลหิตต่ำ",
+    medication: "ORS, พักผ่อน",
+    needHospital: false,
+    doctorNote: "แนะนำดื่มน้ำมากขึ้น และพักผ่อนให้เพียงพอ",
+    vitalSigns: {
+      bloodPressure: "90/60",
+      heartRate: 72,
+      temperature: 36.6,
+      oxygenSaturation: "98%"
+    }
+  },
+  {
+    date: "2023-08-19T16:45:00Z",
+    symptoms: "ไอ เจ็บคอ มีไข้",
+    diagnosis: "ติดเชื้อทางเดินหายใจส่วนบน",
+    medication: "Paracetamol, Amoxicillin",
+    needHospital: false,
+    doctorNote: "ให้ยาครบตามกำหนด หากไม่ดีขึ้นให้กลับมาตรวจ",
+    vitalSigns: {
+      bloodPressure: "120/80",
+      heartRate: 85,
+      temperature: 38.2,
+      oxygenSaturation: "97%"
+    }
+  }
+];
 
 
 
@@ -385,13 +385,13 @@ export default function DoctorCall() {
     }
   };
 
-    const handleRecordPress = (record: PatientMedicalHistory) => {
-      console.log('Selected record:', record);
-      setSelectedRecord(record)
-      setActiveMenu("showDetailHistory");
-    };
+  const handleRecordPress = (record: PatientMedicalHistory) => {
+    console.log('Selected record:', record);
+    setSelectedRecord(record)
+    setActiveMenu("showDetailHistory");
+  };
 
-      const formatDate = (dateString: string): string => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('th-TH', {
       day: '2-digit',
@@ -400,12 +400,12 @@ export default function DoctorCall() {
     });
   };
 
-const VitalItem = ({ label, value }: { label: string; value: string | number }) => (
-  <View className="bg-gray-100 rounded-lg px-4 py-3 mb-2 w-[48%]">
-    <Text className="text-gray-500 text-xs">{label}</Text>
-    <Text className="text-gray-900 font-semibold">{value}</Text>
-  </View>
-);
+  const VitalItem = ({ label, value }: { label: string; value: string | number }) => (
+    <View className="bg-gray-100 rounded-lg px-4 py-3 mb-2 w-[48%]">
+      <Text className="text-gray-500 text-xs">{label}</Text>
+      <Text className="text-gray-900 font-semibold">{value}</Text>
+    </View>
+  );
 
 
   return (
@@ -717,10 +717,10 @@ const VitalItem = ({ label, value }: { label: string; value: string | number }) 
 
             {statusReq ? (
               <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4 pb-4">
-  <DiagnosisHistoryPatientComp
-    PatientHistory={medicalHistory}
-    onPatientRecordPress={handleRecordPress}
-  />
+                <DiagnosisHistoryPatientComp
+                  PatientHistory={medicalHistory}
+                  onPatientRecordPress={handleRecordPress}
+                />
               </View>
             ) : (
               <View>
@@ -748,83 +748,83 @@ const VitalItem = ({ label, value }: { label: string; value: string | number }) 
 
         </View>}
 
-{activeMenu === "showDetailHistory" && selectedRecord && (
-  <SafeAreaView className="flex-1 bg-gray-50">
-    {/* Header */}
-    <View className="p-4 flex-row items-center">
-      <TouchableOpacity
-        onPress={() => setActiveMenu("history")}
-        className="w-10 h-10 bg-gray-200 rounded-full items-center justify-center"
-      >
-        <FontAwesome5 name="angle-left" size={20} color="#374151" />
-      </TouchableOpacity>
+      {activeMenu === "showDetailHistory" && selectedRecord && (
+        <SafeAreaView className="flex-1 bg-gray-50">
+          {/* Header */}
+          <View className="p-4 flex-row items-center">
+            <TouchableOpacity
+              onPress={() => setActiveMenu("history")}
+              className="w-10 h-10 bg-gray-200 rounded-full items-center justify-center"
+            >
+              <FontAwesome5 name="angle-left" size={20} color="#374151" />
+            </TouchableOpacity>
 
-      <View className="flex-1 items-center">
-        <Text className="text-lg font-bold text-gray-900">
-          รายละเอียดประวัติ
-        </Text>
-      </View>
+            <View className="flex-1 items-center">
+              <Text className="text-lg font-bold text-gray-900">
+                รายละเอียดประวัติ
+              </Text>
+            </View>
 
-      <View className="w-10" />
-    </View>
+            <View className="w-10" />
+          </View>
 
-    <ScrollView className="flex-1 p-4">
-      
-      {/* Status */}
-      {selectedRecord.needHospital && (
-        <View className="bg-orange-100 rounded-xl p-3 mb-3">
-          <Text className="text-orange-700 font-semibold">
-            ⚠️ จำเป็นต้องส่งโรงพยาบาล
-          </Text>
-        </View>
+          <ScrollView className="flex-1 p-4">
+
+            {/* Status */}
+            {selectedRecord.needHospital && (
+              <View className="bg-orange-100 rounded-xl p-3 mb-3">
+                <Text className="text-orange-700 font-semibold">
+                  ส่งโรงพยาบาล
+                </Text>
+              </View>
+            )}
+
+            {/* Date */}
+            <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-1">วันที่</Text>
+              <Text className="text-gray-900 font-semibold">
+                {formatDate(selectedRecord.date)}
+              </Text>
+            </View>
+
+            {/* Symptoms */}
+            <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-1">อาการ</Text>
+              <Text className="text-gray-800">{selectedRecord.symptoms}</Text>
+            </View>
+
+            {/* Diagnosis */}
+            <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-1">การวินิจฉัย</Text>
+              <Text className="text-gray-800">{selectedRecord.diagnosis}</Text>
+            </View>
+
+            {/* Doctor Note */}
+            <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-1">หมายเหตุจากแพทย์</Text>
+              <Text className="text-gray-800">{selectedRecord.doctorNote}</Text>
+            </View>
+
+            {/* Medication */}
+            <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-1">ยาที่ได้รับ</Text>
+              <Text className="text-gray-800">{selectedRecord.medication}</Text>
+            </View>
+
+            {/* Vital Signs */}
+            <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
+              <Text className="text-gray-500 text-sm mb-3">สัญญาณชีพ</Text>
+
+              <View className="flex-row flex-wrap justify-between">
+                <VitalItem label="BP" value={selectedRecord.vitalSigns.bloodPressure} />
+                <VitalItem label="HR" value={`${selectedRecord.vitalSigns.heartRate} bpm`} />
+                <VitalItem label="O₂" value={selectedRecord.vitalSigns.oxygenSaturation} />
+                <VitalItem label="Temp" value={`${selectedRecord.vitalSigns.temperature} °C`} />
+              </View>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
       )}
-
-      {/* Date */}
-      <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-1">วันที่</Text>
-        <Text className="text-gray-900 font-semibold">
-          {formatDate(selectedRecord.date)}
-        </Text>
-      </View>
-
-      {/* Symptoms */}
-      <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-1">อาการ</Text>
-        <Text className="text-gray-800">{selectedRecord.symptoms}</Text>
-      </View>
-
-      {/* Diagnosis */}
-      <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-1">การวินิจฉัย</Text>
-        <Text className="text-gray-800">{selectedRecord.diagnosis}</Text>
-      </View>
-
-      {/* Doctor Note */}
-      <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-1">หมายเหตุจากแพทย์</Text>
-        <Text className="text-gray-800">{selectedRecord.doctorNote}</Text>
-      </View>
-
-      {/* Medication */}
-      <View className="bg-white rounded-xl p-4 mb-3 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-1">ยาที่ได้รับ</Text>
-        <Text className="text-gray-800">{selectedRecord.medication}</Text>
-      </View>
-
-      {/* Vital Signs */}
-      <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
-        <Text className="text-gray-500 text-sm mb-3">สัญญาณชีพ</Text>
-
-        <View className="flex-row flex-wrap justify-between">
-          <VitalItem label="BP" value={selectedRecord.vitalSigns.bloodPressure} />
-          <VitalItem label="HR" value={`${selectedRecord.vitalSigns.heartRate} bpm`} />
-          <VitalItem label="O₂" value={selectedRecord.vitalSigns.oxygenSaturation} />
-          <VitalItem label="Temp" value={`${selectedRecord.vitalSigns.temperature} °C`} />
-        </View>
-      </View>
-    </ScrollView>
-  </SafeAreaView>
-)}
 
 
     </SafeAreaView >
