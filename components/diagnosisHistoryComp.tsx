@@ -1,5 +1,7 @@
 
-import { DiagnosisRecord, DoctorInfo } from '@/types/diagnosisHistory';
+import { CARD, TEXT_SIZE } from '@/constants/styles';
+import i18n from '@/services/i18nService';
+import { DiagnosisRecord } from '@/types/diagnosisHistory';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,13 +16,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface DiagnosisHistoryScreenProps {
-  doctorInfo: DoctorInfo;
   records: DiagnosisRecord[];
   onRecordPress?: (record: DiagnosisRecord) => void;
 }
 
 const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
-  doctorInfo,
   records,
   onRecordPress,
 }) => {
@@ -29,7 +29,6 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
   const [selectedDateFilter, setSelectedDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const { t } = useTranslation();
 
-  // กรองข้อมูล
   const filteredRecords = records.filter((record) => {
     const matchesSearch =
       record.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,7 +40,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       (selectedFilter === 'hospital' && record.needHospital);
 
     // กรองตามวันที่
-    const recordDate = new Date(record.date);
+    const recordDate = new Date(record.timestamps);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -65,7 +64,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('th-TH', {
+    return date.toLocaleDateString(i18n.language, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -88,14 +87,14 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="pt-4 pb-6 px-5">
+      <View className="pb-6 px-5">
 
         {/* Search Bar */}
         <View className="bg-white rounded-[24px] flex-row items-center px-4 py-3 border border-gray-200">
           <FontAwesome5 name="search" size={16} color="#9CA3AF" />
           <TextInput
-            className="flex-1 ml-3 text-base text-gray-900"
-            placeholder="ค้นหาชื่อผู้ป่วย, อาการ, การวินิจฉัย..."
+            className={`${TEXT_SIZE.medium} flex-1 ml-3 text-gray-900`}
+            placeholder={t('placeholder-searchHistory')}
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -122,7 +121,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               className={`font-semibold ${selectedFilter === 'all' ? 'text-white' : 'text-gray-700'
                 }`}
             >
-              ทั้งหมด ({records.length})
+              {t('all')} ({records.length})
             </Text>
           </TouchableOpacity>
 
@@ -136,7 +135,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               className={`font-semibold ${selectedFilter === 'hospital' ? 'text-white' : 'text-gray-700'
                 }`}
             >
-              ส่งโรงพยาบาล (
+              {t('sendedHospital')} (
               {records.filter((r) => r.needHospital).length})
             </Text>
           </TouchableOpacity>
@@ -149,7 +148,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           <View className="items-center justify-center py-20">
             <FontAwesome5 name="folder-open" size={64} color="#D1D5DB" />
             <Text className="text-gray-500 text-lg mt-4">
-              ไม่พบข้อมูลประวัติการวินิจฉัย
+              {t('noData')}
             </Text>
           </View>
         ) : (
@@ -161,49 +160,52 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               activeOpacity={0.7}
             >
               {/* Patient Info Header */}
-              <View className="flex-row items-center justify-between mb-3">
+              <View className="flex-row items-center justify-between mb-2">
                 <View className="flex-row items-center flex-1">
-                  <View className="flex justify-center items-center bg-blue-500 w-[40px] h-[40px] rounded-[24px] p-2 mr-3">
-                    <FontAwesome5
-                      name={getGenderIcon(record.patientGender)}
-                      size={20}
-                      color="white"
-                    />
-                  </View>
                   <View className="flex-1">
-                    <Text className="text-gray-900 text-lg font-bold">
+                    <Text className={`${CARD.title} text-gray-900`}>
                       {record.patientName}
                     </Text>
-                    <Text className="text-gray-600 text-sm">
-                      {t('age')} {record.patientAge} {t('year')}
-                    </Text>
+                    <View className='flex-row items-center gap-2'>
+                      <Text className={`${CARD.subtitle} text-gray-600 `}>
+                        {t('age')}: {record.patientAge} {t('years')}
+                      </Text>
+                    </View>
                   </View>
+                </View>
+                <View className="flex-row justify-end items-center mb-4 ">
+                  <Text className={`${CARD.subtitle} text-blue-600 font-medium mr-2`}>
+                    {t('detail')}
+                  </Text>
+                  <FontAwesome5 name="chevron-right" size={12} color="#2563eb" />
+                </View>
+              </View>
+
+              <View className='flex-row items-center gap-4 mt-4'>
+                {/* Date */}
+                <View className="flex-row items-center">
+                  <FontAwesome5 name="calendar" size={12} color="#6B7280" />
+                  <Text className={`${CARD.subtitle} text-gray-600 ml-2`}>
+                    {formatDate(record.timestamps)}
+                  </Text>
+                </View>
+                {/* เวลาที่ใช้ */}
+                <View className="flex-row items-center">
+                  <FontAwesome5 name="clock" size={12} color="#6B7280" />
+                  <Text className={`${CARD.subtitle} text-gray-600 ml-2`}>
+                    {record.timeSpent} {t('minute')}
+                  </Text>
                 </View>
 
                 {record.needHospital && (
-                  <View className="bg-orange-100 rounded-full px-3 py-1">
-                    <Text className="text-orange-700 text-xs font-semibold">
-                      {t('sendedHospital')}
-                    </Text>
+                  <View className="flex-row items-center">
+                    <View className="bg-orange-100 rounded-full px-3 py-1  ">
+                      <Text className="text-orange-700 text-xs font-semibold">
+                        {t('sendedHospital')}
+                      </Text>
+                    </View>
                   </View>
                 )}
-              </View>
-
-              {/* Date */}
-              <View className="flex-row items-center mb-3">
-                <FontAwesome5 name="calendar" size={12} color="#6B7280" />
-                <Text className="text-gray-600 text-sm ml-2">
-                  {formatDate(record.date)}
-                </Text>
-              </View>
-
-
-              {/* View Details Arrow */}
-              <View className="flex-row justify-end items-center mt-3">
-                <Text className="text-blue-600 text-sm font-semibold mr-1">
-                  {t('detail')}
-                </Text>
-                <FontAwesome5 name="chevron-right" size={12} color="#3B82F6" />
               </View>
             </TouchableOpacity>
           ))

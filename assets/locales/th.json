@@ -64,6 +64,7 @@
   "set-work-time-duration": "ระยะเวลาทำงาน",
   "hour": "ชั่วโมง",
   "minute": "นาที",
+  "years": "ปี",
   "waiting-for-patient": "กำลังรอคนไข้",
   "waiting-for-patient-description": "พร้อมรับคนไข้ ระบบกำลังจับคู่คนไข้ให้คุณ",
   "search-pause-work": "หยุดรับคนไข้ชั่วคราว",
@@ -105,5 +106,9 @@
   "preferences": "ตั้งค่า",
   "legal": "กฎหมาย",
   "manage_profile_description": "จัดการข้อมูลโปรไฟล์ของคุณ",
-  "manage_profile": "จัดการโปรไฟล์"
+  "manage_profile": "จัดการโปรไฟล์",
+  "noData": "ไม่พบข้อมูลประวัติการวินิจฉัย",
+  "all": "ทั้งหมด",
+  "placeholder-searchHistory": "ค้นหาชื่อผู้ป่วย, อาการ, การวินิจฉัย...",
+  "doctor-check": "หมอผู้ตรวจ"
 }

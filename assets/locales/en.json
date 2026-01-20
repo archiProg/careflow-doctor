@@ -63,7 +63,8 @@
   "set-work-time-start": "Start Time",
   "set-work-time-duration": "Duration",
   "hour": "Hour",
-  "minute": "Minute",
+  "minute": "Minutes",
+  "years": "Years",
   "waiting-for-patient": "Waiting for patient",
   "waiting-for-patient-description": "Ready to receive patients. The system is matching patients for you.",
   "search-pause-work": "Pause Work",
@@ -107,5 +108,8 @@
   "legal": "Legal",
   "manage_profile_description": "Manage your profile information",
   "manage_profile": "Manage Profile",
-  "sendedHospital": "Send to Hospital"
+  "sendedHospital": "Send to Hospital",
+  "all": "All",
+  "placeholder-searchHistory": "Search patient name, symptoms, diagnosis...",
+  "doctor-check": "Examining Doctor"
 }

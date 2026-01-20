@@ -3,16 +3,13 @@ export interface DiagnosisRecord {
     patientName: string;
     patientAge: number;
     patientGender: 'male' | 'female' | 'other';
-    date: string;
+    timestamps: string;
     symptoms: string;
     diagnosis: string;
     medication: string;
     needHospital: boolean;
+    timeSpent: number;
+    doctorNote: string;
 }
 
-export interface DoctorInfo {
-    name: string;
-    specialization: string;
-    licenseNumber: string;
-}
 

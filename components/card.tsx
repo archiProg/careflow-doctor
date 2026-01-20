@@ -1,3 +1,4 @@
+import { CARD } from "@/constants/styles";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Href, useRouter } from "expo-router";
 import React, { ReactNode } from "react";
@@ -94,18 +95,12 @@ const Card: React.FC<CardProps> = ({
             )}
 
             {/* Title */}
-            <View className="flex-1">
+            <View className="flex-1 py-2">
               <Text
-                className={`text-white font-bold leading-tight ${size === "sm"
-                    ? "text-lg"
-                    : size === "lg"
-                      ? "text-3xl"
-                      : "text-2xl"
-                  }`}
+                className={`${CARD.title} text-white font-bold leading-tight`}
               >
                 {title}
               </Text>
-
               {/* Badge */}
               {badge && (
                 <View
@@ -126,7 +121,7 @@ const Card: React.FC<CardProps> = ({
               className="bg-white/20 px-4 py-2 rounded-full flex-row items-center active:scale-95"
               activeOpacity={0.8}
             >
-              <Text className="text-white text-sm font-semibold mr-1">
+              <Text className={`${CARD.subtitle} text-white text-sm font-semibold mr-1`}>
                 {detailLabel}
               </Text>
               <FontAwesome5 name="arrow-right" size={12} color="white" />
@@ -145,7 +140,7 @@ const Card: React.FC<CardProps> = ({
                 style={{ marginRight: 8 }}
               />
             )}
-            <Text className="text-white/90 text-sm font-medium flex-1">
+            <Text className={`${CARD.subtitle} text-white/90 text-sm font-medium flex-1`}>
               {subtitle}
             </Text>
           </View>
@@ -153,7 +148,7 @@ const Card: React.FC<CardProps> = ({
 
         {/* Description */}
         {description && (
-          <Text className="text-white/70 text-sm mt-3 leading-5">
+          <Text className={`${CARD.subtitle} text-white/70 text-sm mt-3 leading-5`}>
             {description}
           </Text>
         )}
@@ -164,7 +159,7 @@ const Card: React.FC<CardProps> = ({
 
       {/* Actions Section */}
       {actions && actions.length > 0 && (
-        <View className="px-6 pb-6 pt-2">
+        <View className="px-4 pb-4 pt-2">
           <View
             className={`
               ${actionLayout === "vertical" ? "flex-col gap-2" : ""}
@@ -201,7 +196,7 @@ const Card: React.FC<CardProps> = ({
                       />
                     )}
 
-                    <Text className={`font-bold text-base text-gray-600`}>
+                    <Text className={`${CARD.subtitle} font-bold text-gray-600`}>
                       {action.label}
                     </Text>
                   </View>
