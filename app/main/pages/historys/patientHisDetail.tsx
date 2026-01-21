@@ -63,8 +63,8 @@ const PatientHisDetail = () => {
                 {/* Card Container */}
                 <View className="bg-white rounded-3xl shadow-xl overflow-hidden">
                     {/* Header Section */}
-                    <View className="bg-blue-500 px-6 py-8">
-                        <Text className="text-2xl font-bold text-white text-center">
+                    <View className="bg-blue-400 px-6 py-4">
+                        <Text className="text-xl font-bold text-white text-center">
                             {t('summarize-diagnosis')}
                         </Text>
                     </View>
@@ -72,8 +72,8 @@ const PatientHisDetail = () => {
                     {/* Content Section */}
                     <View className="p-6">
                         {/* Patient Info */}
-                        <View className="rounded-2xl p-5 mb-4 border-l-4 border-blue-500">
-                            <Text className={`${TEXT_SIZE.medium} font-semibold text-blue-700 mb-1`}>
+                        <View className="rounded-2xl p-5 mb-4 ">
+                            <Text className={`${TEXT_SIZE.medium} font-semibold text-black mb-1`}>
                                 {t('patient')}
                             </Text>
                             <Text className="text-lg text-gray-900 font-medium">
@@ -82,8 +82,8 @@ const PatientHisDetail = () => {
                         </View>
 
                         {/* Doctor Info */}
-                        <View className="bg-emerald-50 rounded-2xl p-5 mb-4 border-l-4 border-emerald-500">
-                            <Text className="text-sm font-semibold text-emerald-700 mb-1">
+                        <View className="rounded-2xl p-5 mb-4 ">
+                            <Text className="text-sm font-semibold text-black mb-1">
                                 {t('doctor-check')}
                             </Text>
                             <Text className="text-lg text-gray-900 font-medium">
@@ -92,8 +92,8 @@ const PatientHisDetail = () => {
                         </View>
 
                         {/* Symptoms */}
-                        <View className="bg-amber-50 rounded-2xl p-5 mb-4 border-l-4 border-amber-500">
-                            <Text className="text-sm font-semibold text-amber-700 mb-2">
+                        <View className="rounded-2xl p-5 mb-4 ">
+                            <Text className="text-sm font-semibold text-black mb-2">
                                 {t('symptoms')}
                             </Text>
                             <Text className="text-base text-gray-800 leading-6">
@@ -102,8 +102,8 @@ const PatientHisDetail = () => {
                         </View>
 
                         {/* Medication */}
-                        <View className="bg-purple-50 rounded-2xl p-5 mb-4 border-l-4 border-purple-500">
-                            <Text className="text-sm font-semibold text-purple-700 mb-2">
+                        <View className="rounded-2xl p-5 mb-4 ">
+                            <Text className="text-sm font-semibold text-black mb-2">
                                 {t('medication')}
                             </Text>
                             <Text className="text-base text-gray-800 leading-6">
@@ -112,8 +112,8 @@ const PatientHisDetail = () => {
                         </View>
 
                         {/* Doctor Note */}
-                        <View className="bg-indigo-50 rounded-2xl p-5 border-l-4 border-indigo-500">
-                            <Text className="text-sm font-semibold text-indigo-700 mb-2">
+                        <View className="rounded-2xl p-5 mb-4 ">
+                            <Text className="text-sm font-semibold text-black mb-2">
                                 {t('doctorNote')}
                             </Text>
                             <Text className="text-base text-gray-800 leading-6">
