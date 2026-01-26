@@ -1,5 +1,5 @@
 import Card from "@/components/card";
-import { BG, CARD } from "@/constants/styles";
+import { BG, CARD, TEXT_SIZE } from "@/constants/styles";
 import FormatWorkTime from "@/hooks/useFormatDate";
 import Provider from "@/services/providerService";
 import { AppDispatch, RootState } from "@/stores/index";
@@ -143,14 +143,14 @@ const DoctorHomeScreen = () => {
       <ScrollView className="flex-1 px-2" showsVerticalScrollIndicator={false}>
         {/* Greeting Section */}
         <View className="pt-4 pb-6">
-          <Text className="text-gray-500 dark:text-gray-400 text-md mb-1">
+          <Text className={`${TEXT_SIZE.default} text-gray-500 dark:text-gray-400 mb-1`}>
             {new Date().getHours() < 12
               ? t("home-screen-good-morning")
               : new Date().getHours() < 18
                 ? t("home-screen-good-afternoon")
                 : t("home-screen-good-evening")}
           </Text>
-          <Text className="text-3xl font-bold text-black dark:text-white">
+          <Text className={`${TEXT_SIZE.big} font-bold text-black dark:text-white`}>
             {t("home-screen-welcome")}
           </Text>
         </View>

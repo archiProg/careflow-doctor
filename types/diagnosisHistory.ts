@@ -3,18 +3,15 @@ export interface DiagnosisRecord {
     patientName: string;
     patientAge: number;
     patientGender: 'male' | 'female' | 'other';
-    date: string;
+    timestamps: string;
     symptoms: string;
     diagnosis: string;
     medication: string;
     needHospital: boolean;
+    timeSpent: number;
+    doctorNote: string;
 }
 
-export interface DoctorInfo {
-    name: string;
-    specialization: string;
-    licenseNumber: string;
-}
 
 
 export interface VitalSigns {
@@ -25,12 +22,16 @@ export interface VitalSigns {
 }
 
 export interface PatientMedicalHistory {
-  date: string;
+  id: string;
+  patientName: string,
+  patientAge: number,
+  patientGender: string,
+  timestamps: string;
   symptoms: string;
   diagnosis: string;
   medication: string;
   needHospital: boolean;
   doctorNote: string;
-  vitalSigns: VitalSigns;
+  timeSpent: number;
 }
 

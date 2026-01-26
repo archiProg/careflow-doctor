@@ -105,7 +105,7 @@ const DiagnosisHistoryPatientComp: React.FC<DiagnosisHistoryPatientCompProps> = 
                     {PatientHistory.patientName}
                   </Text> */}
                   <Text className="text-gray-600 text-sm">
-                    {formatDate(record.date)}
+                    {formatDate(record.timestamps)}
                   </Text>
                 </View>
               </View>
