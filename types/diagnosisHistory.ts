@@ -22,12 +22,16 @@ export interface VitalSigns {
 }
 
 export interface PatientMedicalHistory {
-  date: string;
+  id: string;
+  patientName: string,
+  patientAge: number,
+  patientGender: string,
+  timestamps: string;
   symptoms: string;
   diagnosis: string;
   medication: string;
   needHospital: boolean;
   doctorNote: string;
-  vitalSigns: VitalSigns;
+  timeSpent: number;
 }
 

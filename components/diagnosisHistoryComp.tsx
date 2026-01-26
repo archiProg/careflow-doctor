@@ -16,14 +16,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface DiagnosisHistoryScreenProps {
-  records: DiagnosisRecord[];
+  records?: DiagnosisRecord[];
   onRecordPress?: (record: DiagnosisRecord) => void;
 }
 
+
 const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
-  records,
+  records = [],
   onRecordPress,
 }) => {
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'hospital'>('all');
   const [selectedDateFilter, setSelectedDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
@@ -58,6 +60,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       monthAgo.setMonth(today.getMonth() - 1);
       matchesDateFilter = recordDate >= monthAgo;
     }
+    
 
     return matchesSearch && matchesFilter && matchesDateFilter;
   });
@@ -85,7 +88,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
 
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50 mb-10">
       {/* Header */}
       <View className="pb-6 px-5">
 
@@ -108,6 +111,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       </View>
 
       {/* Filter Tabs */}
+      {records.length > 0 && (
       <View className="px-5 py-3 ">
         {/* Category Filter */}
         <View className="flex-row gap-2 ">
@@ -141,9 +145,10 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           </TouchableOpacity>
         </View>
       </View>
+)}
 
       {/* Records List */}
-      <ScrollView className="flex-1 px-5 py-4">
+      <ScrollView className="flex-1 px-5 my-4">
         {filteredRecords.length === 0 ? (
           <View className="items-center justify-center py-20">
             <FontAwesome5 name="folder-open" size={64} color="#D1D5DB" />
