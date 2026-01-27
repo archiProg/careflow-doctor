@@ -132,8 +132,12 @@
     "symptoms": "อาการ",
     "diagnosis": "การวินิจฉัย",
     "medication": "ยาที่ได้รับ",
-    "doctorNote": "หมายเหตุจากแพทย์",
+    "doctorNote": "ความคิดเห็นของแพทย์",
     "timeSpent": "เวลาที่ใช้ตรวจ",
     "minute": "นาที"
-  }
+  }, 
+    "filterAll": "ทั้งหมด",
+    "filterHospital": "ส่งโรงพยาบาล",
+    "hospitalTag": "ส่งโรงพยาบาล",
+    "viewDetail": "ดูรายละเอียด"
 }

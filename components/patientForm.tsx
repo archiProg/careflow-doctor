@@ -156,7 +156,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                {t('doctorNote')}
+                                {t('doctorNote')}{" "} 
                             </Text>
                         </View>
                         <TextInput
