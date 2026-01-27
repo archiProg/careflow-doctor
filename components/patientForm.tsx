@@ -33,6 +33,7 @@ const overlayTop = videoHeight - 8; // เลื่อน overlay ขึ้น 1
 const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onReview, onCancel }) => {
     const [symptoms, setSymptoms] = useState<string>('');
     const [doctorNote, setDoctorNote] = useState<string>('');
+    const [diagnosis, setDiagnosis] = useState<string>('');
     const [medication, setMedication] = useState<string>('');
     const [needHospital, setNeedHospital] = useState<boolean>(false);
     const insets = useSafeAreaInsets();
@@ -45,11 +46,11 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
         }
 
         const data: PatientDataForm = {
-            symptoms,
-            doctorNote,
-            medication,
-            needHospital,
-            timestamp: new Date().toISOString(),
+            symptoms: symptoms || "ไม่ระบุ",
+            doctorNote: doctorNote || "ไม่ระบุ",
+            medication: medication || "ไม่ระบุ",
+            diagnosis: diagnosis || "ไม่ระบุ",
+            needHospital: needHospital,
         };
 
         if (onSetPatientDataForm) {
@@ -93,10 +94,11 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                         />
                     </View>
 
+                    {/* ยาที่สั่งจ่าย */}
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                {t("doctorNote")}
+                                {"ผลวินิจฉัย"}
                             </Text>
                         </View>
                         <TextInput
@@ -106,11 +108,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                             multiline
                             numberOfLines={4}
                             textAlignVertical="top"
-                            value={doctorNote}
-                            onChangeText={setDoctorNote}
+                            value={diagnosis}
+                            onChangeText={setDiagnosis}
                         />
                     </View>
-
                     {/* ยาที่สั่งจ่าย */}
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
@@ -151,6 +152,24 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                         </View>
 
                     </TouchableOpacity>
+
+                    <View className="mb-6">
+                        <View className="flex-row items-center mb-2">
+                            <Text className="text-gray-900 text-base font-semibold ml-2">
+                                {t('doctorNote')}
+                            </Text>
+                        </View>
+                        <TextInput
+                            className="bg-white border border-gray-300 rounded-xl p-4 text-base text-gray-900 min-h-[100px]"
+                            placeholder=""
+                            placeholderTextColor="#9CA3AF"
+                            multiline
+                            numberOfLines={4}
+                            textAlignVertical="top"
+                            value={doctorNote}
+                            onChangeText={setDoctorNote}
+                        />
+                    </View>
 
                     {/* ปุ่มดำเนินการ */}
                     <View className="flex-row gap-3">

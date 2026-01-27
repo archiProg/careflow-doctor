@@ -2,9 +2,9 @@ export interface PatientDataForm {
     symptoms: string;
     userName?: string;
     doctorNote: string;
+    diagnosis: string;
     medication: string;
     needHospital: boolean;
-    timestamp: string;
 }
 
 export interface PatientInfo {
@@ -19,4 +19,13 @@ export interface PatientInfo {
 export interface ConsultInfo {
   caseId: string;
   patient_info: PatientInfo;
+}
+
+export interface AddTreatmentPayload {
+  consult_id: string;
+  symptoms: string;
+  diagnosis: string;
+  medication: string;
+  need_hospital: boolean;
+  note: string;
 }
