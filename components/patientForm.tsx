@@ -46,10 +46,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
         }
 
         const data: PatientDataForm = {
-            symptoms: symptoms || "ไม่ระบุ",
-            doctorNote: doctorNote || "ไม่ระบุ",
-            medication: medication || "ไม่ระบุ",
-            diagnosis: diagnosis || "ไม่ระบุ",
+            symptoms: symptoms || t("N/A"),
+            doctorNote: doctorNote || t("N/A"),
+            medication: medication || t("N/A"),
+            diagnosis: diagnosis || t("N/A"),
             needHospital: needHospital,
         };
 
@@ -98,7 +98,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                {"ผลวินิจฉัย"}
+                                {t("diagnosis")}
                             </Text>
                         </View>
                         <TextInput
@@ -156,7 +156,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                {t('doctorNote')}
+                                {t('doctorNote')}{" "} 
                             </Text>
                         </View>
                         <TextInput

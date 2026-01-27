@@ -77,7 +77,7 @@
   "symptoms": "Symptoms",
   "medication": "Medication",
   "needHospital": "Should go to the hospital",
-  "doctorNote": "Doctor Note",
+  "doctorNote": "Doctor's Note",
   "summarize-diagnosis": "Summarize",
   "save": "Save",
   "notification": "Notification",
@@ -111,5 +111,33 @@
   "sendedHospital": "Send to Hospital",
   "all": "All",
   "placeholder-searchHistory": "Search patient name, symptoms, diagnosis...",
-  "doctor-check": "Examining Doctor"
+  "doctor-check": "Examining Doctor",
+
+  "saveFormSuccess": "Saved successfully",
+  "saveFormError": "Unable to save data",
+  "PleaseAddSymptoms": "Please enter symptoms",
+  "N/A": "N/A",
+  "MedicalHistory": "Medical History",
+  "historyDetail": {
+    "title": "Medical History Detail",
+    "patientInfo": "Patient Information",
+    "name": "Name",
+    "age": "Age",
+    "year": "years",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "needHospital": "Hospital referral required",
+    "visitDate": "Visit Date",
+    "symptoms": "Symptoms",
+    "diagnosis": "Diagnosis",
+    "medication": "Medication",
+    "doctorNote": "Doctor's Note",
+    "timeSpent": "Time Spent",
+    "minute": "minutes"
+  },
+    "filterAll": "All",
+    "filterHospital": "Hospital Referral",
+    "hospitalTag": "Hospital Referral",
+    "viewDetail": "View details"
 }

@@ -111,5 +111,33 @@
   "all": "ทั้งหมด",
   "placeholder-searchHistory": "ค้นหาชื่อผู้ป่วย, อาการ, การวินิจฉัย...",
   "doctor-check": "หมอผู้ตรวจ",
-  "patient": "ผู้ป่วย"
+  "patient": "ผู้ป่วย",
+
+  "saveFormSuccess": "บันทึกข้อมูลเรียบร้อยแล้ว",
+  "saveFormError": "เกิดข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้",
+  "PleaseAddSymptoms": "กรุณาระบุอาการ",
+  "N/A": "ไม่มีข้อมูล",
+  "MedicalHistory": "ประวัติการรักษา",
+  "historyDetail": {
+    "title": "รายละเอียดประวัติ",
+    "patientInfo": "ข้อมูลผู้ป่วย",
+    "name": "ชื่อ",
+    "age": "อายุ",
+    "year": "ปี",
+    "gender": "เพศ",
+    "male": "ชาย",
+    "female": "หญิง",
+    "needHospital": "ต้องส่งโรงพยาบาล",
+    "visitDate": "วันที่ตรวจ",
+    "symptoms": "อาการ",
+    "diagnosis": "การวินิจฉัย",
+    "medication": "ยาที่ได้รับ",
+    "doctorNote": "ความคิดเห็นของแพทย์",
+    "timeSpent": "เวลาที่ใช้ตรวจ",
+    "minute": "นาที"
+  }, 
+    "filterAll": "ทั้งหมด",
+    "filterHospital": "ส่งโรงพยาบาล",
+    "hospitalTag": "ส่งโรงพยาบาล",
+    "viewDetail": "ดูรายละเอียด"
 }
