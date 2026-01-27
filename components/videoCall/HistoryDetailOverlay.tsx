@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { PatientMedicalHistory } from "@/types/diagnosisHistory";
+import { useTranslation } from "react-i18next";
 
 /* ---------- Types ---------- */
 
@@ -47,6 +48,8 @@ const HistoryDetailOverlay: React.FC<HistoryDetailOverlayProps> = ({
   record,
   onBack,
 }) => {
+  const { t } = useTranslation();
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("th-TH", {
@@ -65,47 +68,59 @@ const HistoryDetailOverlay: React.FC<HistoryDetailOverlayProps> = ({
         <FontAwesome5 name="arrow-left" size={18} color="#333" />
       </TouchableOpacity>
 
-      <Text className="text-xl font-bold mb-4">รายละเอียดประวัติ</Text>
+      <Text className="text-xl font-bold mb-4">{t("historyDetail.title")}</Text>
 
-      {/* Patient Info */}
-      <InfoSection icon="user" title="ข้อมูลผู้ป่วย">
-        <Text>ชื่อ: {record.patientName}</Text>
-        <Text>อายุ: {record.patientAge} ปี</Text>
-        <Text>เพศ: {record.patientGender === "female" ? "หญิง" : "ชาย"}</Text>
+      <InfoSection icon="user" title={t("historyDetail.patientInfo")}>
+        <Text>
+          {t("historyDetail.name")}: {record.patientName}
+        </Text>
+        <Text>
+          {t("historyDetail.age")}: {record.patientAge}{" "}
+          {t("historyDetail.year")}
+        </Text>
+        <Text>
+          {t("historyDetail.gender")}:{" "}
+          {t(
+            record.patientGender === "female"
+              ? "historyDetail.female"
+              : "historyDetail.male",
+          )}
+        </Text>
       </InfoSection>
 
-      {/* Status */}
       {record.needHospital && (
         <View className="bg-red-100 rounded-xl p-4 mb-3 flex-row items-center">
           <FontAwesome5 name="ambulance" size={18} color="#DC2626" />
           <Text className="ml-2 text-red-600 font-semibold">
-            ต้องส่งโรงพยาบาล
+            {t("historyDetail.needHospital")}
           </Text>
         </View>
       )}
 
-      <InfoSection icon="calendar-alt" title="วันที่ตรวจ">
+      <InfoSection icon="calendar-alt" title={t("historyDetail.visitDate")}>
         <Text>{formatDate(record.timestamps)}</Text>
       </InfoSection>
 
-      <InfoSection icon="notes-medical" title="อาการ">
+      <InfoSection icon="notes-medical" title={t("historyDetail.symptoms")}>
         <Text>{record.symptoms}</Text>
       </InfoSection>
 
-      <InfoSection icon="stethoscope" title="การวินิจฉัย">
+      <InfoSection icon="stethoscope" title={t("historyDetail.diagnosis")}>
         <Text>{record.diagnosis}</Text>
       </InfoSection>
 
-      <InfoSection icon="pills" title="ยาที่ได้รับ">
+      <InfoSection icon="pills" title={t("historyDetail.medication")}>
         <Text>{record.medication}</Text>
       </InfoSection>
 
-      <InfoSection icon="comment-medical" title="หมายเหตุจากแพทย์">
+      <InfoSection icon="comment-medical" title={t("historyDetail.doctorNote")}>
         <Text>{record.doctorNote}</Text>
       </InfoSection>
 
-      <InfoSection icon="clock" title="เวลาที่ใช้ตรวจ">
-        <Text>{record.timeSpent} นาที</Text>
+      <InfoSection icon="clock" title={t("historyDetail.timeSpent")}>
+        <Text>
+          {record.timeSpent} {t("historyDetail.minute")}
+        </Text>
       </InfoSection>
     </ScrollView>
   );

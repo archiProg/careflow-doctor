@@ -97,10 +97,10 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
 
           <View className="flex-1 ml-2">
             <Text className="text-black my-1">
-              {patientInfo?.name || "ไม่ระบุ"}
+              {patientInfo?.name || t("N/A")}
             </Text>
             <Text className="text-gray-500 mb-1">
-              {t("age")} : {patientInfo?.age ?? "ไม่ระบุ"}
+              {t("age")} : {patientInfo?.age ?? t("N/A")}
             </Text>
           </View>
         </View>

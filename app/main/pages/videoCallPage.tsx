@@ -382,12 +382,12 @@ export default function DoctorCall() {
       );
 
       if (response.success) {
-        Alert.alert("สำเร็จ", "บันทึกข้อมูลเรียบร้อย");
+        Alert.alert(t("saveFormSuccess"));
         setActiveMenu("menu");
       }
     } catch (error) {
       console.error("add-treatment error:", error);
-      Alert.alert("ผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้");
+      Alert.alert(t("saveFormError"));
     }
   };
 
@@ -401,7 +401,7 @@ export default function DoctorCall() {
       });
       setActiveMenu("sumDiagnosis");
     } else {
-      alert("กรุณากรอกข้อมูลผู้ป่วย");
+      alert(t("PleaseAddSymptoms"));
     }
   };
 
@@ -417,7 +417,7 @@ export default function DoctorCall() {
         <VideoGrid peers={peers} />
         <LocalVideo
           localID={socket.id}
-          localName={Provider.Profile?.name || "คุณ"}
+          localName={Provider.Profile?.name || t("N/A")}
           stream={localStream}
           isMicOn={isMicOn}
           isVideoOn={isVideoOn}
