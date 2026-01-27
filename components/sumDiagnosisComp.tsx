@@ -40,6 +40,10 @@ const SumDiagnosisComp = ({ patientDataForm, onSend, onCancel }: SumDiagnosisCom
                                 <Text className="flex-1">{patientDataForm.symptoms}</Text>
                             </View>
                             <View className="flex-row">
+                                <Text className={`text-gray-600 text-md text-blue-500`}>{"ผลวินิจฉัย"} : </Text>
+                                <Text className="flex-1">{patientDataForm.diagnosis}</Text>
+                            </View>
+                            <View className="flex-row">
                                 <Text className={`text-gray-600 text-md text-blue-500`}>{t('medication')} : </Text>
                                 <Text className="flex-1">{patientDataForm.medication}</Text>
                             </View>
