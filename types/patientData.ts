@@ -29,3 +29,25 @@ export interface AddTreatmentPayload {
   need_hospital: boolean;
   note: string;
 }
+
+export interface Measurement {
+  id: number;
+  device_id: string;
+  created_at: string;
+  values: Record<string, any>;
+}
+
+export interface PatientMeasurement {
+  bf: Measurement[];
+  bmi: Measurement[];
+  bo: Measurement[];
+  bp: Measurement[];
+  bs: Measurement[];
+  ecg: Measurement[];
+  eye: Measurement[];
+  ncg: Measurement[];
+  temp: Measurement[];
+  thxhdb: Measurement[];
+  whr: Measurement[];
+  xzsx: Measurement[];
+}

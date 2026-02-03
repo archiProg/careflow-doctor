@@ -165,7 +165,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               activeOpacity={0.7}
             >
               {/* Patient Info Header */}
-              <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
                   <View className="flex-1">
                     <Text className={`${CARD.title} text-gray-900`}>
@@ -186,7 +186,19 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
                 </View>
               </View>
 
-              <View className='flex-row items-center gap-4 mt-4'>
+              <View className='my-2'>
+                {record.needHospital && (
+                  <View className="flex-row items-center">
+                    <View className="bg-orange-100 rounded-lg px-3 py-1  ">
+                      <Text className="text-orange-700 text-xs font-semibold">
+                        {t('sendedHospital')}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+
+              <View className='flex-row items-center gap-4'>
                 {/* Date */}
                 <View className="flex-row items-center">
                   <FontAwesome5 name="calendar" size={12} color="#6B7280" />
@@ -201,16 +213,6 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
                     {record.timeSpent} {t('minute')}
                   </Text>
                 </View>
-
-                {record.needHospital && (
-                  <View className="flex-row items-center">
-                    <View className="bg-orange-100 rounded-full px-3 py-1  ">
-                      <Text className="text-orange-700 text-xs font-semibold">
-                        {t('sendedHospital')}
-                      </Text>
-                    </View>
-                  </View>
-                )}
               </View>
             </TouchableOpacity>
           ))

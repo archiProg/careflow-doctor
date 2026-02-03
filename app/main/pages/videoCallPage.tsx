@@ -17,6 +17,7 @@ import {
   PatientInfo,
   ConsultInfo,
   AddTreatmentPayload,
+  PatientMeasurement
 } from "@/types/patientData";
 import { emitSocket, getSocket } from "@/utilitys/socket";
 import { useKeepAwake } from "expo-keep-awake";
@@ -79,6 +80,7 @@ export default function DoctorCall() {
   const [streamReady, setStreamReady] = useState(false);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [patientMeasurement, setPatientMeasurement] = useState<PatientMeasurement | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [peers, dispatch] = useReducer(PeerReducer, {});
@@ -180,13 +182,15 @@ export default function DoctorCall() {
           stream.getTracks().map((t) => `${t.kind}: ${t.enabled}`),
         );
         streamRef.current = stream;
+        console.log("streamRef.current : ");
+        console.log(streamRef.current);
+        
         setLocalStream(stream);
         setStreamReady(true);
       } catch (error) {
         console.error("Failed to get local stream:", error);
       }
     };
-
     init();
 
     setIsVideoOn(video === "1");
@@ -262,6 +266,9 @@ export default function DoctorCall() {
               hasVideo: p.hasVideo,
             });
             createOffer(p.id);
+            console.log("p : ");
+            console.log(p);
+            
           });
         },
       );
@@ -282,7 +289,28 @@ export default function DoctorCall() {
     } else {
       onConnect();
     }
+    
+  const onDoctorPatientInfo = (data: any) => {
+    console.log("👨‍⚕️ doctor:patient_info", data);
 
+    if (data.message) {
+      Alert.alert(t("permission"), data.message);
+      setStatusReq(false);
+      return;
+    }
+
+    if (data.patient_measurement) {
+ console.log("data.patient_measurement : ");
+ console.log(data.patient_measurement);
+ console.log("data.patient_info : ");
+ console.log(data.patient_info);
+
+ setPatientMeasurement(data.patient_measurement)
+   setStatusReq(true); // ใช้แสดง loading / waiting
+    } else {
+      setStatusReq(false)
+    }
+  };
     socket.on("connect", handleSocketConnect);
 
     socket.on("connect_error", (err) => {
@@ -292,7 +320,7 @@ export default function DoctorCall() {
     socket.on("offer", handleOffer);
     socket.on("answer", handleAnswer);
     socket.on("ice-candidate", handleIceCandidate);
-
+  socket.on("doctor:patient_info", onDoctorPatientInfo);
     socket.on("peer-media-updated", ({ id, hasAudio, hasVideo }) => {
       dispatch({
         type: "UPDATE_PEER_MEDIA",
@@ -329,6 +357,7 @@ export default function DoctorCall() {
       socket.off("peer-media-updated");
       socket.off("user-connected");
       socket.off("user-disconnected");
+      socket.off("doctor:patient_info", onDoctorPatientInfo);
     };
   }, [streamReady, roomId, userName, audio, video]);
 
@@ -411,6 +440,15 @@ export default function DoctorCall() {
     setActiveMenu("showDetailHistory");
   };
 
+  const handleRequestPermission = () => {
+  if (!roomId) return;
+
+  emitSocket("doctor:req-permission", {
+    caseId: roomId,
+  });
+};
+
+
   return (
     <SafeAreaView className="flex-1 bg-black h-full">
       <View className="h-1/3">
@@ -466,10 +504,10 @@ export default function DoctorCall() {
           insets={insets}
           patientInfo={patientInfo}
           statusReq={statusReq}
-          patientData={patientData}
+          patientData={patientMeasurement}
           patientMockData={patientMockData}
           onBackToMenu={() => setActiveMenu("menu")}
-          onRequestConsent={() => setStatusReq(true)}
+          onRequestConsent={handleRequestPermission}
         />
       )}
 
@@ -482,7 +520,7 @@ export default function DoctorCall() {
           medicalHistory={medicalHistory}
           patientMockData={patientMockData}
           onBackToMenu={() => setActiveMenu("menu")}
-          onRequestConsent={() => setStatusReq(true)}
+          onRequestConsent={handleRequestPermission}
           onPatientRecordPress={handleRecordPress}
         />
       )}

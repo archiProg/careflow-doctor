@@ -9,7 +9,9 @@ import {
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
-
+import {
+  PatientMeasurement
+} from "@/types/patientData";
 import { TEXT } from "@/constants/styles";
 import PatientDataCard from "../patientDataCard";
 import Provider from "@/services/providerService";
@@ -29,7 +31,7 @@ interface PatientOverlayProps {
   };
   patientInfo: PatientInfo | null;
   statusReq: boolean;
-  patientData: any[];
+  patientData: PatientMeasurement | null;
   patientMockData: any[];
   onBackToMenu: () => void;
   onRequestConsent: () => void;
@@ -48,6 +50,28 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
   onRequestConsent,
 }) => {
   const { t } = useTranslation();
+  const latestPatientData = React.useMemo(() => {
+  if (!patientData) return [];
+
+  return Object.entries(patientData)
+    .filter(([_, arr]) => Array.isArray(arr))
+    .map(([type, arr]) => {
+      const sorted = [...arr].sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() -
+          new Date(a.created_at).getTime()
+      );
+
+      return {
+        type,              // เช่น bp, bs, bmi
+        ...sorted[0],      // เอาค่าล่าสุด
+      };
+    });
+}, [patientData]);
+
+  console.log("latestPatientData : ");
+  console.log(latestPatientData);
+  
 
   return (
     <View
@@ -108,13 +132,17 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
         <View className="flex-row border-t border-gray-200 m-4" />
 
         {/* Patient Data */}
-        {statusReq ? (
-          <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4 pb-4">
-            {patientData.map((item, index) => (
-              <PatientDataCard key={index} data={item} loading={false} />
-            ))}
-          </View>
-        ) : (
+{statusReq ? (
+  <View className="w-100 grid grid-cols-1 px-4 gap-y-4 pb-4">
+    {latestPatientData.map((item, index) => (
+      <PatientDataCard
+        key={item.type + index}
+        data={item}
+        loading={false}
+      />
+    ))}
+  </View>
+) : (
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
               {patientMockData.map((item, index) => (
