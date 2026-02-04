@@ -1,9 +1,10 @@
 import DiagnosisHistoryComp from "@/components/diagnosisHistoryComp";
+import { BG } from "@/constants/styles";
+import { RequestApi } from "@/services/requestApiService";
 import { DiagnosisRecord } from "@/types/diagnosisHistory";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { RequestApi } from "@/services/requestApiService";
 
 const HistoryScreen: React.FC = () => {
   const router = useRouter();
@@ -31,7 +32,7 @@ const HistoryScreen: React.FC = () => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     GetTreatment();
   }, []);
 
@@ -88,7 +89,7 @@ const HistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex-1 ${BG.default} bg-gray-50`}>
       <DiagnosisHistoryComp
         records={treatMent}
         onRecordPress={handleRecordPress}

@@ -75,7 +75,7 @@ const SearchPatient = () => {
   }, []);
 
   return (
-    <SafeAreaView className={`${BG.default} flex-1`}>
+    <SafeAreaView className={`${BG.default} flex-1 p-4`}>
       <View className="flex items-start">
         <Pressable className="px-3 rounded-full" onPress={backButton}>
           <FontAwesome
@@ -110,7 +110,7 @@ const SearchPatient = () => {
             />
           </View>
           {/* Bottom Fixed Button */}
-          <View className="flex-row justify-between   pt-4  dark:bg-gray-900    ">
+          <View className="flex-row justify-between pt-4 dark:bg-gray-900">
             <Pressable
               onPress={() => {
                 if (status === "start_work") {
@@ -144,7 +144,7 @@ const SearchPatient = () => {
         </View>
       ) : (
         <View className="flex-1">
-          <ScrollView className="flex-1 px-6">
+          <ScrollView className="flex-1">
             {/* Header */}
             <View className="pt-4 pb-8">
               <Text className="text-3xl font-bold text-black dark:text-white">
@@ -312,7 +312,7 @@ const SearchPatient = () => {
           </ScrollView>
 
           {/* Bottom Fixed Button */}
-          <View className="px-6   pt-4">
+          <View className="pt-4">
             <Pressable
               onPress={StartWork}
               className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"

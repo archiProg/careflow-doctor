@@ -112,7 +112,6 @@
   "placeholder-searchHistory": "ค้นหาชื่อผู้ป่วย, อาการ, การวินิจฉัย...",
   "doctor-check": "หมอผู้ตรวจ",
   "patient": "ผู้ป่วย",
-
   "saveFormSuccess": "บันทึกข้อมูลเรียบร้อยแล้ว",
   "saveFormError": "เกิดข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้",
   "PleaseAddSymptoms": "กรุณาระบุอาการ",
@@ -135,9 +134,15 @@
     "doctorNote": "ความคิดเห็นของแพทย์",
     "timeSpent": "เวลาที่ใช้ตรวจ",
     "minute": "นาที"
-  }, 
-    "filterAll": "ทั้งหมด",
-    "filterHospital": "ส่งโรงพยาบาล",
-    "hospitalTag": "ส่งโรงพยาบาล",
-    "viewDetail": "ดูรายละเอียด"
+  },
+  "filterAll": "ทั้งหมด",
+  "filterHospital": "ส่งโรงพยาบาล",
+  "hospitalTag": "ส่งโรงพยาบาล",
+  "viewDetail": "ดูรายละเอียด",
+  "changePassword": "เปลี่ยนรหัสผ่าน",
+  "oldPassword": "รหัสผ่านเดิม",
+  "newPassword": "รหัสผ่านใหม่",
+  "confirmPassword": "ยืนยันรหัสผ่าน",
+  "changePasswordSuccess": "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว",
+  "changePasswordError": "เกิดข้อผิดพลาด ไม่สามารถเปลี่ยนรหัสผ่านได้"
 }

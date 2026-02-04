@@ -1,6 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from "react-i18next";
 import { BackHandler, Pressable, ScrollView, Text, TextInput, TextInputProps, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,10 +14,10 @@ export default function ChangePasswordScreen() {
     const [showNew, setShowNew] = useState<boolean>(false);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const router = useRouter();
-
+    const { t } = useTranslation();
     const handleChangePassword = () => {
         if (newPassword !== confirmPassword) {
-            alert('รหัสผ่านใหม่ไม่ตรงกัน');
+            alert(t('changePasswordError'));
             return;
         }
         console.log('เปลี่ยนรหัสผ่าน', { currentPassword, newPassword });
@@ -60,10 +61,10 @@ export default function ChangePasswordScreen() {
         ...rest
     }) => (
         <View className="mb-4">
-            <View className="flex-row items-center bg-white rounded-xl px-4 py-3 border border-blue-100">
+            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
                 <FontAwesome name="lock" size={20} color="#60A5FA" />
                 <TextInput
-                    className="flex-1 ml-3 text-gray-800 text-base"
+                    className="flex-1 ml-3 text-gray-800 dark:text-white text-base"
                     placeholder={placeholder}
                     placeholderTextColor="#9CA3AF"
                     secureTextEntry={!show}
@@ -98,14 +99,13 @@ export default function ChangePasswordScreen() {
 
             <ScrollView className="flex-1 p-5 pb-10">
                 {/* Header */}
-
                 <View className="items-center mb-8">
                     <View className="flex items-center justify-center bg-blue-100 rounded-full w-24 h-24 p-4 mb-4">
                         <FontAwesome name="lock" size={48} color="#3B82F6" />
                     </View>
-                    <Text className="text-3xl font-bold text-gray-800 mb-2">เปลี่ยนรหัสผ่าน</Text>
-                    <Text className="text-gray-500 text-center">
-                        กรุณากรอกรหัสผ่านเดิมและรหัสผ่านใหม่
+                    <Text className="text-3xl font-bold text-gray-800 dark:text-white mb-2">{t('changePassword')}</Text>
+                    <Text className="text-gray-500 dark:text-gray-400 text-center">
+                        {t('changePasswordDescription')}
                     </Text>
                 </View>
 
@@ -114,21 +114,21 @@ export default function ChangePasswordScreen() {
                     <PasswordInput
                         value={currentPassword}
                         onChangeText={setCurrentPassword}
-                        placeholder="รหัสผ่านปัจจุบัน"
+                        placeholder={t('oldPassword')}
                         show={showCurrent}
                         toggleShow={() => setShowCurrent(!showCurrent)}
                     />
                     <PasswordInput
                         value={newPassword}
                         onChangeText={setNewPassword}
-                        placeholder="รหัสผ่านใหม่"
+                        placeholder={t('newPassword')}
                         show={showNew}
                         toggleShow={() => setShowNew(!showNew)}
                     />
                     <PasswordInput
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
-                        placeholder="ยืนยันรหัสผ่านใหม่"
+                        placeholder={t('confirmPassword')}
                         show={showConfirm}
                         toggleShow={() => setShowConfirm(!showConfirm)}
                     />
@@ -141,7 +141,7 @@ export default function ChangePasswordScreen() {
                 className={`bg-blue-500 rounded-xl py-4 m-4 items-center shadow-lg active:bg-blue-600 ${currentPassword === '' || newPassword === '' || confirmPassword === '' ? 'opacity-50' : ''}`}
                 onPress={handleChangePassword}
             >
-                <Text className="text-white font-bold text-lg">ยืนยันการเปลี่ยนรหัสผ่าน</Text>
+                <Text className="text-white font-bold text-lg">{t('changePassword')}</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

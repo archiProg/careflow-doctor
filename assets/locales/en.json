@@ -112,7 +112,6 @@
   "all": "All",
   "placeholder-searchHistory": "Search patient name, symptoms, diagnosis...",
   "doctor-check": "Examining Doctor",
-
   "saveFormSuccess": "Saved successfully",
   "saveFormError": "Unable to save data",
   "PleaseAddSymptoms": "Please enter symptoms",
@@ -136,8 +135,14 @@
     "timeSpent": "Time Spent",
     "minute": "minutes"
   },
-    "filterAll": "All",
-    "filterHospital": "Hospital Referral",
-    "hospitalTag": "Hospital Referral",
-    "viewDetail": "View details"
+  "filterAll": "All",
+  "filterHospital": "Hospital Referral",
+  "hospitalTag": "Hospital Referral",
+  "viewDetail": "View details",
+  "changePassword": "Change Password",
+  "oldPassword": "Old Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm Password",
+  "changePasswordSuccess": "Password changed successfully",
+  "changePasswordError": "Unable to change password"
 }

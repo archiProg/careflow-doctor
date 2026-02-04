@@ -1,3 +1,4 @@
+import { BG } from "@/constants/styles";
 import Provider from "@/services/providerService";
 import { RootState } from "@/stores";
 import { closeSocket } from "@/utilitys/socket";
@@ -49,10 +50,10 @@ export default function SettingsScreen() {
     }, []);
 
     return (
-        <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-gray-50 p-4">
+        <SafeAreaView edges={['top', 'bottom']} className={`flex-1 ${BG.default} bg-gray-50 p-4`}>
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 20 }}>
                 {/* Header */}
-                <View className="flex-row items-center bg-white p-4">
+                <View className="flex-row items-center bg-white rounded-2xl dark:bg-gray-800 p-4">
                     {/* Profile Image */}
                     <View className="relative">
                         {Provider.Profile?.profile_image_url ? (
@@ -79,7 +80,7 @@ export default function SettingsScreen() {
                     </View>
 
                     {/* Profile Info */}
-                    <View className="flex-1 ml-4">
+                    <View className="flex-1 ml-4 ">
                         <Text className={`text-black dark:text-white mb-1`}>
                             {Provider.Profile?.name || "Doctor"}
                         </Text>
@@ -96,18 +97,18 @@ export default function SettingsScreen() {
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
                         {t('account')}
                     </Text>
-                    <View className="bg-white">
+                    <View className="bg-white  rounded-2xl dark:bg-gray-800">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100" onPress={() => router.push("/main/pages/settings/manageProfile")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="user" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('manage-profile')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('manage-profile')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
                         <Pressable className="flex-row items-center justify-between px-6 py-4" onPress={() => router.push("/main/pages/settings/changePasswordPage")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="lock" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('change-password')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('change-password')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
@@ -119,14 +120,14 @@ export default function SettingsScreen() {
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
                         {t('preferences')}
                     </Text>
-                    <View className="bg-white">
+                    <View className="bg-white dark:bg-gray-800 rounded-t-2xl">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
                             <View className="flex-row items-center">
                                 <FontAwesome name="bell" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('notifications')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('notifications')}</Text>
                             </View>
                             <View className={`w-12 h-7 rounded-full ${notifications ? 'bg-blue-500' : 'bg-gray-300'}`}>
-                                <View className={`w-5 h-5 rounded-full bg-white mt-1 ${notifications ? 'ml-6' : 'ml-1'}`} />
+                                <View className={`w-5 h-5 rounded-full bg-white dark:bg-gray-800 mt-1 ${notifications ? 'ml-6' : 'ml-1'}`} />
                             </View>
                         </Pressable>
                         {/* <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -148,11 +149,11 @@ export default function SettingsScreen() {
                             </View>
                         </Pressable> */}
                     </View>
-                    <View className="bg-white">
-                        <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100" onPress={() => router.push("/main/pages/settings/languagePage")}>
+                    <View className="bg-white dark:bg-gray-800 rounded-b-2xl">
+                        <Pressable className="flex-row items-center justify-between px-6 py-4 " onPress={() => router.push("/main/pages/settings/languagePage")}>
                             <View className="flex-row items-center">
                                 <FontAwesome name="language" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('language')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('language')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
@@ -164,18 +165,18 @@ export default function SettingsScreen() {
                     <Text className="text-xs font-semibold text-gray-500 uppercase px-6 mb-2">
                         {t('legal')}
                     </Text>
-                    <View className="bg-white">
+                    <View className="bg-white dark:bg-gray-800 rounded-2xl">
                         <Pressable className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
                             <View className="flex-row items-center">
                                 <FontAwesome name="shield" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('privacy-policy')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('privacy-policy')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>
                         <Pressable className="flex-row items-center justify-between px-6 py-4">
                             <View className="flex-row items-center">
                                 <FontAwesome name="file-text-o" size={20} color="#6B7280" />
-                                <Text className="ml-4 text-gray-800">{t('terms-conditions')}</Text>
+                                <Text className="ml-4 text-gray-800 dark:text-white">{t('terms-conditions')}</Text>
                             </View>
                             <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
                         </Pressable>

@@ -17,7 +17,7 @@ const TabLayout = () => {
     (state: RootState) => state.tab.activeTab
   );
   return (
-    <NativeTabs tintColor="#2563EB" backgroundColor="#FFFFFF">
+    <NativeTabs tintColor="#2563EB" >
       <NativeTabs.Trigger name="homeScreen">
         <Label>{t("home")}</Label>
         <Icon src={<VectorIcon family={FontAwesome} name="home" />} />

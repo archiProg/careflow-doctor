@@ -139,8 +139,8 @@ const DoctorHomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className={`${BG.default} bg-secondary flex-1`}>
-      <ScrollView className="flex-1 px-2" showsVerticalScrollIndicator={false}>
+    <SafeAreaView className={`${BG.default} bg-secondary p-4 flex-1`}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Greeting Section */}
         <View className="pt-4 pb-6">
           <Text className={`${TEXT_SIZE.default} text-gray-500 dark:text-gray-400 mb-1`}>

@@ -60,7 +60,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       monthAgo.setMonth(today.getMonth() - 1);
       matchesDateFilter = recordDate >= monthAgo;
     }
-    
+
 
     return matchesSearch && matchesFilter && matchesDateFilter;
   });
@@ -74,29 +74,17 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
     });
   };
 
-  const getGenderIcon = (gender: string): string => {
-    switch (gender) {
-      case 'male':
-        return 'mars';
-      case 'female':
-        return 'venus';
-      default:
-        return 'genderless';
-    }
-  };
-
-
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 mb-10">
+    <SafeAreaView className="flex-1 mb-10">
       {/* Header */}
       <View className="pb-6 px-5">
 
         {/* Search Bar */}
-        <View className="bg-white rounded-[24px] flex-row items-center px-4 py-3 border border-gray-200">
+        <View className="bg-white dark:bg-gray-800 rounded-[24px] flex-row items-center px-4 py-3 border border-gray-200">
           <FontAwesome5 name="search" size={16} color="#9CA3AF" />
           <TextInput
-            className={`${TEXT_SIZE.medium} flex-1 ml-3 text-gray-900`}
+            className={`${TEXT_SIZE.medium} flex-1 ml-3 text-gray-900 dark:text-white`}
             placeholder={t('placeholder-searchHistory')}
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
@@ -112,40 +100,40 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
 
       {/* Filter Tabs */}
       {records.length > 0 && (
-      <View className="px-5 py-3 ">
-        {/* Category Filter */}
-        <View className="flex-row gap-2 ">
-          <TouchableOpacity
-            className={`px-4 py-2 rounded-full ${selectedFilter === 'all' ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-            onPress={() => setSelectedFilter('all')}
-            activeOpacity={0.7}
-          >
-            <Text
-              className={`font-semibold ${selectedFilter === 'all' ? 'text-white' : 'text-gray-700'
+        <View className="px-5 py-3 ">
+          {/* Category Filter */}
+          <View className="flex-row gap-2 ">
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full ${selectedFilter === 'all' ? 'bg-blue-600' : 'bg-gray-200'
                 }`}
+              onPress={() => setSelectedFilter('all')}
+              activeOpacity={0.7}
             >
-              {t('all')} ({records.length})
-            </Text>
-          </TouchableOpacity>
+              <Text
+                className={`font-semibold ${selectedFilter === 'all' ? 'text-white' : 'text-gray-700'
+                  }`}
+              >
+                {t('all')} ({records.length})
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            className={`px-4 py-2 rounded-full ${selectedFilter === 'hospital' ? 'bg-orange-400' : 'bg-gray-200'
-              }`}
-            onPress={() => setSelectedFilter('hospital')}
-            activeOpacity={0.7}
-          >
-            <Text
-              className={`font-semibold ${selectedFilter === 'hospital' ? 'text-white' : 'text-gray-700'
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full ${selectedFilter === 'hospital' ? 'bg-orange-400' : 'bg-gray-200'
                 }`}
+              onPress={() => setSelectedFilter('hospital')}
+              activeOpacity={0.7}
             >
-              {t('sendedHospital')} (
-              {records.filter((r) => r.needHospital).length})
-            </Text>
-          </TouchableOpacity>
+              <Text
+                className={`font-semibold ${selectedFilter === 'hospital' ? 'text-white' : 'text-gray-700'
+                  }`}
+              >
+                {t('sendedHospital')} (
+                {records.filter((r) => r.needHospital).length})
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-)}
+      )}
 
       {/* Records List */}
       <ScrollView className="flex-1 px-5 my-4">
@@ -160,7 +148,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           filteredRecords.map((record) => (
             <TouchableOpacity
               key={record.id}
-              className="bg-white rounded-xl p-4 mb-3 shadow-sm  "
+              className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-3 shadow-sm  "
               onPress={() => onRecordPress?.(record)}
               activeOpacity={0.7}
             >
@@ -168,18 +156,18 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
                   <View className="flex-1">
-                    <Text className={`${CARD.title} text-gray-900`}>
+                    <Text className={`${CARD.title} text-gray-900 dark:text-white`}>
                       {record.patientName}
                     </Text>
                     <View className='flex-row items-center gap-2'>
-                      <Text className={`${CARD.subtitle} text-gray-600 `}>
+                      <Text className={`${CARD.subtitle} text-gray-600 dark:text-gray-400`}>
                         {t('age')}: {record.patientAge} {t('years')}
                       </Text>
                     </View>
                   </View>
                 </View>
                 <View className="flex-row justify-end items-center mb-4 ">
-                  <Text className={`${CARD.subtitle} text-blue-600 font-medium mr-2`}>
+                  <Text className={`${CARD.subtitle} text-blue-600  font-medium mr-2`}>
                     {t('detail')}
                   </Text>
                   <FontAwesome5 name="chevron-right" size={12} color="#2563eb" />
@@ -190,7 +178,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
                 {record.needHospital && (
                   <View className="flex-row items-center">
                     <View className="bg-orange-100 rounded-lg px-3 py-1  ">
-                      <Text className="text-orange-700 text-xs font-semibold">
+                      <Text className="text-orange-700 text-xs font-semibold dark:text-orange-400">
                         {t('sendedHospital')}
                       </Text>
                     </View>
@@ -202,14 +190,14 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
                 {/* Date */}
                 <View className="flex-row items-center">
                   <FontAwesome5 name="calendar" size={12} color="#6B7280" />
-                  <Text className={`${CARD.subtitle} text-gray-600 ml-2`}>
+                  <Text className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}>
                     {formatDate(record.timestamps)}
                   </Text>
                 </View>
                 {/* เวลาที่ใช้ */}
                 <View className="flex-row items-center">
                   <FontAwesome5 name="clock" size={12} color="#6B7280" />
-                  <Text className={`${CARD.subtitle} text-gray-600 ml-2`}>
+                  <Text className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}>
                     {record.timeSpent} {t('minute')}
                   </Text>
                 </View>

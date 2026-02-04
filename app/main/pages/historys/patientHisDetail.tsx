@@ -37,7 +37,7 @@ const PatientHisDetail = () => {
     }, []);
 
     return (
-        <SafeAreaView className="flex-1 h-full bg-secondary ">
+        <SafeAreaView className="flex-1 h-full  bg-secondary dark:bg-gray-900 ">
             <View className="flex w-full p-5 justify-start items-start">
                 <Pressable
                     className="flex-row items-center justify-start px-3 rounded-full"
@@ -61,10 +61,10 @@ const PatientHisDetail = () => {
                 contentContainerClassName="pb-8"
             >
                 {/* Card Container */}
-                <View className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <View className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden">
                     {/* Header Section */}
-                    <View className="bg-blue-400 px-6 py-4">
-                        <Text className="text-xl font-bold text-white text-center">
+                    <View className="bg-blue-400 px-6 py-4 dark:bg-blue-600">
+                        <Text className="text-xl font-bold text-white dark:text-white text-center">
                             {t('summarize-diagnosis')}
                         </Text>
                     </View>
@@ -73,50 +73,50 @@ const PatientHisDetail = () => {
                     <View className="p-6">
                         {/* Patient Info */}
                         <View className="rounded-2xl p-5 mb-4 ">
-                            <Text className={`${TEXT_SIZE.medium} font-semibold text-black mb-1`}>
+                            <Text className={`${TEXT_SIZE.medium} font-semibold text-black dark:text-white mb-1`}>
                                 {t('patient')}
                             </Text>
-                            <Text className="text-lg text-gray-900 font-medium">
+                            <Text className="text-lg text-gray-900 dark:text-white font-medium">
                                 {record.patientName}
                             </Text>
                         </View>
 
                         {/* Doctor Info */}
                         <View className="rounded-2xl p-5 mb-4 ">
-                            <Text className="text-sm font-semibold text-black mb-1">
+                            <Text className="text-sm font-semibold text-black dark:text-white mb-1">
                                 {t('doctor-check')}
                             </Text>
-                            <Text className="text-lg text-gray-900 font-medium">
+                            <Text className="text-lg text-gray-900 dark:text-white font-medium">
                                 {Provider.Profile?.name}
                             </Text>
                         </View>
 
                         {/* Symptoms */}
                         <View className="rounded-2xl p-5 mb-4 ">
-                            <Text className="text-sm font-semibold text-black mb-2">
+                            <Text className="text-sm font-semibold text-black dark:text-white mb-2">
                                 {t('symptoms')}
                             </Text>
-                            <Text className="text-base text-gray-800 leading-6">
+                            <Text className="text-base text-gray-800 dark:text-white leading-6">
                                 {record?.symptoms}
                             </Text>
                         </View>
 
                         {/* Medication */}
                         <View className="rounded-2xl p-5 mb-4 ">
-                            <Text className="text-sm font-semibold text-black mb-2">
+                            <Text className="text-sm font-semibold text-black dark:text-white mb-2">
                                 {t('medication')}
                             </Text>
-                            <Text className="text-base text-gray-800 leading-6">
+                            <Text className="text-base text-gray-800 dark:text-white leading-6">
                                 {record?.medication}
                             </Text>
                         </View>
 
                         {/* Doctor Note */}
                         <View className="rounded-2xl p-5 mb-4 ">
-                            <Text className="text-sm font-semibold text-black mb-2">
+                            <Text className="text-sm font-semibold text-black dark:text-white mb-2">
                                 {t('doctorNote')}
                             </Text>
-                            <Text className="text-base text-gray-800 leading-6">
+                            <Text className="text-base text-gray-800 dark:text-white leading-6">
                                 {record?.doctorNote}
                             </Text>
                         </View>

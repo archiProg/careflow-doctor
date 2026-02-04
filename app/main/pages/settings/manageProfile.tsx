@@ -98,12 +98,12 @@ const ManageProfilePage = () => {
                     <Text className="text-md text-gray-600 mb-2 font-medium">
                         ชื่อ-นามสกุล
                     </Text>
-                    <View className="flex-row items-center bg-white rounded-xl px-4 py-3 border border-blue-100">
+                    <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
 
                         <TextInput
                             value={name}
                             onChangeText={setName}
-                            className="flex-1 ml-3 text-gray-800 text-md"
+                            className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
                             placeholder="กรอกชื่อ-นามสกุล"
                         />
                     </View>
@@ -112,13 +112,13 @@ const ManageProfilePage = () => {
                     <Text className="text-md text-gray-600 mb-2 font-medium mt-8">
                         อีเมล
                     </Text>
-                    <View className="flex-row items-center bg-white rounded-xl px-4 py-3 border border-blue-100">
+                    <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
                         <TextInput
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             autoCapitalize="none"
-                            className="flex-1 ml-3 text-gray-800 text-md"
+                            className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
                             placeholder="กรอกอีเมล"
                         />
                     </View>

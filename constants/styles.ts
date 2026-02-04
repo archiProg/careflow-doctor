@@ -1,5 +1,5 @@
 export const BG = {
-  default: "bg-gray-100 dark:bg-gray-900 p-4",
+  default: "bg-gray-100 dark:bg-gray-900  ",
   center: "flex justify-center items-center",
 };
 
