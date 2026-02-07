@@ -123,7 +123,8 @@ export default function DoctorCall() {
   ) as ConsultInfo | null;
 
   const GetTreatment = async () => {
-    const info: PatientInfo | null = consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
+    const info: PatientInfo | null =
+      consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
     if (!info) return;
     const api = new RequestApi();
     try {
@@ -313,11 +314,10 @@ export default function DoctorCall() {
         console.log(data.patient_measurement);
         console.log("data.patient_info : ");
         console.log(data.patient_info);
-
         setPatientMeasurement(data.patient_measurement);
-        setStatusReq(true); // ใช้แสดง loading / waiting
       } else {
-        setStatusReq(false);
+        setStatusReq(false); // ใช้แสดง loading / waiting
+        return;
       }
     };
     socket.on("connect", handleSocketConnect);
@@ -451,10 +451,10 @@ export default function DoctorCall() {
 
   const handleRequestPermission = () => {
     if (!roomId) return;
-
     emitSocket("doctor:req-permission", {
       caseId: roomId,
     });
+    setStatusReq(true);
   };
 
   return (
@@ -480,7 +480,6 @@ export default function DoctorCall() {
           />
         )}
       </View>
-
       {activeMenu === "menu" && (
         <PatientMenuSheet
           activeMenu={activeMenu}

@@ -1,15 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Image,
-} from "react-native";
+import { View, Text, Pressable, ScrollView, Image } from "react-native";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
 import { PatientMedicalHistory } from "@/types/diagnosisHistory";
+import LoadingComp from "@/components/loadingComp";
 import { TEXT } from "@/constants/styles";
 import Provider from "@/services/providerService";
 import PatientDataCard from "../patientDataCard";
@@ -84,22 +79,30 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
         <View className="flex-1 flex-row items-center mx-4 mt-4">
           <View className="">
             {patientInfo?.profile_image_url ? (
-            <View className="relative">
-              <Image
-                source={{
-                  uri: Provider.HostApi + patientInfo.profile_image_url,
-                }}
-                style={{ height: "100%", borderRadius: 16, position:"absolute" }}
-                resizeMode="contain"
-              />
-                    <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                    </View>
-                  </View>
+              <View className="relative">
+                <Image
+                  source={{
+                    uri: Provider.HostApi + patientInfo.profile_image_url,
+                  }}
+                  style={{
+                    height: "100%",
+                    borderRadius: 16,
+                    position: "absolute",
+                  }}
+                  resizeMode="contain"
+                />
+                <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
+                  <Text className="text-white text-2xl font-bold">
+                    {patientInfo?.name?.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+              </View>
             ) : (
-                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                    <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                  </View>
+              <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                <Text className="text-white text-2xl font-bold">
+                  {patientInfo?.name?.charAt(0).toUpperCase()}
+                </Text>
+              </View>
             )}
           </View>
 
@@ -117,12 +120,16 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
 
         {/* History / Locked View */}
         {statusReq ? (
-          <View className="px-4 pb-4">
-            <DiagnosisHistoryPatientComp
-              PatientHistory={medicalHistory}
-              onPatientRecordPress={onPatientRecordPress}
-            />
-          </View>
+          medicalHistory && medicalHistory.length > 0 ? (
+            <View className="px-4 pb-4">
+              <DiagnosisHistoryPatientComp
+                PatientHistory={medicalHistory}
+                onPatientRecordPress={onPatientRecordPress}
+              />
+            </View>
+          ) : (
+            <LoadingComp />
+          )
         ) : (
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">

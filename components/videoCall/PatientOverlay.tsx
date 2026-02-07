@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Image,
-} from "react-native";
+import { View, Text, Pressable, ScrollView, Image } from "react-native";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
-import {
-  PatientMeasurement
-} from "@/types/patientData";
+import LoadingComp from "@/components/loadingComp";
+import { PatientMeasurement } from "@/types/patientData";
 import { TEXT } from "@/constants/styles";
 import PatientDataCard from "../patientDataCard";
 import Provider from "@/services/providerService";
@@ -54,24 +47,22 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
 }) => {
   const { t } = useTranslation();
   const latestPatientData = React.useMemo(() => {
-  if (!patientData) return [];
+    if (!patientData) return [];
 
-  return Object.entries(patientData)
-    .filter(([_, arr]) => Array.isArray(arr))
-    .map(([type, arr]) => {
-      const sorted = [...arr].sort(
-        (a: any, b: any) =>
-          new Date(b.created_at).getTime() -
-          new Date(a.created_at).getTime()
-      );
+    return Object.entries(patientData)
+      .filter(([_, arr]) => Array.isArray(arr))
+      .map(([type, arr]) => {
+        const sorted = [...arr].sort(
+          (a: any, b: any) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
 
-      return {
-        type,              // เช่น bp, bs, bmi
-        ...sorted[0],      // เอาค่าล่าสุด
-      };
-    });
-}, [patientData]);
-  
+        return {
+          type, // เช่น bp, bs, bmi
+          ...sorted[0], // เอาค่าล่าสุด
+        };
+      });
+  }, [patientData]);
 
   return (
     <View
@@ -105,22 +96,30 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
         <View className="flex-1 flex-row items-center mx-4 mt-4">
           <View className="">
             {patientInfo?.profile_image_url ? (
-            <View className="relative">
-              <Image
-                source={{
-                  uri: Provider.HostApi + patientInfo.profile_image_url,
-                }}
-                style={{ height: "100%", borderRadius: 16, position:"absolute" }}
-                resizeMode="contain"
-              />
-                    <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                    </View>
-                  </View>
+              <View className="relative">
+                <Image
+                  source={{
+                    uri: Provider.HostApi + patientInfo.profile_image_url,
+                  }}
+                  style={{
+                    height: "100%",
+                    borderRadius: 16,
+                    position: "absolute",
+                  }}
+                  resizeMode="contain"
+                />
+                <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
+                  <Text className="text-white text-2xl font-bold">
+                    {patientInfo?.name?.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+              </View>
             ) : (
-                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                    <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                  </View>
+              <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                <Text className="text-white text-2xl font-bold">
+                  {patientInfo?.name?.charAt(0).toUpperCase()}
+                </Text>
+              </View>
             )}
           </View>
 
@@ -137,22 +136,31 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
         <View className="flex-row border-t border-gray-200 m-4" />
 
         {/* Patient Data */}
-{statusReq ? (
-  <View className="w-100 grid grid-cols-1 px-4 gap-y-4 pb-4">
-    {latestPatientData.map((item, index) => (
-      <PatientDataCard
-        key={item.type + index}
-        data={item}
-        loading={false}
-        patientInfo={patientInfo}
-      />
-    ))}
-  </View>
-) : (
+        {statusReq ? (
+          latestPatientData && latestPatientData.length > 0 ? (
+            <View className="w-100 grid grid-cols-1 px-4 gap-y-4 pb-4">
+              {latestPatientData.map((item, index) => (
+                <PatientDataCard
+                  key={item.type + index}
+                  data={item}
+                  loading={false}
+                  patientInfo={patientInfo}
+                />
+              ))}
+            </View>
+          ) : (
+            <LoadingComp />
+          )
+        ) : (
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
               {patientMockData.map((item, index) => (
-                <PatientDataCard key={index} data={item} loading={false} patientInfo={patientInfo}/>
+                <PatientDataCard
+                  key={index}
+                  data={item}
+                  loading={false}
+                  patientInfo={patientInfo}
+                />
               ))}
             </View>
 
