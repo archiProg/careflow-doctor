@@ -19,7 +19,7 @@ import {
   ConsultInfo,
   PatientDataForm,
   PatientInfo,
-  PatientMeasurement
+  PatientMeasurement,
 } from "@/types/patientData";
 import { emitSocket, getSocket } from "@/utilitys/socket";
 import { useKeepAwake } from "expo-keep-awake";
@@ -80,7 +80,8 @@ export default function DoctorCall() {
   const [streamReady, setStreamReady] = useState(false);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [patientMeasurement, setPatientMeasurement] = useState<PatientMeasurement | null>(null);
+  const [patientMeasurement, setPatientMeasurement] =
+    useState<PatientMeasurement | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [peers, dispatch] = useReducer(PeerReducer, {});
@@ -176,34 +177,25 @@ export default function DoctorCall() {
         const wantVideo = video === "1";
 
         const stream = await mediaDevices.getUserMedia({
-          audio: wantAudio,
-          video: wantVideo,
+          audio: true,
+          video: true,
         });
 
-
         if (!wantAudio) {
-          stream.getAudioTracks().forEach(t => {
-            t.enabled = false;
-          });
+          stream.getAudioTracks().forEach((t) => (t.enabled = false));
         }
 
         if (!wantVideo) {
-          stream.getVideoTracks().forEach(t => {
-            t.enabled = false;
-          });
+          stream.getVideoTracks().forEach((t) => (t.enabled = false));
         }
 
-
         streamRef.current = stream;
-        console.log("streamRef.current : ");
-        console.log(streamRef.current);
-
         setLocalStream(stream);
         setStreamReady(true);
 
         console.log(
           "Tracks:",
-          stream.getTracks().map(t => `${t.kind}:${t.enabled}`)
+          stream.getTracks().map((t) => `${t.kind}:${t.enabled}`),
         );
       } catch (error) {
         console.error("Failed to get local stream:", error);
@@ -286,7 +278,6 @@ export default function DoctorCall() {
             createOffer(p.id);
             console.log("p : ");
             console.log(p);
-
           });
         },
       );
@@ -323,10 +314,10 @@ export default function DoctorCall() {
         console.log("data.patient_info : ");
         console.log(data.patient_info);
 
-        setPatientMeasurement(data.patient_measurement)
+        setPatientMeasurement(data.patient_measurement);
         setStatusReq(true); // ใช้แสดง loading / waiting
       } else {
-        setStatusReq(false)
+        setStatusReq(false);
       }
     };
     socket.on("connect", handleSocketConnect);
@@ -465,7 +456,6 @@ export default function DoctorCall() {
       caseId: roomId,
     });
   };
-
 
   return (
     <SafeAreaView className="flex-1 bg-black h-full">
