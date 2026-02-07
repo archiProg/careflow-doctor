@@ -123,7 +123,7 @@ export default function DoctorCall() {
   ) as ConsultInfo | null;
 
   const GetTreatment = async () => {
-    const info: PatientInfo | null = consultInfo?.patient_info ?? null;
+    const info: PatientInfo | null = consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
     if (!info) return;
     const api = new RequestApi();
     try {

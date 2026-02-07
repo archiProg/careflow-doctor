@@ -73,17 +73,20 @@ const PreCallPage: React.FC = () => {
               <View className="flex-1 justify-center items-center">
                 {/* placeholder / avatar */}
                 {Provider.Profile?.profile_image_url ? (
-                  <Image
-                    source={{
-                      uri: Provider.HostApi + Provider.Profile.profile_image_url,
-                    }}
-                    className="w-32 h-32 rounded-full"
-                  />
+                  <View>
+                    <Image
+                      source={{
+                        uri: Provider.HostApi + Provider.Profile.profile_image_url,
+                      }}
+                      className="absolute w-20 h-20 rounded-2xl z-10"
+                    />
+                    <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                      <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                    </View>
+                  </View>
                 ) : (
-                  <View className="w-32 h-32 rounded-full bg-blue-600 items-center justify-center mb-4">
-                    <Text className="text-white text-5xl font-bold">
-                      {Provider.Profile?.name[0]}
-                    </Text>
+                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                    <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
                   </View>
                 )}
                 <Text className="text-white text-xl font-medium">คุณ</Text>

@@ -56,18 +56,23 @@ export default function SettingsScreen() {
                 <View className="flex-row items-center bg-white rounded-2xl dark:bg-gray-800 p-4">
                     {/* Profile Image */}
                     <View className="relative">
-                        {Provider.Profile?.profile_image_url ? (
-                            <Image
-                                source={{
-                                    uri: Provider.HostApi + Provider.Profile.profile_image_url,
-                                }}
-                                className="w-20 h-20 rounded-2xl"
-                            />
-                        ) : (
-                            <View className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 items-center justify-center">
-                                <FontAwesome name="user-md" size={32} color="" />
-                            </View>
-                        )}
+                {Provider.Profile?.profile_image_url ? (
+                  <View>
+                    <Image
+                      source={{
+                        uri: Provider.HostApi + Provider.Profile.profile_image_url,
+                      }}
+                      className="absolute w-20 h-20 rounded-2xl"
+                    />
+                    <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                      <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                    </View>
+                  </View>
+                ) : (
+                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                    <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                  </View>
+                )}
                         {/* Status Indicator */}
                         <View
                             className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 ${status === "start_work"

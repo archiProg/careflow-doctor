@@ -19,9 +19,12 @@ import Provider from "@/services/providerService";
 /* ---------- Types ---------- */
 
 interface PatientInfo {
+  patient_id?: number;
   name?: string;
   age?: number;
   profile_image_url?: string;
+  birthday?: string;
+  sex?: number;
 }
 
 interface PatientOverlayProps {
@@ -68,9 +71,6 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
       };
     });
 }, [patientData]);
-
-  console.log("latestPatientData : ");
-  console.log(latestPatientData);
   
 
   return (
@@ -103,19 +103,24 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
       <ScrollView className="flex-1">
         {/* Profile */}
         <View className="flex-1 flex-row items-center mx-4 mt-4">
-          <View className="relative h-20 min-w-20 bg-black/70 rounded-xl">
+          <View className="">
             {patientInfo?.profile_image_url ? (
+            <View className="relative">
               <Image
                 source={{
                   uri: Provider.HostApi + patientInfo.profile_image_url,
                 }}
-                style={{ height: "100%", borderRadius: 16 }}
+                style={{ height: "100%", borderRadius: 16, position:"absolute" }}
                 resizeMode="contain"
               />
+                    <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
+                      <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+                    </View>
+                  </View>
             ) : (
-              <View className="w-full h-full rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 items-center justify-center">
-                <FontAwesome name="user-md" size={32} color="white" />
-              </View>
+                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                    <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+                  </View>
             )}
           </View>
 
@@ -139,6 +144,7 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
         key={item.type + index}
         data={item}
         loading={false}
+        patientInfo={patientInfo}
       />
     ))}
   </View>
@@ -146,7 +152,7 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
               {patientMockData.map((item, index) => (
-                <PatientDataCard key={index} data={item} loading={false} />
+                <PatientDataCard key={index} data={item} loading={false} patientInfo={patientInfo}/>
               ))}
             </View>
 

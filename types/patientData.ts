@@ -19,6 +19,8 @@ export interface PatientInfo {
 export interface ConsultInfo {
   caseId: string;
   patient_info: PatientInfo;
+  patientInfo: PatientInfo;
+
 }
 
 export interface AddTreatmentPayload {

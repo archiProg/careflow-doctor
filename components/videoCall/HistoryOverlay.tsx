@@ -82,19 +82,24 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
       <ScrollView className="flex-1">
         {/* Profile */}
         <View className="flex-1 flex-row items-center mx-4 mt-4">
-          <View className="relative h-20 min-w-20 bg-black/70 rounded-xl">
+          <View className="">
             {patientInfo?.profile_image_url ? (
+            <View className="relative">
               <Image
                 source={{
                   uri: Provider.HostApi + patientInfo.profile_image_url,
                 }}
-                style={{ height: "100%", borderRadius: 16 }}
+                style={{ height: "100%", borderRadius: 16, position:"absolute" }}
                 resizeMode="contain"
               />
+                    <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
+                      <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+                    </View>
+                  </View>
             ) : (
-              <View className="w-full h-full rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 items-center justify-center">
-                <FontAwesome name="user-md" size={32} color="white" />
-              </View>
+                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                    <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+                  </View>
             )}
           </View>
 
