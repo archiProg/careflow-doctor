@@ -1,30 +1,29 @@
 // src/app/videoCall.tsx
-import PatientMenuSheet from "@/components/videoCall/PatientMenuSheet";
 import ControlButtons from "@/components/rtc/controlButtons";
 import LocalVideo from "@/components/rtc/localVideo";
 import VideoGrid from "@/components/rtc/videoGrid";
 import DiagnosisOverlay from "@/components/videoCall/DiagnosisOverlay";
-import PatientOverlay from "@/components/videoCall/PatientOverlay";
-import HistoryOverlay from "@/components/videoCall/HistoryOverlay";
 import HistoryDetailOverlay from "@/components/videoCall/HistoryDetailOverlay";
+import HistoryOverlay from "@/components/videoCall/HistoryOverlay";
+import PatientMenuSheet from "@/components/videoCall/PatientMenuSheet";
+import PatientOverlay from "@/components/videoCall/PatientOverlay";
 import { user_role } from "@/constants/enums";
 import { usePeerConnection } from "@/hooks/usePeerConnection";
 import { PeerReducer } from "@/reducers/peerReducer";
 import Provider from "@/services/providerService";
+import { RequestApi } from "@/services/requestApiService";
+import { RootState } from "@/stores/index";
 import { PatientMedicalHistory } from "@/types/diagnosisHistory";
 import {
+  AddTreatmentPayload,
+  ConsultInfo,
   PatientDataForm,
   PatientInfo,
-  ConsultInfo,
-  AddTreatmentPayload,
   PatientMeasurement
 } from "@/types/patientData";
 import { emitSocket, getSocket } from "@/utilitys/socket";
 import { useKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { RequestApi } from "@/services/requestApiService";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/index";
 import React, {
   useCallback,
   useEffect,
@@ -40,6 +39,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { mediaDevices, MediaStream } from "react-native-webrtc";
+import { useSelector } from "react-redux";
 
 const { height: screenHeight } = Dimensions.get("window");
 const videoHeight = Math.max(screenHeight / 3, 280); // h-1/3
@@ -172,21 +172,39 @@ export default function DoctorCall() {
   useEffect(() => {
     const init = async () => {
       try {
+        const wantAudio = audio === "1";
+        const wantVideo = video === "1";
+
         const stream = await mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
+          audio: wantAudio,
+          video: wantVideo,
         });
-        console.log("Local stream initialized:", stream.toURL());
-        console.log(
-          "Tracks:",
-          stream.getTracks().map((t) => `${t.kind}: ${t.enabled}`),
-        );
+
+
+        if (!wantAudio) {
+          stream.getAudioTracks().forEach(t => {
+            t.enabled = false;
+          });
+        }
+
+        if (!wantVideo) {
+          stream.getVideoTracks().forEach(t => {
+            t.enabled = false;
+          });
+        }
+
+
         streamRef.current = stream;
         console.log("streamRef.current : ");
         console.log(streamRef.current);
-        
+
         setLocalStream(stream);
         setStreamReady(true);
+
+        console.log(
+          "Tracks:",
+          stream.getTracks().map(t => `${t.kind}:${t.enabled}`)
+        );
       } catch (error) {
         console.error("Failed to get local stream:", error);
       }
@@ -268,7 +286,7 @@ export default function DoctorCall() {
             createOffer(p.id);
             console.log("p : ");
             console.log(p);
-            
+
           });
         },
       );
@@ -289,28 +307,28 @@ export default function DoctorCall() {
     } else {
       onConnect();
     }
-    
-  const onDoctorPatientInfo = (data: any) => {
-    console.log("👨‍⚕️ doctor:patient_info", data);
 
-    if (data.message) {
-      Alert.alert(t("permission"), data.message);
-      setStatusReq(false);
-      return;
-    }
+    const onDoctorPatientInfo = (data: any) => {
+      console.log("👨‍⚕️ doctor:patient_info", data);
 
-    if (data.patient_measurement) {
- console.log("data.patient_measurement : ");
- console.log(data.patient_measurement);
- console.log("data.patient_info : ");
- console.log(data.patient_info);
+      if (data.message) {
+        Alert.alert(t("permission"), data.message);
+        setStatusReq(false);
+        return;
+      }
 
- setPatientMeasurement(data.patient_measurement)
-   setStatusReq(true); // ใช้แสดง loading / waiting
-    } else {
-      setStatusReq(false)
-    }
-  };
+      if (data.patient_measurement) {
+        console.log("data.patient_measurement : ");
+        console.log(data.patient_measurement);
+        console.log("data.patient_info : ");
+        console.log(data.patient_info);
+
+        setPatientMeasurement(data.patient_measurement)
+        setStatusReq(true); // ใช้แสดง loading / waiting
+      } else {
+        setStatusReq(false)
+      }
+    };
     socket.on("connect", handleSocketConnect);
 
     socket.on("connect_error", (err) => {
@@ -320,7 +338,7 @@ export default function DoctorCall() {
     socket.on("offer", handleOffer);
     socket.on("answer", handleAnswer);
     socket.on("ice-candidate", handleIceCandidate);
-  socket.on("doctor:patient_info", onDoctorPatientInfo);
+    socket.on("doctor:patient_info", onDoctorPatientInfo);
     socket.on("peer-media-updated", ({ id, hasAudio, hasVideo }) => {
       dispatch({
         type: "UPDATE_PEER_MEDIA",
@@ -441,12 +459,12 @@ export default function DoctorCall() {
   };
 
   const handleRequestPermission = () => {
-  if (!roomId) return;
+    if (!roomId) return;
 
-  emitSocket("doctor:req-permission", {
-    caseId: roomId,
-  });
-};
+    emitSocket("doctor:req-permission", {
+      caseId: roomId,
+    });
+  };
 
 
   return (
