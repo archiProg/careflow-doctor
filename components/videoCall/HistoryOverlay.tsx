@@ -4,7 +4,7 @@ import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
 import { PatientMedicalHistory } from "@/types/diagnosisHistory";
-import LoadingComp from "@/components/loadingComp";
+import LoadingMini from "@/components/loadingMini";
 import { TEXT } from "@/constants/styles";
 import Provider from "@/services/providerService";
 import PatientDataCard from "../patientDataCard";
@@ -27,6 +27,8 @@ interface HistoryOverlayProps {
   statusReq: boolean;
   medicalHistory: PatientMedicalHistory[] | [];
   patientMockData: any[];
+  retryAt: number | null;
+  cooldownLeft: number;
   onBackToMenu: () => void;
   onRequestConsent: () => void;
   onPatientRecordPress: (record: any) => void;
@@ -39,6 +41,8 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
   insets,
   patientInfo,
   statusReq,
+  retryAt,
+  cooldownLeft,
   medicalHistory,
   patientMockData,
   onBackToMenu,
@@ -128,8 +132,9 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
               />
             </View>
           ) : (
-            <LoadingComp />
-          )
+            <View>
+    <LoadingMini/>
+            </View>          )
         ) : (
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
@@ -148,9 +153,12 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
               <Pressable
                 className="items-center justify-center bg-[#33AAE1] py-4 px-8 rounded-[16px] shadow-lg"
                 onPress={onRequestConsent}
+                disabled={!!retryAt}
               >
                 <Text className="text-white">
-                  {t("request-patient-consent")}
+                  {retryAt && cooldownLeft > 0
+      ? `กรุณารอ ${cooldownLeft} วินาที`
+      :t("request-patient-consent")}
                 </Text>
               </Pressable>
             </View>

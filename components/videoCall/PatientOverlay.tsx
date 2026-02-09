@@ -3,7 +3,7 @@ import { View, Text, Pressable, ScrollView, Image } from "react-native";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
-import LoadingComp from "@/components/loadingComp";
+import LoadingMini from "@/components/loadingMini";
 import { PatientMeasurement } from "@/types/patientData";
 import { TEXT } from "@/constants/styles";
 import PatientDataCard from "../patientDataCard";
@@ -27,6 +27,8 @@ interface PatientOverlayProps {
   };
   patientInfo: PatientInfo | null;
   statusReq: boolean;
+  retryAt: number | null;
+  cooldownLeft: number;
   patientData: PatientMeasurement | null;
   patientMockData: any[];
   onBackToMenu: () => void;
@@ -41,6 +43,8 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
   patientInfo,
   statusReq,
   patientData,
+  retryAt,
+  cooldownLeft,
   patientMockData,
   onBackToMenu,
   onRequestConsent,
@@ -149,7 +153,10 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
               ))}
             </View>
           ) : (
-            <LoadingComp />
+            <View>
+    <LoadingMini/>
+            </View>
+
           )
         ) : (
           <View>
@@ -174,9 +181,12 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
               <Pressable
                 className="items-center justify-center bg-[#33AAE1] py-4 px-8 rounded-[16px] shadow-lg"
                 onPress={onRequestConsent}
+                disabled={!!retryAt}
               >
                 <Text className="text-white">
-                  {t("request-patient-consent")}
+                  {retryAt && cooldownLeft > 0
+      ? `กรุณารอ ${cooldownLeft} วินาที`
+      :t("request-patient-consent")}
                 </Text>
               </Pressable>
             </View>

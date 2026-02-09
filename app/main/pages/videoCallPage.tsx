@@ -79,7 +79,9 @@ export default function DoctorCall() {
   const [statusReq, setStatusReq] = useState(false);
   const [streamReady, setStreamReady] = useState(false);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
+  const [retryAt, setRetryAt] = useState<number | null>(null);
+  const [cooldownLeft, setCooldownLeft] = useState<number>(0);
   const [patientMeasurement, setPatientMeasurement] =
     useState<PatientMeasurement | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
@@ -320,6 +322,14 @@ export default function DoctorCall() {
         return;
       }
     };
+const onDoctorcooldown = (data: any) => {
+  if (data.retryAt) {
+    setRetryAt(data.retryAt);
+    setStatusReq(false);
+  }
+};
+
+
     socket.on("connect", handleSocketConnect);
 
     socket.on("connect_error", (err) => {
@@ -328,6 +338,7 @@ export default function DoctorCall() {
 
     socket.on("offer", handleOffer);
     socket.on("answer", handleAnswer);
+    socket.on("doctor:req-permission:cooldown", onDoctorcooldown);
     socket.on("ice-candidate", handleIceCandidate);
     socket.on("doctor:patient_info", onDoctorPatientInfo);
     socket.on("peer-media-updated", ({ id, hasAudio, hasVideo }) => {
@@ -367,8 +378,28 @@ export default function DoctorCall() {
       socket.off("user-connected");
       socket.off("user-disconnected");
       socket.off("doctor:patient_info", onDoctorPatientInfo);
+      socket.off("doctor:req-permission:cooldown", onDoctorcooldown);
     };
   }, [streamReady, roomId, userName, audio, video]);
+
+  useEffect(() => {
+  if (!retryAt) return;
+
+  const interval = setInterval(() => {
+    const now = Date.now();
+    const diff = Math.max(0, Math.ceil((retryAt - now) / 1000));
+
+    setCooldownLeft(diff);
+
+    if (diff <= 0) {
+      setRetryAt(null);
+      clearInterval(interval);
+    }
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [retryAt]);
+
 
   useEffect(() => {
     if (!streamReady) return;
@@ -508,6 +539,8 @@ export default function DoctorCall() {
       {activeMenu === "patient" && (
         <PatientOverlay
           overlayTop={overlayTop}
+          retryAt={retryAt}
+          cooldownLeft={cooldownLeft}
           insets={insets}
           patientInfo={patientInfo}
           statusReq={statusReq}
@@ -521,6 +554,8 @@ export default function DoctorCall() {
       {activeMenu === "history" && (
         <HistoryOverlay
           overlayTop={overlayTop}
+          retryAt={retryAt}
+          cooldownLeft={cooldownLeft}
           insets={insets}
           patientInfo={patientInfo}
           statusReq={statusReq}
