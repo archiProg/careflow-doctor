@@ -37,12 +37,12 @@ const PreCallPage: React.FC = () => {
       ? await PermissionService.requestMicrophonePermission()
       : true;
     if (!camGranted || !micGranted) {
-      Alert.alert("กรุณาอนุญาตกล้องและไมโครโฟน");
+      Alert.alert(t("error.mediaDevicesFailed"));
       return;
     }
     const stream = await getLocalStream(settings.video, settings.audio);
     if (!stream) {
-      Alert.alert("ไม่สามารถเข้าถึงกล้อง/ไมโครโฟน");
+      Alert.alert(t("error.mediaDevicesFailed"));
       return;
     }
     console.log("Local stream tracks:", stream.getTracks().map(t => t.kind));
@@ -78,7 +78,7 @@ const PreCallPage: React.FC = () => {
                       source={{
                         uri: Provider.HostApi + Provider.Profile.profile_image_url,
                       }}
-                      className="absolute w-20 h-20 rounded-2xl z-10"
+                      className="absolute w-20 h-20 rounded-xl z-10"
                     />
                     <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
                       <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
@@ -89,7 +89,7 @@ const PreCallPage: React.FC = () => {
                     <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
                   </View>
                 )}
-                <Text className="text-white text-xl font-medium">คุณ</Text>
+                <Text className="text-white text-xl font-medium">{t("you")}</Text>
               </View>
             )}
           </View>

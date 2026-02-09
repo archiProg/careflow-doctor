@@ -1,3 +1,4 @@
+import i18n from "@/services/i18nService";
 import { RequestApi } from "@/services/requestApiService";
 import { CheckEmailResponse } from "@/types/checkEmailModel";
 
@@ -17,11 +18,11 @@ const UseCheckEmail = async (email: string): Promise<CheckEmailResponse> => {
     if (getResponse != null) {
       return getResponse;
     } else {
-      return { message: "Server error", status: -1 };
+      return { message: i18n.t("error.serverError"), status: -1 };
     }
   } catch (error) {
     console.error("checkEmail error:", error);
-    return { message: "Server error", status: -1 };
+    return { message: i18n.t("error.serverError"), status: -1 };
   }
 };
 

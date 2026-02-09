@@ -6,7 +6,7 @@ interface LoadingProps {
   message?: string;
   dotColor?: string;
 }
-3
+
 const loadingMini: React.FC<LoadingProps> = ({
   message = "Loading",
   dotColor = "#33AAE1",

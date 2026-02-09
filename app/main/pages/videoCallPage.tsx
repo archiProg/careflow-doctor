@@ -79,7 +79,7 @@ export default function DoctorCall() {
   const [statusReq, setStatusReq] = useState(false);
   const [streamReady, setStreamReady] = useState(false);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [retryAt, setRetryAt] = useState<number | null>(null);
   const [cooldownLeft, setCooldownLeft] = useState<number>(0);
   const [patientMeasurement, setPatientMeasurement] =
@@ -146,6 +146,9 @@ export default function DoctorCall() {
       }
     } catch (error) {
       console.error("GetTreatment error:", error);
+      Alert.alert(t("error.permission"), t("error.loadTreatmentFailed"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
     }
   };
 
@@ -202,6 +205,9 @@ export default function DoctorCall() {
         );
       } catch (error) {
         console.error("Failed to get local stream:", error);
+        Alert.alert(t("error.permission"), t("error.mediaDevicesFailed"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
       }
     };
     init();
@@ -263,6 +269,9 @@ export default function DoctorCall() {
         (others: any[]) => {
           if (!others) {
             console.error("❌ Join-room failed: No response from server");
+            Alert.alert(t("error.permission"), t("error.joinRoomFailed"), [
+              { text: t("ok"), style: "cancel" },
+            ]);
             return;
           }
           console.log(
@@ -305,11 +314,15 @@ export default function DoctorCall() {
     const onDoctorPatientInfo = (data: any) => {
       console.log("👨‍⚕️ doctor:patient_info", data);
 
-      if (data.message) {
-        Alert.alert(t("permission"), data.message);
-        setStatusReq(false);
-        return;
-      }
+if (data.message) {
+  Alert.alert(
+    "ไม่ได้รับอนุญาต",
+    "ผู้ป่วยไม่อนุญาตให้เข้าถึงข้อมูลสุขภาพย้อนหลัง กรุณาขออนุญาตอีกครั้งหากจำเป็น",
+    [{ text: "ปิด" }]
+  );
+  setStatusReq(false);
+  return;
+}
 
       if (data.patient_measurement) {
         console.log("data.patient_measurement : ");
@@ -322,18 +335,20 @@ export default function DoctorCall() {
         return;
       }
     };
-const onDoctorcooldown = (data: any) => {
-  if (data.retryAt) {
-    setRetryAt(data.retryAt);
-    setStatusReq(false);
-  }
-};
-
+    const onDoctorcooldown = (data: any) => {
+      if (data.retryAt) {
+        setRetryAt(data.retryAt);
+        setStatusReq(false);
+      }
+    };
 
     socket.on("connect", handleSocketConnect);
 
     socket.on("connect_error", (err) => {
       console.error("🔌 Socket Connection Error:", err.message);
+      Alert.alert(t("error.permission"), t("error.socketConnectError"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
     });
 
     socket.on("offer", handleOffer);
@@ -383,23 +398,22 @@ const onDoctorcooldown = (data: any) => {
   }, [streamReady, roomId, userName, audio, video]);
 
   useEffect(() => {
-  if (!retryAt) return;
+    if (!retryAt) return;
 
-  const interval = setInterval(() => {
-    const now = Date.now();
-    const diff = Math.max(0, Math.ceil((retryAt - now) / 1000));
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const diff = Math.max(0, Math.ceil((retryAt - now) / 1000));
 
-    setCooldownLeft(diff);
+      setCooldownLeft(diff);
 
-    if (diff <= 0) {
-      setRetryAt(null);
-      clearInterval(interval);
-    }
-  }, 1000);
+      if (diff <= 0) {
+        setRetryAt(null);
+        clearInterval(interval);
+      }
+    }, 1000);
 
-  return () => clearInterval(interval);
-}, [retryAt]);
-
+    return () => clearInterval(interval);
+  }, [retryAt]);
 
   useEffect(() => {
     if (!streamReady) return;
@@ -415,6 +429,9 @@ const onDoctorcooldown = (data: any) => {
       }
     } catch (e: any) {
       console.warn("❌ InCallManager start failed:", e.message);
+      Alert.alert(t("error.permission"), t("error.audioFailed"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
     }
 
     return () => {
@@ -431,7 +448,19 @@ const onDoctorcooldown = (data: any) => {
   }, [streamReady]);
 
   const handlePatientSubmit = async () => {
-    if (!roomId || !patientDataForm) return;
+    if (!roomId) {
+      Alert.alert(t("error.permission"), t("error.generalError"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
+      return;
+    }
+
+    if (!patientDataForm) {
+      Alert.alert(t("notification"), t("PleaseAddSymptoms"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
+      return;
+    }
 
     const api = new RequestApi();
 
@@ -453,10 +482,16 @@ const onDoctorcooldown = (data: any) => {
       if (response.success) {
         Alert.alert(t("saveFormSuccess"));
         setActiveMenu("menu");
+      } else {
+        Alert.alert(t("error.permission"), t("saveFormError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
       }
     } catch (error) {
       console.error("add-treatment error:", error);
-      Alert.alert(t("saveFormError"));
+      Alert.alert(t("error.permission"), t("error.saveFailed"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
     }
   };
 

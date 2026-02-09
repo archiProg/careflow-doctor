@@ -118,6 +118,25 @@
   "saveFormSuccess": "Saved successfully",
   "saveFormError": "Unable to save data",
   "PleaseAddSymptoms": "Please enter symptoms",
+  "please-wait-seconds": "Please wait {{seconds}} seconds",
+  "you": "You",
+  "missing-credentials": "Please enter email and password",
+  "email-not-found": "Email not found, please register.",
+  "permission": {
+    "gallery": {
+      "title": "Gallery Permission",
+      "message": "App needs access to your gallery to upload images"
+    },
+    "camera": {
+      "title": "Camera Permission",
+      "message": "App needs access to your camera"
+    },
+    "microphone": {
+      "title": "Microphone Permission",
+      "message": "App needs access to your microphone"
+    },
+    "askMeLater": "Ask Me Later"
+  },
   "N/A": "N/A",
   "MedicalHistory": "Medical History",
   "historyDetail": {
@@ -147,5 +166,17 @@
   "newPassword": "New Password",
   "confirmPassword": "Confirm Password",
   "changePasswordSuccess": "Password changed successfully",
-  "changePasswordError": "Unable to change password"
+  "changePasswordError": "Unable to change password",
+  "error": {
+    "serverError": "Server error",
+    "loadTreatmentFailed": "Failed to load patient treatment history",
+    "mediaDevicesFailed": "Failed to access camera/microphone. Please check permissions.",
+    "socketConnectError": "Connection error. Please check your internet connection.",
+    "joinRoomFailed": "Failed to join the video call. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "saveFailed": "Failed to save data. Please try again.",
+    "permission": "Permission denied",
+    "audioFailed": "Failed to initialize audio system",
+    "generalError": "An error occurred. Please try again."
+  }
 }

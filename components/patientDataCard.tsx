@@ -2,6 +2,7 @@ import { RequestApi } from "@/services/requestApiService";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Skeleton } from "moti/skeleton";
 import React, { useState } from "react";
+import LoadingMini from "@/components/loadingMini";
 import { useTranslation } from "react-i18next";
 import {
   Dimensions,
@@ -198,6 +199,7 @@ export default function PatientDataCard({
       console.log("patient_id: ", patient_id, "type_id: ", type_id);
       return;
     }
+    setLoadingHistory(true)
     const api = new RequestApi();
     try {
       const response = await api.postApiJwt(
@@ -214,9 +216,11 @@ export default function PatientDataCard({
         const data = JSON.parse(response.response);
         setHistory(data);
         setShowHistory(true);
+        setLoadingHistory(false)
       }
     } catch (error) {
       console.error("GetTreatment error:", error);
+      setLoadingHistory(false)
     }
   };
 
@@ -430,7 +434,9 @@ export default function PatientDataCard({
                 keyboardShouldPersistTaps="handled"
               >
                 {loadingHistory ? (
-                  <Skeleton width="100%" height={40} />
+                  <View>
+                    <LoadingMini/>
+                  </View>
                 ) : history.length === 0 ? (
                   <Text
                     style={{

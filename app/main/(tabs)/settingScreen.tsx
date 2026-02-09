@@ -62,7 +62,7 @@ export default function SettingsScreen() {
                       source={{
                         uri: Provider.HostApi + Provider.Profile.profile_image_url,
                       }}
-                      className="absolute w-20 h-20 rounded-2xl"
+                      className="absolute w-20 h-20 rounded-xl z-10"
                     />
                     <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
                       <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
@@ -75,7 +75,7 @@ export default function SettingsScreen() {
                 )}
                         {/* Status Indicator */}
                         <View
-                            className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 ${status === "start_work"
+                            className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 z-20 ${status === "start_work"
                                 ? "bg-green-500"
                                 : status === "paused_work"
                                     ? "bg-orange-500"

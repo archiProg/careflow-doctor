@@ -38,12 +38,16 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       if (!isConnected) {
-        Alert.alert("No Internet", "Please check your connection");
+        Alert.alert(t("error.permission"), t("error.networkError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
         return;
       }
 
       if (!email || !password) {
-        Alert.alert("Error", "Please enter email and password");
+        Alert.alert(t("notification"), t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
         return;
       }
 
@@ -57,7 +61,9 @@ const LoginPage = () => {
       const response = await api.postApi("/login", JSON.stringify(body));
 
       if (!response.success) {
-        Alert.alert("API Error", JSON.stringify(response.response));
+        Alert.alert(t("error.permission"), t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
         return;
       }
 
@@ -67,12 +73,16 @@ const LoginPage = () => {
         getResponse = JSON.parse(response.response);
         Provider.Token = getResponse.token;
       } catch {
-        Alert.alert("Parse Error", "Invalid response format");
+        Alert.alert(t("error.permission"), t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
         return;
       }
 
       if (!getResponse) {
-        Alert.alert("Response Error", "Empty response");
+        Alert.alert(t("error.permission"), t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
         return;
       }
 
@@ -84,11 +94,17 @@ const LoginPage = () => {
 
         router.replace("/");
       } else {
-        Alert.alert("Notification", getResponse.message ?? "Login failed");
+        Alert.alert(
+          t("notification"),
+          getResponse.message ?? t("error.generalError"),
+          [{ text: t("ok"), style: "cancel" }],
+        );
       }
     } catch (error: any) {
       console.error("Login error:", error);
-      Alert.alert("Unexpected Error", error?.message ?? "Something went wrong");
+      Alert.alert(t("error.permission"), t("error.generalError"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
     }
   };
 
@@ -102,13 +118,13 @@ const LoginPage = () => {
         //     email_param: email,
         //   },
         // });
-        Alert.alert("Notification", "Email not found, please register.");
+        Alert.alert(t("notification"), t("email-not-found"));
       } else {
         setIsPasswordVisible(true);
       }
     } catch (error: any) {
       console.error("Check email error:", error);
-      Alert.alert("Unexpected Error", error?.message ?? "Something went wrong");
+      Alert.alert(t("notification"), error?.message ?? t("error.generalError"));
     }
   };
 
@@ -196,7 +212,7 @@ const LoginPage = () => {
                 {t("or")}
               </Text>
               <Pressable
-                onPress={async () => { }}
+                onPress={async () => {}}
                 className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
               >
                 <View className="flex flex-row items-center">
@@ -248,7 +264,7 @@ const LoginPage = () => {
                 {t("or")}
               </Text>
               <Pressable
-                onPress={async () => { }}
+                onPress={async () => {}}
                 className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
               >
                 <View className="flex flex-row items-center">

@@ -76,7 +76,7 @@ const ManageProfilePage = () => {
                       source={{
                         uri: Provider.HostApi + Provider.Profile.profile_image_url,
                       }}
-                      className="absolute w-20 h-20 rounded-2xl"
+                      className="absolute w-20 h-20 rounded-xl z-10"
                     />
                     <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
                       <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>

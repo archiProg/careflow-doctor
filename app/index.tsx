@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; // <-- ใช้ router จาก expo-router
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
+import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import LoadingComp from "@/components/loadingComp";
@@ -19,6 +20,7 @@ const StartupPage = () => {
   const initLang = async () => {
     await loadLanguage();
   };
+  const { t } = useTranslation();
 
   const initApp = async (): Promise<boolean> => {
     Provider.Token = "";
@@ -37,12 +39,12 @@ const StartupPage = () => {
     password: string
   ): Promise<boolean> => {
     if (!email || !password) {
-      Alert.alert("Error", "Please enter email and password");
+      Alert.alert(t("notification"), t("missing-credentials"));
       return false;
     }
 
     if (!isConnected) {
-      Alert.alert("No Internet", "Please check your connection");
+      Alert.alert(t("notification"), t("error.networkError"));
       return false;
     }
 
@@ -70,27 +72,27 @@ const StartupPage = () => {
           return true;
         } else {
           if (getResponse.message == "Invalid email or password") {
-            Alert.alert("Notification", getResponse.message);
+            Alert.alert(t("notification"), getResponse.message);
           } else if (getResponse.message == "User not found or inactive") {
-            Alert.alert("Notification", getResponse.message);
+            Alert.alert(t("notification"), getResponse.message);
           } else {
-            Alert.alert("Notification", getResponse.message);
+            Alert.alert(t("notification"), getResponse.message);
           }
           return false;
         }
       } else {
-        Alert.alert("Response Error", JSON.stringify(response.response));
+        Alert.alert(t("notification"), JSON.stringify(response.response));
         return false;
       }
     } else {
-      Alert.alert("API Error", JSON.stringify(response.response));
+      Alert.alert(t("notification"), JSON.stringify(response.response));
       return false;
     }
   };
 
   const initProfile = async () => {
     if (!isConnected) {
-      Alert.alert("No Internet", "Please check your connection");
+      Alert.alert(t("notification"), t("error.networkError"));
       return false;
     }
 
@@ -111,7 +113,7 @@ const StartupPage = () => {
       }
       return false;
     } else {
-      Alert.alert("API Error", JSON.stringify(response.response));
+      Alert.alert(t("notification"), JSON.stringify(response.response));
       return false;
     }
   };
