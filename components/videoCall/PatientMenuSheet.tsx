@@ -25,6 +25,7 @@ interface PatientMenuSheetProps {
   overlayTop: number;
   insets: { bottom: number };
   patientInfo: PatientInfo | null;
+  submited:boolean;
 
   setActiveMenu: (
     menu:
@@ -46,6 +47,7 @@ const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
   insets,
   patientInfo,
   setActiveMenu,
+  submited,
   handleLeave,
 }) => {
   const { t } = useTranslation();
@@ -121,6 +123,7 @@ const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
 
       {/* End Case */}
       <Pressable
+        disabled={!submited}
         onPress={handleLeave}
         className="m-4 h-[56px] rounded-[16px] items-center justify-center bg-[#FB6469]"
       >

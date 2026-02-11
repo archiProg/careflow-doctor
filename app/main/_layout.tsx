@@ -14,10 +14,42 @@ import { useEffect } from "react";
 import { Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
+
 export default function MainLayout() {
     const { status } = useSelector((state: RootState) => state.work);
+      const { startWork, times } = useSelector(
+    (state: RootState) => state.work
+  );
+
     const router = useRouter();
     const dispatch = useDispatch();
+
+const getStartAndEndTime = () => {
+  const startStr = startWork;
+  const timeStr = times;
+  console.log("888" , startStr , timeStr);
+  
+
+  if (!startStr || !timeStr) return null;
+
+  // 1. starttime → unix ms
+  const startTimeMs = new Date(startStr).getTime();
+
+  // 2. แปลง "01:00" → milliseconds
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  const durationMs = (hours * 60 * 60 + minutes * 60) * 1000;
+
+  // 3. endtime = start + duration
+  const endTimeMs = startTimeMs + durationMs;
+    console.log("66666666" , startTimeMs , endTimeMs);
+    
+  return {
+    startTimeMs,
+    endTimeMs,
+  };
+};
+
+
 
     useEffect(() => {
         if (Provider.Token != "") {
@@ -81,15 +113,37 @@ export default function MainLayout() {
 
 
 
-    useEffect(() => {
-        if (Provider.Token != "") {
-            if (status === "start_work") {
-                emitSocket("doctor:set-availability", { available: true });
-            } else if (status === "paused_work" || status === "end_work") {
-                emitSocket("doctor:set-availability", { available: false });
-            }
-        }
-    }, [status]);
+useEffect(() => {
+  if (!Provider.Token) return;
+
+  const run = async () => {
+    if (status === "start_work") {
+      const result = await getStartAndEndTime();
+      if (!result) return;
+
+      const { startTimeMs, endTimeMs } = result;
+
+      console.log("999999999999999", startTimeMs, endTimeMs);
+
+      emitSocket("doctor:set-availability", {
+        available: true,
+        shift_time: {
+          start: startTimeMs,
+          end: endTimeMs,
+        },
+      });
+    } 
+    else if (status === "paused_work" || status === "end_work") {
+      emitSocket("doctor:set-availability", {
+        available: false,
+        shift_time: null,
+      });
+    }
+  };
+
+  run();
+}, [status]);
+
 
     return <Stack
         screenOptions={{

@@ -78,6 +78,7 @@ export default function DoctorCall() {
   const insets = useSafeAreaInsets();
   const [statusReq, setStatusReq] = useState(false);
   const [streamReady, setStreamReady] = useState(false);
+  const [submited, setSubmited] = useState(false);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [retryAt, setRetryAt] = useState<number | null>(null);
@@ -126,8 +127,9 @@ export default function DoctorCall() {
 
   const GetTreatment = async () => {
     const info: PatientInfo | null =
-      consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
+    consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
     if (!info) return;
+    setPatientInfo(info);
     const api = new RequestApi();
     try {
       const response = await api.postApiJwt(
@@ -142,7 +144,6 @@ export default function DoctorCall() {
       if (response.success && response.response) {
         const data = JSON.parse(response.response);
         setMedicalHistory(data);
-        setPatientInfo(info);
       }
     } catch (error) {
       console.error("GetTreatment error:", error);
@@ -154,7 +155,7 @@ export default function DoctorCall() {
 
   useEffect(() => {
     GetTreatment();
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     const updateColumns = () => {
@@ -218,6 +219,7 @@ export default function DoctorCall() {
   }, []);
 
   const handleLeave = useCallback(() => {
+    if(submited) return;
     Alert.alert(t("leave"), t("leave-call-description"), [
       {
         text: t("cancel"),
@@ -482,6 +484,7 @@ if (data.message) {
       if (response.success) {
         Alert.alert(t("saveFormSuccess"));
         setActiveMenu("menu");
+        setSubmited(true)
       } else {
         Alert.alert(t("error.permission"), t("saveFormError"), [
           { text: t("ok"), style: "cancel" },
@@ -553,6 +556,7 @@ if (data.message) {
           insets={insets}
           patientInfo={patientInfo}
           setActiveMenu={setActiveMenu}
+          submited={submited}
           handleLeave={handleLeave}
         />
       )}
