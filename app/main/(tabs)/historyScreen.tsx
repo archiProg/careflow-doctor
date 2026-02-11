@@ -14,9 +14,8 @@ const HistoryScreen: React.FC = () => {
     const api = new RequestApi();
     try {
       const response = await api.postApiJwt(
-        "/get-treatment",
+        "/get-treatment_doctor",
         JSON.stringify({
-          // "patient_id":55,
           date_start: null,
           date_end: null,
         }),
@@ -35,49 +34,6 @@ const HistoryScreen: React.FC = () => {
   useEffect(() => {
     GetTreatment();
   }, []);
-
-  // const mockRecords: DiagnosisRecord[] = [
-  //   {
-  //     id: "1",
-  //     patientName: "นางสาวสมหญิง รักสุขภาพ",
-  //     patientAge: 35,
-  //     patientGender: "female",
-  //     timestamps: "2024-01-15T10:30:00Z",
-  //     symptoms: "ไข้สูง ปวดศีรษะ คลื่นไส้ อาเจียน",
-  //     diagnosis: "ไข้หวัดใหญ่ (Influenza) - แนะนำให้พักผ่อน ดื่มน้ำมากๆ",
-  //     medication: "พาราเซตามอล 500mg วันละ 3 ครั้ง, วิตามินซี",
-  //     needHospital: false,
-  //     timeSpent: 10,
-  //     doctorNote: "เพียงพอ",
-  //   },
-  //   {
-  //     id: "2",
-  //     patientName: "นายสมชาย แข็งแรง",
-  //     patientAge: 52,
-  //     patientGender: "male",
-  //     timestamps: "2024-01-14T14:20:00Z",
-  //     symptoms: "เจ็บหน้าอกรุนแรง หายใจลำบาก เหงือออก",
-  //     diagnosis: "สงสัยโรคหัวใจ - ต้องส่งโรงพยาบาลเพื่อตรวจเพิ่มเติมด่วน",
-  //     medication: "Aspirin 300mg, NTG sublingual",
-  //     needHospital: true,
-  //     timeSpent: 10,
-  //     doctorNote: "เพียงพอ",
-  //   },
-  //   {
-  //     id: "3",
-  //     patientName: "เด็กหญิงน้ำฝน ยิ้มแย้ม",
-  //     patientAge: 8,
-  //     patientGender: "female",
-  //     timestamps: "2024-01-13T09:15:00Z",
-  //     symptoms: "ไอ มีเสมหะ มีไข้เล็กน้อย",
-  //     diagnosis: "หวัดธรรมดา - พักผ่อนให้เพียงพอ",
-  //     medication: "ยาแก้ไอสำหรับเด็ก, ยาลดไข้",
-  //     needHospital: false,
-  //     timeSpent: 10,
-  //     doctorNote: "เพียงพอ",
-  //   },
-  // ];
-
 
   const handleRecordPress = (record: DiagnosisRecord) => {
     router.push({

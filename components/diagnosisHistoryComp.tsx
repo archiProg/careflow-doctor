@@ -1,36 +1,48 @@
-
-import { CARD, TEXT_SIZE } from '@/constants/styles';
-import i18n from '@/services/i18nService';
-import { DiagnosisRecord } from '@/types/diagnosisHistory';
-import { FontAwesome5 } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { CARD, TEXT_SIZE } from "@/constants/styles";
+import i18n from "@/services/i18nService";
+import { DiagnosisRecord } from "@/types/diagnosisHistory";
+import { FontAwesome5 } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface DiagnosisHistoryScreenProps {
   records?: DiagnosisRecord[];
   onRecordPress?: (record: DiagnosisRecord) => void;
 }
 
-
 const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
   records = [],
   onRecordPress,
 }) => {
-
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'hospital'>('all');
-  const [selectedDateFilter, setSelectedDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState<"all" | "hospital">(
+    "all",
+  );
+  const [selectedDateFilter, setSelectedDateFilter] = useState<
+    "all" | "today" | "week" | "month"
+  >("all");
   const { t } = useTranslation();
 
+  const displayValue = (value?: string | number) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === "ไม่ระบุ" ||
+      value === "N/A"
+    ) {
+      return t("N/A");
+    }
+    return value;
+  };
   const filteredRecords = records.filter((record) => {
     const matchesSearch =
       record.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -38,8 +50,8 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       record.diagnosis.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesFilter =
-      selectedFilter === 'all' ||
-      (selectedFilter === 'hospital' && record.needHospital);
+      selectedFilter === "all" ||
+      (selectedFilter === "hospital" && record.needHospital);
 
     // กรองตามวันที่
     const recordDate = new Date(record.timestamps);
@@ -47,20 +59,19 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
     today.setHours(0, 0, 0, 0);
 
     let matchesDateFilter = true;
-    if (selectedDateFilter === 'today') {
+    if (selectedDateFilter === "today") {
       const recordDateOnly = new Date(recordDate);
       recordDateOnly.setHours(0, 0, 0, 0);
       matchesDateFilter = recordDateOnly.getTime() === today.getTime();
-    } else if (selectedDateFilter === 'week') {
+    } else if (selectedDateFilter === "week") {
       const weekAgo = new Date(today);
       weekAgo.setDate(today.getDate() - 7);
       matchesDateFilter = recordDate >= weekAgo;
-    } else if (selectedDateFilter === 'month') {
+    } else if (selectedDateFilter === "month") {
       const monthAgo = new Date(today);
       monthAgo.setMonth(today.getMonth() - 1);
       matchesDateFilter = recordDate >= monthAgo;
     }
-
 
     return matchesSearch && matchesFilter && matchesDateFilter;
   });
@@ -68,30 +79,28 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString(i18n.language, {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     });
   };
-
 
   return (
     <SafeAreaView className="flex-1 mb-10">
       {/* Header */}
       <View className="pb-6 px-5">
-
         {/* Search Bar */}
         <View className="bg-white dark:bg-gray-800 rounded-[24px] flex-row items-center px-4 py-3 border border-gray-200">
           <FontAwesome5 name="search" size={16} color="#9CA3AF" />
           <TextInput
             className={`${TEXT_SIZE.medium} flex-1 ml-3 text-gray-900 dark:text-white`}
-            placeholder={t('placeholder-searchHistory')}
+            placeholder={t("placeholder-searchHistory")}
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
               <FontAwesome5 name="times-circle" size={16} color="#9CA3AF" />
             </TouchableOpacity>
           )}
@@ -104,30 +113,34 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           {/* Category Filter */}
           <View className="flex-row gap-2 ">
             <TouchableOpacity
-              className={`px-4 py-2 rounded-full ${selectedFilter === 'all' ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
-              onPress={() => setSelectedFilter('all')}
+              className={`px-4 py-2 rounded-full ${
+                selectedFilter === "all" ? "bg-blue-600" : "bg-gray-200"
+              }`}
+              onPress={() => setSelectedFilter("all")}
               activeOpacity={0.7}
             >
               <Text
-                className={`font-semibold ${selectedFilter === 'all' ? 'text-white' : 'text-gray-700'
-                  }`}
+                className={`font-semibold ${
+                  selectedFilter === "all" ? "text-white" : "text-gray-700"
+                }`}
               >
-                {t('all')} ({records.length})
+                {t("all")} ({records.length})
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className={`px-4 py-2 rounded-full ${selectedFilter === 'hospital' ? 'bg-orange-400' : 'bg-gray-200'
-                }`}
-              onPress={() => setSelectedFilter('hospital')}
+              className={`px-4 py-2 rounded-full ${
+                selectedFilter === "hospital" ? "bg-orange-400" : "bg-gray-200"
+              }`}
+              onPress={() => setSelectedFilter("hospital")}
               activeOpacity={0.7}
             >
               <Text
-                className={`font-semibold ${selectedFilter === 'hospital' ? 'text-white' : 'text-gray-700'
-                  }`}
+                className={`font-semibold ${
+                  selectedFilter === "hospital" ? "text-white" : "text-gray-700"
+                }`}
               >
-                {t('sendedHospital')} (
+                {t("sendedHospital")} (
                 {records.filter((r) => r.needHospital).length})
               </Text>
             </TouchableOpacity>
@@ -140,9 +153,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
         {filteredRecords.length === 0 ? (
           <View className="items-center justify-center py-20">
             <FontAwesome5 name="folder-open" size={64} color="#D1D5DB" />
-            <Text className="text-gray-500 text-lg mt-4">
-              {t('noData')}
-            </Text>
+            <Text className="text-gray-500 text-lg mt-4">{t("noData")}</Text>
           </View>
         ) : (
           filteredRecords.map((record) => (
@@ -156,49 +167,66 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
                   <View className="flex-1">
-                    <Text className={`${CARD.title} text-gray-900 dark:text-white`}>
-                      {record.patientName}
+                    <Text
+                      className={`${CARD.title} text-gray-900 dark:text-white`}
+                    >
+                      {displayValue(record.patientName)}
                     </Text>
-                    <View className='flex-row items-center gap-2'>
-                      <Text className={`${CARD.subtitle} text-gray-600 dark:text-gray-400`}>
-                        {t('age')}: {record.patientAge} {t('years')}
+                    <View className="flex-row items-center gap-2">
+                      <Text
+                        className={`${CARD.subtitle} text-gray-600 dark:text-gray-400`}
+                      >
+                        {t("age")}: {displayValue(record.patientAge)}{" "}
+                        {t("years")}
                       </Text>
                     </View>
                   </View>
                 </View>
                 <View className="flex-row justify-end items-center mb-4 ">
-                  <Text className={`${CARD.subtitle} text-blue-600  font-medium mr-2`}>
-                    {t('detail')}
+                  <Text
+                    className={`${CARD.subtitle} text-blue-600  font-medium mr-2`}
+                  >
+                    {t("detail")}
                   </Text>
-                  <FontAwesome5 name="chevron-right" size={12} color="#2563eb" />
+                  <FontAwesome5
+                    name="chevron-right"
+                    size={12}
+                    color="#2563eb"
+                  />
                 </View>
               </View>
 
-              <View className='my-2'>
+              <View className="my-2">
                 {record.needHospital && (
                   <View className="flex-row items-center">
                     <View className="bg-orange-100 rounded-lg px-3 py-1  ">
                       <Text className="text-orange-700 text-xs font-semibold dark:text-orange-400">
-                        {t('sendedHospital')}
+                        {t("sendedHospital")}
                       </Text>
                     </View>
                   </View>
                 )}
               </View>
 
-              <View className='flex-row items-center gap-4'>
+              <View className="flex-row items-center gap-4">
                 {/* Date */}
                 <View className="flex-row items-center">
                   <FontAwesome5 name="calendar" size={12} color="#6B7280" />
-                  <Text className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}>
+                  <Text
+                    className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}
+                  >
                     {formatDate(record.timestamps)}
                   </Text>
                 </View>
                 {/* เวลาที่ใช้ */}
                 <View className="flex-row items-center">
                   <FontAwesome5 name="clock" size={12} color="#6B7280" />
-                  <Text className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}>
-                    {record.timeSpent} {t('minute')}
+                  <Text
+                    className={`${CARD.subtitle} text-gray-600 ml-2 dark:text-gray-400`}
+                  >
+                    {displayValue(
+                      record.timestamps ? formatDate(record.timestamps) : "N/A",
+                    )}
                   </Text>
                 </View>
               </View>
@@ -206,8 +234,6 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           ))
         )}
       </ScrollView>
-
-
     </SafeAreaView>
   );
 };
