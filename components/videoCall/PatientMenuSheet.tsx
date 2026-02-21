@@ -122,16 +122,19 @@ const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
       </ScrollView>
 
       {/* End Case */}
-      <Pressable
-        disabled={!submited}
-        onPress={handleLeave}
-        className="m-4 h-[56px] rounded-[16px] items-center justify-center bg-[#FB6469]"
-      >
-        <View className="flex-row items-center gap-2">
-          <FontAwesome name="phone" size={18} color="white" />
-          <Text className="text-white">{t("end-case")}</Text>
-        </View>
-      </Pressable>
+<Pressable
+  disabled={!submited}
+  onPress={handleLeave}
+  className={`m-4 h-[56px] rounded-[16px] items-center justify-center ${
+    submited ? "bg-[#FB6469]" : "bg-[#d9d9d9]"
+  }`}
+>
+  <View className="flex-row items-center gap-2">
+    <FontAwesome name="phone" size={18} color="white" />
+    <Text className="text-white">{t("end-case")}</Text>
+  </View>
+</Pressable>
+
     </View>
   );
 };

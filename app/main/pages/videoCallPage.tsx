@@ -21,7 +21,7 @@ import {
   PatientInfo,
   PatientMeasurement,
 } from "@/types/patientData";
-import { emitSocket, getSocket } from "@/utilitys/socket";
+import { emitSocket, getSocket , listenSocket , offSocket } from "@/utilitys/socket";
 import { useKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {
@@ -295,6 +295,19 @@ export default function DoctorCall() {
           });
         },
       );
+                  listenSocket({
+                "doctor:diagnose": (data) => {
+                    console.log("doctor:diagnose", data)
+                    if(data.caseId === roomId){
+                      setSubmited(false)
+                      setActiveMenu("diagnosis")
+                    }
+                }
+            });
+
+                    return () => {
+                        offSocket("case:offer");
+                    };
     };
 
     console.log(
@@ -484,6 +497,13 @@ if (data.message) {
       if (response.success) {
         Alert.alert(t("saveFormSuccess"));
         setActiveMenu("menu");
+              socket.emit(
+        "doctor:set-diagnose",
+        {
+ caseId : roomId, 
+ diagnose : true
+        },
+      )
         setSubmited(true)
       } else {
         Alert.alert(t("error.permission"), t("saveFormError"), [
