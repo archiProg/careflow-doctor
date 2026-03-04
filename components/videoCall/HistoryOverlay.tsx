@@ -157,7 +157,7 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
               >
                 <Text className="text-white">
                   {retryAt && cooldownLeft > 0
-      ? `กรุณารอ ${cooldownLeft} วินาที`
+      ? t("please_wait_seconds", { seconds: cooldownLeft })
       :t("request-patient-consent")}
                 </Text>
               </Pressable>

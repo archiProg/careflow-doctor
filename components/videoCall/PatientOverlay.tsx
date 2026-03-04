@@ -52,7 +52,6 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
   const { t } = useTranslation();
   const latestPatientData = React.useMemo(() => {
     if (!patientData) return [];
-
     return Object.entries(patientData)
       .filter(([_, arr]) => Array.isArray(arr))
       .map(([type, arr]) => {
@@ -66,6 +65,7 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
           ...sorted[0], // เอาค่าล่าสุด
         };
       });
+    
   }, [patientData]);
 
   return (
@@ -185,7 +185,7 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
               >
                 <Text className="text-white">
                   {retryAt && cooldownLeft > 0
-      ? `กรุณารอ ${cooldownLeft} วินาที`
+      ? t("please_wait_seconds", { seconds: cooldownLeft })
       :t("request-patient-consent")}
                 </Text>
               </Pressable>

@@ -21,7 +21,12 @@ import {
   PatientInfo,
   PatientMeasurement,
 } from "@/types/patientData";
-import { emitSocket, getSocket , listenSocket , offSocket } from "@/utilitys/socket";
+import {
+  emitSocket,
+  getSocket,
+  listenSocket,
+  offSocket,
+} from "@/utilitys/socket";
 import { useKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {
@@ -127,7 +132,7 @@ export default function DoctorCall() {
 
   const GetTreatment = async () => {
     const info: PatientInfo | null =
-    consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
+      consultInfo?.patient_info ?? consultInfo?.patientInfo ?? null;
     if (!info) return;
     setPatientInfo(info);
     const api = new RequestApi();
@@ -219,7 +224,7 @@ export default function DoctorCall() {
   }, []);
 
   const handleLeave = useCallback(() => {
-    if(submited) return;
+    if (submited) return;
     Alert.alert(t("leave"), t("leave-call-description"), [
       {
         text: t("cancel"),
@@ -295,19 +300,19 @@ export default function DoctorCall() {
           });
         },
       );
-                  listenSocket({
-                "doctor:diagnose": (data) => {
-                    console.log("doctor:diagnose", data)
-                    if(data.caseId === roomId){
-                      setSubmited(false)
-                      setActiveMenu("diagnosis")
-                    }
-                }
-            });
+      listenSocket({
+        "doctor:diagnose": (data) => {
+          console.log("doctor:diagnose", data);
+          if (data.caseId === roomId) {
+            setSubmited(false);
+            setActiveMenu("diagnosis");
+          }
+        },
+      });
 
-                    return () => {
-                        offSocket("case:offer");
-                    };
+      return () => {
+        offSocket("case:offer");
+      };
     };
 
     console.log(
@@ -329,15 +334,19 @@ export default function DoctorCall() {
     const onDoctorPatientInfo = (data: any) => {
       console.log("👨‍⚕️ doctor:patient_info", data);
 
-if (data.message) {
-  Alert.alert(
-    "ไม่ได้รับอนุญาต",
-    "ผู้ป่วยไม่อนุญาตให้เข้าถึงข้อมูลสุขภาพย้อนหลัง กรุณาขออนุญาตอีกครั้งหากจำเป็น",
-    [{ text: "ปิด" }]
-  );
-  setStatusReq(false);
-  return;
-}
+      if (data.message) {
+Alert.alert(
+  t("permission.denied-title"),
+  t("permission.denied-health-history"),
+  [
+    {
+      text: t("common.close"),
+    },
+  ]
+);
+        setStatusReq(false);
+        return;
+      }
 
       if (data.patient_measurement) {
         console.log("data.patient_measurement : ");
@@ -481,11 +490,11 @@ if (data.message) {
 
     const payload: AddTreatmentPayload = {
       consult_id: roomId,
-      symptoms: patientDataForm.symptoms ?? "ไม่ระบุ",
-      diagnosis: patientDataForm.diagnosis ?? "ไม่ระบุ",
-      medication: patientDataForm.medication?.trim() ?? "ไม่ระบุ",
+      symptoms: patientDataForm.symptoms ?? t("N/A"),
+      diagnosis: patientDataForm.diagnosis ?? t("N/A"),
+      medication: patientDataForm.medication?.trim() ?? t("N/A"),
       need_hospital: patientDataForm.needHospital ?? false,
-      note: patientDataForm.doctorNote ?? "ไม่ระบุ",
+      note: patientDataForm.doctorNote ?? t("N/A"),
     };
 
     try {
@@ -497,14 +506,11 @@ if (data.message) {
       if (response.success) {
         Alert.alert(t("saveFormSuccess"));
         setActiveMenu("menu");
-              socket.emit(
-        "doctor:set-diagnose",
-        {
- caseId : roomId, 
- diagnose : true
-        },
-      )
-        setSubmited(true)
+        socket.emit("doctor:set-diagnose", {
+          caseId: roomId,
+          diagnose: true,
+        });
+        setSubmited(true);
       } else {
         Alert.alert(t("error.permission"), t("saveFormError"), [
           { text: t("ok"), style: "cancel" },

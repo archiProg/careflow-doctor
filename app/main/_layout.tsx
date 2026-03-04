@@ -13,9 +13,12 @@ import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+
 
 
 export default function MainLayout() {
+    const { t } = useTranslation();
     const { status } = useSelector((state: RootState) => state.work);
       const { startWork, times } = useSelector(
     (state: RootState) => state.work
@@ -81,21 +84,21 @@ const getStartAndEndTime = () => {
                 },
                 "doctor:status": (data) => console.log("🩺 doctor:status", data),
                 "force-logout": () => {
-                    Alert.alert(
-                        "ออกจากระบบ",
-                        "บัญชีของคุณถูกออกจากระบบจากอุปกรณ์อื่น",
-                        [
-                            {
-                                text: "ตกลง",
-                                onPress: async () => {
-                                    await AsyncStorage.multiRemove(["email", "password", "token", "user"]);
-                                    closeSocket();
-                                    dispatch(setConsultId(null));
-                                    router.replace("/");
-                                },
-                            },
-                        ]
-                    );
+Alert.alert(
+  t("logout"),
+  t("account-logged-out-other-device"),
+  [
+    {
+      text: t("ok"),
+      onPress: async () => {
+        await AsyncStorage.multiRemove(["email", "password", "token", "user"]);
+        closeSocket();
+        dispatch(setConsultId(null));
+        router.replace("/");
+      },
+    },
+  ]
+);
                 },
 
             });

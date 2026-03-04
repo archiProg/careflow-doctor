@@ -1,7 +1,7 @@
 import { RequestApi } from "@/services/requestApiService";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Skeleton } from "moti/skeleton";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoadingMini from "@/components/loadingMini";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,8 +10,9 @@ import {
   Pressable,
   ScrollView,
   Text,
-  View
+  View,
 } from "react-native";
+import { Label } from "expo-router/unstable-native-tabs";
 
 /* ---------- Color Palette (White–Blue) ---------- */
 const colors = {
@@ -45,8 +46,10 @@ const TYPE_CONFIG: Record<string, { label: string; unit?: string }> = {
 };
 
 /* ---------- Utils ---------- */
-const EXCLUDE_KEYWORDS = ["_normal", "dw", "ttype", "value_type"];
-
+const EXCLUDE_KEYWORDS = ["_normal", "dw", "ttype", "value_type" , "_norma"];
+const BASE64_FIELDS: Base64Config = {
+  ecg: ["result"],
+};
 const isValidValue = (v: any) =>
   v !== undefined && v !== null && v !== "" && !Number.isNaN(v);
 
@@ -63,7 +66,22 @@ const prettifyKey = (key: string) => {
   return map[key] ?? key.toUpperCase();
 };
 
+const shouldDecode = (deviceType: string, fieldKey: string): boolean => {
+  const fields = BASE64_FIELDS[deviceType];
+  if (!fields) return false;
+  return fields.includes(fieldKey.toLowerCase());
+};
+
+const decodeBase64 = (str: string) => {
+  try {
+    return atob(str.replace(/\n/g, "").trim());
+  } catch {
+    return str;
+  }
+};
+
 const extractDisplayItems = (
+  deviceType: string,
   values: any,
   unit?: string,
 ): { label: string; value: string }[] => {
@@ -74,10 +92,25 @@ const extractDisplayItems = (
       if (EXCLUDE_KEYWORDS.some((k) => key.includes(k))) return false;
       return true;
     })
-    .map(([key, value]) => ({
-      label: prettifyKey(key),
-      value: `${value}${unit ?? ""}`,
-    }));
+    .map(([key, value]) => {
+      let finalValue = String(value).trim();
+
+      if (shouldDecode(deviceType, key)) {
+        finalValue = decodeBase64(finalValue);
+      }
+
+      if (key.toLowerCase() === "result") {
+        return {
+          label: prettifyKey(key),
+          value: finalValue,
+        };
+      }
+
+      return {
+        label: prettifyKey(key),
+        value: `${finalValue} ${unit ?? ""}`,
+      };
+    });
 };
 
 /* ---------- Layout ---------- */
@@ -98,6 +131,10 @@ type Props = {
   data?: any;
   loading?: boolean;
   patientInfo?: PatientInfo | null;
+};
+
+type Base64Config = {
+  [deviceType: string]: string[]; // field ที่ต้อง decode
 };
 
 /* ---------- Grid Metrics ---------- */
@@ -126,8 +163,17 @@ function GridMetrics({ items }: { items: { label: string; value: string }[] }) {
           }}
         >
           {/* Value */}
-          <Text
+          {/* <Text
             numberOfLines={1}
+            style={{
+              fontSize: 16,
+              fontWeight: "700",
+              color: colors.blue600,
+              textAlign: "center",
+              flexWrap: "wrap"            
+            }}
+          > */}
+          <Text
             style={{
               fontSize: 16,
               fontWeight: "700",
@@ -185,13 +231,20 @@ export default function PatientDataCard({
   const [showHistory, setShowHistory] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
+  //   useEffect(() => {
+  //   if (data) {
+  //     console.log("📦 PatientDataCard data:");
+  //     console.log(JSON.stringify(data, null, 2));
+  //   }
+  // }, [data]);
+
   const config = TYPE_CONFIG[type] ?? {
     label: typeof type === "string" ? type.toUpperCase() : "UNKNOWN",
   };
 
   const displayItems = React.useMemo(
-    () => extractDisplayItems(values, config.unit),
-    [values, config.unit],
+    () => extractDisplayItems(type, values, config.unit),
+    [type, values, config.unit],
   );
 
   const getpatientmeasurement = async () => {
@@ -199,7 +252,7 @@ export default function PatientDataCard({
       console.log("patient_id: ", patient_id, "type_id: ", type_id);
       return;
     }
-    setLoadingHistory(true)
+    setLoadingHistory(true);
     const api = new RequestApi();
     try {
       const response = await api.postApiJwt(
@@ -216,11 +269,11 @@ export default function PatientDataCard({
         const data = JSON.parse(response.response);
         setHistory(data);
         setShowHistory(true);
-        setLoadingHistory(false)
+        setLoadingHistory(false);
       }
     } catch (error) {
       console.error("GetTreatment error:", error);
-      setLoadingHistory(false)
+      setLoadingHistory(false);
     }
   };
 
@@ -312,55 +365,55 @@ export default function PatientDataCard({
             <GridMetrics items={displayItems} />
           )}
 
-{displayItems.length > 0 &&
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: 12,
-              paddingTop: 10,
-              borderTopWidth: 1,
-              borderTopColor: colors.blue100,
-            }}
-          >
-            {/* Title */}
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "700",
-                color: colors.textPrimary,
-                letterSpacing: 0.3,
-              }}
-            >
-              {/* {config.label} */}
-            </Text>
-
-            {/* Date badge */}
+          {displayItems.length > 0 && (
             <View
               style={{
-                // backgroundColor: colors.offWhite,
-                // borderWidth: 1,
-                // borderColor: colors.blue100,
-                // borderRadius: 6,
-                paddingVertical: 2,
-                paddingHorizontal: 8,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: 12,
+                paddingTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: colors.blue100,
               }}
             >
+              {/* Title */}
               <Text
                 style={{
-                  fontSize: 11,
-                  fontWeight: "600",
-                  color: colors.blue600,
+                  fontSize: 15,
+                  fontWeight: "700",
+                  color: colors.textPrimary,
+                  letterSpacing: 0.3,
                 }}
-                onPress={getpatientmeasurement}
               >
-                {t("measurement-history")}
-                {" >"}
+                {/* {config.label} */}
               </Text>
+
+              {/* Date badge */}
+              <View
+                style={{
+                  // backgroundColor: colors.offWhite,
+                  // borderWidth: 1,
+                  // borderColor: colors.blue100,
+                  // borderRadius: 6,
+                  paddingVertical: 2,
+                  paddingHorizontal: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontWeight: "600",
+                    color: colors.blue600,
+                  }}
+                  onPress={getpatientmeasurement}
+                >
+                  {t("measurement-history")}
+                  {" >"}
+                </Text>
+              </View>
             </View>
-          </View>
-}
+          )}
         </>
       )}
       {showHistory && (
@@ -435,7 +488,7 @@ export default function PatientDataCard({
               >
                 {loadingHistory ? (
                   <View>
-                    <LoadingMini/>
+                    <LoadingMini />
                   </View>
                 ) : history.length === 0 ? (
                   <Text
@@ -449,7 +502,11 @@ export default function PatientDataCard({
                   </Text>
                 ) : (
                   history.map((item, index) => {
-                    const items = extractDisplayItems(item.values, config.unit);
+                    const items = extractDisplayItems(
+                      type,
+                      item.values,
+                      config.unit,
+                    );
 
                     return (
                       <View

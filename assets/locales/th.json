@@ -34,6 +34,8 @@
   "doctor_search_description": "ระบบจะช่วยคุณค้นหาผู้ป่วยที่ตรงกับความเชี่ยวชาญของคุณ",
   "start_work": "เริ่มงาน",
   "apply_language": "ยืนยัน",
+  "account-logged-out-other-device": "บัญชีของคุณถูกออกจากระบบจากอุปกรณ์อื่น",
+  "please_wait_seconds": "กรุณารอ {{seconds}} วินาที",
   "select_language": "เลือกภาษา",
   "choose_language": "เลือกภาษาที่คุณต้องการเพื่อดำเนินการต่อ",
   "patient_diagnose": "วินิจฉัย",
@@ -112,6 +114,7 @@
   "measurement-history": "ประวัติการวัด",
   "no-history-available": "ไม่มีประวัติข้อมูล",
   "all": "ทั้งหมด",
+  "close": "ปิด",
   "placeholder-searchHistory": "ค้นหาชื่อผู้ป่วย, อาการ, การวินิจฉัย...",
   "doctor-check": "หมอผู้ตรวจ",
   "patient": "ผู้ป่วย",
@@ -123,6 +126,8 @@
   "missing-credentials": "กรุณากรอกอีเมลและรหัสผ่าน",
   "email-not-found": "ไม่พบอีเมล กรุณาสมัครสมาชิก",
   "permission": {
+    "denied-title": "ไม่ได้รับอนุญาต",
+    "denied-health-history": "ผู้ป่วยไม่อนุญาตให้เข้าถึงข้อมูลสุขภาพย้อนหลัง กรุณาขออนุญาตอีกครั้งหากจำเป็น",
     "gallery": {
       "title": "ขออนุญาตคลังภาพ",
       "message": "แอปต้องการเข้าถึงคลังภาพของคุณเพื่ออัปโหลดรูปภาพ"
@@ -178,5 +183,15 @@
     "permission": "ไม่ได้รับอนุญาต",
     "audioFailed": "ไม่สามารถเริ่มต้นระบบเสียงได้",
     "generalError": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง"
+  },
+    "profile": {
+    "full-name": "ชื่อ-นามสกุล",
+    "enter-full-name": "กรอกชื่อ-นามสกุล",
+    "email": "อีเมล",
+    "enter-email": "กรอกอีเมล"
+  },
+  "common": {
+    "save": "บันทึกข้อมูล",
+    "close" :"ปิด"
   }
 }

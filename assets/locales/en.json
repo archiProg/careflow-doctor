@@ -79,6 +79,7 @@
   "needHospital": "Should go to the hospital",
   "doctorNote": "Doctor's Note",
   "summarize-diagnosis": "Summarize",
+  "account-logged-out-other-device": "Your account has been logged out from another device.",
   "save": "Save",
   "notification": "Notification",
   "patient-form-notification": "Please enter symptoms",
@@ -87,6 +88,7 @@
   "patient-data": "Patient Data",
   "diagnosis": "Diagnosis",
   "end-case": "End Case",
+  "please_wait_seconds": "Please wait {{seconds}} seconds",
   "leave": "Leave",
   "leave-call-description": "Are you sure you want to leave the call?",
   "ok": "OK",
@@ -178,5 +180,16 @@
     "permission": "Permission denied",
     "audioFailed": "Failed to initialize audio system",
     "generalError": "An error occurred. Please try again."
+  },
+  "profile": {
+    "full-name": "Full Name",
+    "enter-full-name": "Enter full name",
+    "email": "Email",
+    "enter-email": "Enter email"
+  },
+  "common": {
+    "save": "Save",
+    "close" : "Close"
   }
 }
+  

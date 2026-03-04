@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { BackHandler, Image, Pressable, ScrollView, Text, TextInput, TouchableOpacity, useColorScheme, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+
 const ManageProfilePage = () => {
     const [name, setName] = useState(Provider.Profile?.name || "");
     const [email, setEmail] = useState(Provider.Profile?.email || "");
@@ -97,50 +98,54 @@ const ManageProfilePage = () => {
                     </View>
                 </View>
 
-                {/* Profile Form */}
-                <View className="px-6 pb-6">
-                    {/* Name Field */}
-                    <Text className="text-md text-gray-600 mb-2 font-medium">
-                        ชื่อ-นามสกุล
-                    </Text>
-                    <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+{/* Profile Form */}
+<View className="px-6 pb-6">
 
-                        <TextInput
-                            value={name}
-                            onChangeText={setName}
-                            className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
-                            placeholder="กรอกชื่อ-นามสกุล"
-                        />
-                    </View>
+  {/* Name Field */}
+  <Text className="text-md text-gray-600 mb-2 font-medium">
+    {t("profile.full-name")}
+  </Text>
 
-                    {/* Email Field */}
-                    <Text className="text-md text-gray-600 mb-2 font-medium mt-8">
-                        อีเมล
-                    </Text>
-                    <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
-                        <TextInput
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                            className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
-                            placeholder="กรอกอีเมล"
-                        />
-                    </View>
-                </View>
+  <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+    <TextInput
+      value={name}
+      onChangeText={setName}
+      className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
+      placeholder={t("profile.enter-full-name")}
+    />
+  </View>
+
+  {/* Email Field */}
+  <Text className="text-md text-gray-600 mb-2 font-medium mt-8">
+    {t("profile.email")}
+  </Text>
+
+  <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+    <TextInput
+      value={email}
+      onChangeText={setEmail}
+      keyboardType="email-address"
+      autoCapitalize="none"
+      className="flex-1 ml-3 text-gray-800 text-md dark:text-white"
+      placeholder={t("profile.enter-email")}
+    />
+  </View>
+
+</View>
+
             </ScrollView>
             {/* Save Button */}
 
-            <TouchableOpacity
-                onPress={handleSave}
-                disabled={isDisable}
-                className={`bg-blue-500 active:bg-blue-700 py-4 rounded-xl mb-4 mx-4 ${isDisable ? "opacity-50" : ""}`}
-            >
-                <Text className="text-white text-base font-semibold text-center">
-                    บันทึกข้อมูล
-                </Text>
-            </TouchableOpacity>
-
+{/* Save Button */}
+<TouchableOpacity
+  onPress={handleSave}
+  disabled={isDisable}
+  className={`bg-blue-500 active:bg-blue-700 py-4 rounded-xl mb-4 mx-4 ${isDisable ? "opacity-50" : ""}`}
+>
+  <Text className="text-white text-base font-semibold text-center">
+    {t("common.save")}
+  </Text>
+</TouchableOpacity>
         </SafeAreaView>
     );
 };
