@@ -86,24 +86,22 @@ const extractDisplayItems = (
   unit?: string,
 ): { label: string; value: string }[] => {
   if (!values || typeof values !== "object") return [];
+
   return Object.entries(values)
     .filter(([key, value]) => {
       if (!isValidValue(value)) return false;
       if (EXCLUDE_KEYWORDS.some((k) => key.includes(k))) return false;
+
+      // 🚫 ตอนนี้ไม่ต้องการ field ที่ต้อง decode
+      if (shouldDecode(deviceType, key)) return false;
+
       return true;
     })
     .map(([key, value]) => {
       let finalValue = String(value).trim();
-
+ 
       if (shouldDecode(deviceType, key)) {
         finalValue = decodeBase64(finalValue);
-      }
-
-      if (key.toLowerCase() === "result") {
-        return {
-          label: prettifyKey(key),
-          value: finalValue,
-        };
       }
 
       return {
