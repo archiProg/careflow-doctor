@@ -10,7 +10,7 @@ import {
   resume_work,
   setStatus,
 } from "@/stores/workSlice";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -21,12 +21,18 @@ import {
   ScrollView,
   Text,
   useColorScheme,
+  useWindowDimensions,
   View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
+
 const DoctorHomeScreen = () => {
+  const { height, width } = useWindowDimensions();
+
+  const BASE_WIDTH = width > height ? height : width;
+
   const dispatch: AppDispatch = useDispatch();
   const { status, startWork, times } = useSelector(
     (state: RootState) => state.work
@@ -139,8 +145,9 @@ const DoctorHomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className={`${BG.default} bg-secondary p-4 flex-1`}>
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+    <SafeAreaView className={`${BG.default} bg-secondary p-4 flex-1 justify-center items-center`}>
+      <ScrollView className="flex p-4" style={{ width: BASE_WIDTH }}
+        showsVerticalScrollIndicator={false}>
         {/* Greeting Section */}
         <View className="pt-4 pb-6">
           <Text className={`${TEXT_SIZE.default} text-gray-500 dark:text-gray-400 mb-1`}>
@@ -162,23 +169,23 @@ const DoctorHomeScreen = () => {
           <View className="flex-row items-center">
             {/* Profile Image */}
             <View className="relative">
-                {Provider.Profile?.profile_image_url ? (
-                  <View>
-                    <Image
-                      source={{
-                        uri: Provider.HostApi + Provider.Profile.profile_image_url,
-                      }}
-                      className="absolute w-20 h-20 rounded-xl z-10"
-                    />
-                    <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
-                    </View>
-                  </View>
-                ) : (
+              {Provider.Profile?.profile_image_url ? (
+                <View>
+                  <Image
+                    source={{
+                      uri: Provider.HostApi + Provider.Profile.profile_image_url,
+                    }}
+                    className="absolute w-20 h-20 rounded-xl z-10"
+                  />
                   <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
                     <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
                   </View>
-                )}
+                </View>
+              ) : (
+                <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                  <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                </View>
+              )}
               {/* Status Indicator */}
               <View
                 className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 z-20 ${status === "start_work"

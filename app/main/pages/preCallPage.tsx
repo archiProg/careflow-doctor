@@ -10,6 +10,7 @@ import {
   Pressable,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,8 +18,10 @@ import { MediaStream, RTCView } from "react-native-webrtc";
 
 import { useKeepAwake } from "expo-keep-awake";
 import { useTranslation } from "react-i18next";
-const PreCallPage: React.FC = () => {
+const PreCallPage = () => {
   useKeepAwake();
+  const { height, width } = useWindowDimensions();
+  const BASE_WIDTH = width > height ? height : width;
   const { consultId, type } = useLocalSearchParams<{
     consultId: string;
     type: string;
@@ -56,7 +59,7 @@ const PreCallPage: React.FC = () => {
     };
   }, []);
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-900 p-4">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-900 p-4 ">
       <View className="flex-1">
         {/* Video preview */}
         <View className="flex-1 pt-4 pb-16">

@@ -164,7 +164,7 @@
   "hospitalTag": "Hospital Referral",
   "viewDetail": "View details",
   "changePassword": "Change Password",
-  "oldPassword": "Old Password",
+  "oldPassword": "Current Password",
   "newPassword": "New Password",
   "confirmPassword": "Confirm Password",
   "changePasswordSuccess": "Password changed successfully",
@@ -189,7 +189,7 @@
   },
   "common": {
     "save": "Save",
-    "close" : "Close"
-  }
+    "close": "Close"
+  },
+  "changePasswordDescription": "Please enter current password and new password."
 }
-  

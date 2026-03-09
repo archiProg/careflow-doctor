@@ -8,17 +8,19 @@ import { JWT } from "@/utilitys/jwt";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
   Image,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   useColorScheme,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -34,6 +36,11 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isConnected = useInternet();
   const router = useRouter();
+
+
+  const { height, width } = useWindowDimensions();
+
+  const BASE_WIDTH = width > height ? height : width;
 
   const handleLogin = async () => {
     try {
@@ -149,9 +156,11 @@ const LoginPage = () => {
 
   return (
     <>
-      <SafeAreaView className="h-full p-4 bg-white dark:bg-gray-900">
-        <View>
-          <View className="flex flex-row justify-between items-center mb-8">
+      <SafeAreaView className={`h-full bg-white dark:bg-gray-900 justify-center items-center`}
+      >
+        <ScrollView className="flex p-4" style={{ width: BASE_WIDTH }}>
+          <View className="flex flex-row w-full justify-between items-center mb-8"
+          >
             <View>
               {isPasswordVisible && (
                 <Pressable
@@ -191,8 +200,7 @@ const LoginPage = () => {
                 {t("please_email")}
               </Text>
               <TextInput
-                className="h-[56px] mb-[16px] rounded-[24px]  border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 p-4 
-                dark:border-gray-200 dark:text-white"
+                className={`h-[56px] mb-[16px] rounded-[24px]  border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
                 placeholder={t("placeholder_email")}
                 keyboardType="email-address"
                 value={email}
@@ -202,18 +210,18 @@ const LoginPage = () => {
                 onPress={async () => {
                   await handleApi("CHECK_EMAIL");
                 }}
-                className="h-[56px] w-full rounded-[24px] bg-black items-center justify-center dark:bg-[#2196F3]"
+                className={`h-[56px] rounded-[24px] bg-black items-center justify-center dark:bg-[#2196F3]`}
               >
                 <Text className=" text-center text-white font-bold">
                   {t("continue")}
                 </Text>
               </Pressable>
-              <Text className="text-center text-gray-400 mt-[16px] mb-[16px]">
+              <Text className="text-center text-gray-400 my-[24px]">
                 {t("or")}
               </Text>
               <Pressable
-                onPress={async () => {}}
-                className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
+                onPress={async () => { }}
+                className={`h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
@@ -228,7 +236,7 @@ const LoginPage = () => {
             </>
           ) : (
             <>
-              <Text className="py-4  font-bold text-black dark:text-white">
+              <Text className="font-bold text-black dark:text-white">
                 {email}
               </Text>
               <View className="flex-row items-center h-[56px] mb-[16px] rounded-[24px] px-4 border border-gray-900 dark:border-gray-200 focus-within:border-[#2196F3] dark:focus-within:border-[#64B5F6]">
@@ -260,12 +268,12 @@ const LoginPage = () => {
                   {t("login")}
                 </Text>
               </Pressable>
-              <Text className="text-center text-gray-400 mt-[16px] mb-[16px]">
+              <Text className="text-center text-gray-400 my-[24px]">
                 {t("or")}
               </Text>
               <Pressable
-                onPress={async () => {}}
-                className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
+                onPress={async () => { }}
+                className={`h-[56px] w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
@@ -279,7 +287,10 @@ const LoginPage = () => {
               </Pressable>
             </>
           )}
-        </View>
+          <Text className="text-white">Screen Dimensions</Text>
+          <Text className="text-white">Width: {width}px</Text>
+          <Text className="text-white">Height: {height}px</Text>
+        </ScrollView>
       </SafeAreaView>
       {isLoading && (
         <SafeAreaView className="absolute w-full h-full flex items-center justify-center bg-black/50">

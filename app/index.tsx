@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; // <-- ใช้ router จาก expo-router
+import * as ScreenOrientation from 'expo-screen-orientation';
 import React, { useEffect } from "react";
-import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import LoadingComp from "@/components/loadingComp";
@@ -90,6 +91,7 @@ const StartupPage = () => {
     }
   };
 
+
   const initProfile = async () => {
     if (!isConnected) {
       Alert.alert(t("notification"), t("error.networkError"));
@@ -117,6 +119,15 @@ const StartupPage = () => {
       return false;
     }
   };
+
+
+  useEffect(() => {
+    const unlockScreenOerientation = async () => {
+      await ScreenOrientation.unlockAsync()
+    }
+    unlockScreenOerientation()
+  }, [])
+
 
   useEffect(() => {
     if (isConnected === null) return;
