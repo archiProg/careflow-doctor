@@ -80,7 +80,7 @@ const SearchPatient = () => {
 
   return (
     <SafeAreaView className={`${BG.default} flex-1 justify-center items-center p-4`}>
-      <View className="flex-1 p-4" style={{ width: BASE_WIDTH }}>
+      <View className="flex-1 p-4" >
         <View className="flex items-start">
           <Pressable className="px-3 rounded-full" onPress={backButton}>
             <FontAwesome
@@ -317,7 +317,7 @@ const SearchPatient = () => {
             </ScrollView>
 
             {/* Bottom Fixed Button */}
-            <View className="pt-4" style={{ width: BASE_WIDTH }}>
+            <View className="px-4 pt-4"  >
               <Pressable
                 onPress={StartWork}
                 className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"

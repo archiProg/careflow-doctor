@@ -221,7 +221,7 @@ const LoginPage = () => {
               </Text>
               <Pressable
                 onPress={async () => { }}
-                className={`h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
+                className={`h-[56px] w-full mb-16 rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
@@ -273,7 +273,7 @@ const LoginPage = () => {
               </Text>
               <Pressable
                 onPress={async () => { }}
-                className={`h-[56px] mb-32 w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
+                className={`h-[56px] mb-16 w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
