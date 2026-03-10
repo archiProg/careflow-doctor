@@ -287,9 +287,6 @@ const LoginPage = () => {
               </Pressable>
             </>
           )}
-          <Text className="text-white">Screen Dimensions</Text>
-          <Text className="text-white">Width: {width}px</Text>
-          <Text className="text-white">Height: {height}px</Text>
         </ScrollView>
       </SafeAreaView>
       {isLoading && (
