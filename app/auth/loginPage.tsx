@@ -29,8 +29,8 @@ const google_icon = require("@/assets/images/google_64.png");
 const LoginPage = () => {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
-  const [email, setEmail] = useState("dang@gmail.com");
-  const [password, setPassword] = useState("1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -273,7 +273,7 @@ const LoginPage = () => {
               </Text>
               <Pressable
                 onPress={async () => { }}
-                className={`h-[56px] w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
+                className={`h-[56px] mb-32 w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
