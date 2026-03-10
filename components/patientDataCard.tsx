@@ -1,8 +1,8 @@
+import LoadingMini from "@/components/loadingMini";
 import { RequestApi } from "@/services/requestApiService";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Skeleton } from "moti/skeleton";
-import React, { useState, useEffect } from "react";
-import LoadingMini from "@/components/loadingMini";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Dimensions,
@@ -12,7 +12,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { Label } from "expo-router/unstable-native-tabs";
 
 /* ---------- Color Palette (White–Blue) ---------- */
 const colors = {
@@ -46,7 +45,7 @@ const TYPE_CONFIG: Record<string, { label: string; unit?: string }> = {
 };
 
 /* ---------- Utils ---------- */
-const EXCLUDE_KEYWORDS = ["_normal", "dw", "ttype", "value_type" , "_norma"];
+const EXCLUDE_KEYWORDS = ["_normal", "dw", "ttype", "value_type", "_norma"];
 const BASE64_FIELDS: Base64Config = {
   ecg: ["result"],
 };
@@ -99,7 +98,7 @@ const extractDisplayItems = (
     })
     .map(([key, value]) => {
       let finalValue = String(value).trim();
- 
+
       if (shouldDecode(deviceType, key)) {
         finalValue = decodeBase64(finalValue);
       }
@@ -279,7 +278,6 @@ export default function PatientDataCard({
   return (
     <View
       style={{
-        width: cardWidth,
         backgroundColor: colors.white,
         borderRadius: 14,
         borderWidth: 1,

@@ -12,7 +12,6 @@ import {
   View,
 } from "react-native";
 
-import { SafeAreaView } from "react-native-safe-area-context";
 
 interface DiagnosisHistoryScreenProps {
   records?: DiagnosisRecord[];
@@ -86,9 +85,9 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
   };
 
   return (
-    <SafeAreaView className="flex-1 mb-10">
+    <View className="flex-1 mb-32">
       {/* Header */}
-      <View className="pb-6 px-5">
+      <View className="pb-6">
         {/* Search Bar */}
         <View className="bg-white dark:bg-gray-800 rounded-[24px] flex-row items-center px-4 py-3 border border-gray-200">
           <FontAwesome5 name="search" size={16} color="#9CA3AF" />
@@ -109,36 +108,32 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
 
       {/* Filter Tabs */}
       {records.length > 0 && (
-        <View className="px-5 py-3 ">
+        <View className="  py-3 ">
           {/* Category Filter */}
           <View className="flex-row gap-2 ">
             <TouchableOpacity
-              className={`px-4 py-2 rounded-full ${
-                selectedFilter === "all" ? "bg-blue-600" : "bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-full ${selectedFilter === "all" ? "bg-blue-600" : "bg-gray-200"
+                }`}
               onPress={() => setSelectedFilter("all")}
               activeOpacity={0.7}
             >
               <Text
-                className={`font-semibold ${
-                  selectedFilter === "all" ? "text-white" : "text-gray-700"
-                }`}
+                className={`font-semibold ${selectedFilter === "all" ? "text-white" : "text-gray-700"
+                  }`}
               >
                 {t("all")} ({records.length})
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className={`px-4 py-2 rounded-full ${
-                selectedFilter === "hospital" ? "bg-orange-400" : "bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-full ${selectedFilter === "hospital" ? "bg-orange-400" : "bg-gray-200"
+                }`}
               onPress={() => setSelectedFilter("hospital")}
               activeOpacity={0.7}
             >
               <Text
-                className={`font-semibold ${
-                  selectedFilter === "hospital" ? "text-white" : "text-gray-700"
-                }`}
+                className={`font-semibold ${selectedFilter === "hospital" ? "text-white" : "text-gray-700"
+                  }`}
               >
                 {t("sendedHospital")} (
                 {records.filter((r) => r.needHospital).length})
@@ -149,7 +144,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
       )}
 
       {/* Records List */}
-      <ScrollView className="flex-1 px-5 my-4">
+      <ScrollView className="flex-1  my-4">
         {filteredRecords.length === 0 ? (
           <View className="items-center justify-center py-20">
             <FontAwesome5 name="folder-open" size={64} color="#D1D5DB" />
@@ -234,7 +229,7 @@ const DiagnosisHistoryComp: React.FC<DiagnosisHistoryScreenProps> = ({
           ))
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

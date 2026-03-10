@@ -47,9 +47,9 @@ export default function ReComingCall() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end bg-black/40">
+    <SafeAreaView className="flex-1 justify-end bg-black/40 ">
       {/* Bottom Sheet */}
-      <View className="bg-white rounded-t-3xl px-6 pt-6 pb-8">
+      <View className="bg-white rounded-t-3xl px-6 pt-6 pb-8 items-center justify-center p-4">
         {/* Handle */}
         <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
 

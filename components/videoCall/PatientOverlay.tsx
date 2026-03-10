@@ -1,13 +1,13 @@
-import React from "react";
-import { View, Text, Pressable, ScrollView, Image } from "react-native";
-import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
-import { useTranslation } from "react-i18next";
 import LoadingMini from "@/components/loadingMini";
-import { PatientMeasurement } from "@/types/patientData";
 import { TEXT } from "@/constants/styles";
-import PatientDataCard from "../patientDataCard";
 import Provider from "@/services/providerService";
+import { PatientMeasurement } from "@/types/patientData";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import PatientDataCard from "../patientDataCard";
 
 /* ---------- Types ---------- */
 
@@ -38,8 +38,6 @@ interface PatientOverlayProps {
 /* ---------- Component ---------- */
 
 const PatientOverlay: React.FC<PatientOverlayProps> = ({
-  overlayTop,
-  insets,
   patientInfo,
   statusReq,
   patientData,
@@ -65,16 +63,12 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
           ...sorted[0], // เอาค่าล่าสุด
         };
       });
-    
+
   }, [patientData]);
 
   return (
     <View
-      className="flex flex-col absolute left-0 right-0 bg-white rounded-t-[16px]"
-      style={{
-        top: overlayTop,
-        bottom: insets.bottom,
-      }}
+      className="flex flex-col justify-between bg-white h-full"
     >
       {/* ---------- Header ---------- */}
       <View className="p-4 flex-row items-center">
@@ -154,13 +148,13 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
             </View>
           ) : (
             <View>
-    <LoadingMini/>
+              <LoadingMini />
             </View>
 
           )
         ) : (
           <View>
-            <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
+            <View className="px-4 flex flex-row  flex-wrap justify-between gap-y-4">
               {patientMockData.map((item, index) => (
                 <PatientDataCard
                   key={index}
@@ -185,8 +179,8 @@ const PatientOverlay: React.FC<PatientOverlayProps> = ({
               >
                 <Text className="text-white">
                   {retryAt && cooldownLeft > 0
-      ? t("please_wait_seconds", { seconds: cooldownLeft })
-      :t("request-patient-consent")}
+                    ? t("please_wait_seconds", { seconds: cooldownLeft })
+                    : t("request-patient-consent")}
                 </Text>
               </Pressable>
             </View>

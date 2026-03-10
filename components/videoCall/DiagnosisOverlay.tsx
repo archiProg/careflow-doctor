@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, Text, View } from "react-native";
 
-import { TEXT } from "@/constants/styles";
 import PatientForm from "@/components/patientForm";
 import SumDiagnosisComp from "@/components/sumDiagnosisComp";
+import { TEXT } from "@/constants/styles";
 import { PatientDataForm } from "@/types/patientData";
 
 
@@ -13,24 +13,20 @@ import { PatientDataForm } from "@/types/patientData";
 
 interface DiagnosisOverlayProps {
   activeMenu: "diagnosis" | "sumDiagnosis";
-  overlayTop: number;
-  insets: {
-    bottom: number;
-  };
+
   patientDataForm: any | null;
   onSetPatientDataForm: (data: any) => void;
   onBackToMenu: () => void;
   onReview: () => void;
   onBackToDiagnosis: () => void;
-  onSubmit: (data: PatientDataForm ) => void;
+  onSubmit: (data: PatientDataForm) => void;
 }
 
 /* ---------- Component ---------- */
 
 const DiagnosisOverlay: React.FC<DiagnosisOverlayProps> = ({
   activeMenu,
-  overlayTop,
-  insets,
+
   patientDataForm,
   onSetPatientDataForm,
   onBackToMenu,
@@ -42,11 +38,7 @@ const DiagnosisOverlay: React.FC<DiagnosisOverlayProps> = ({
 
   return (
     <View
-      className="flex flex-col justify-between absolute left-0 right-0 bg-white rounded-t-[16px]"
-      style={{
-        top: overlayTop,
-        bottom: insets.bottom,
-      }}
+      className="flex flex-col justify-between bg-white h-full"
     >
       {/* ---------- Header ---------- */}
       <View className="p-4 flex-row items-center">
@@ -66,7 +58,6 @@ const DiagnosisOverlay: React.FC<DiagnosisOverlayProps> = ({
             {t("diagnosis")}
           </Text>
         </View>
-
         <View className="w-10" />
       </View>
 

@@ -213,7 +213,7 @@ const DoctorHomeScreen = () => {
         </View>
 
         {/* Main Work Card */}
-        <View className="mb-6">
+        <View className="mb-32">
           <Card
             title={t("doctor_title_search")}
             subtitle={description}

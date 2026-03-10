@@ -37,7 +37,7 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Dimensions, View } from "react-native";
+import { Alert, Dimensions, useWindowDimensions, View } from "react-native";
 import InCallManager from "react-native-incall-manager";
 import {
   SafeAreaView,
@@ -77,6 +77,7 @@ export default function DoctorCall() {
     video: string;
   }>();
   useKeepAwake();
+  const { height, width } = useWindowDimensions();
   const { t } = useTranslation();
   const socket = getSocket();
   const router = useRouter();
@@ -165,7 +166,6 @@ export default function DoctorCall() {
   useEffect(() => {
     const updateColumns = () => {
       const screenWidth = Dimensions.get("window").width;
-
       if (screenWidth > 1200)
         setNumColumns(6); // extra large tablet
       else if (screenWidth > 900)
@@ -335,15 +335,15 @@ export default function DoctorCall() {
       console.log("👨‍⚕️ doctor:patient_info", data);
 
       if (data.message) {
-Alert.alert(
-  t("permission.denied-title"),
-  t("permission.denied-health-history"),
-  [
-    {
-      text: t("common.close"),
-    },
-  ]
-);
+        Alert.alert(
+          t("permission.denied-title"),
+          t("permission.denied-health-history"),
+          [
+            {
+              text: t("common.close"),
+            },
+          ]
+        );
         setStatusReq(false);
         return;
       }
@@ -553,8 +553,8 @@ Alert.alert(
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black h-full">
-      <View className="h-1/3">
+    <SafeAreaView className={`flex-1 ${height > width ? "flex-col" : "flex-row"} bg-black h-full`}>
+      <View className="flex-1">
         <VideoGrid peers={peers} />
         <LocalVideo
           localID={socket.id}
@@ -575,69 +575,70 @@ Alert.alert(
           />
         )}
       </View>
-      {activeMenu === "menu" && (
-        <PatientMenuSheet
-          activeMenu={activeMenu}
-          overlayTop={overlayTop}
-          insets={insets}
-          patientInfo={patientInfo}
-          setActiveMenu={setActiveMenu}
-          submited={submited}
-          handleLeave={handleLeave}
-        />
-      )}
+      <View className="flex-1 ">
+        <View>
+          {activeMenu === "menu" && (
+            <PatientMenuSheet
+              activeMenu={activeMenu}
+              patientInfo={patientInfo}
+              setActiveMenu={setActiveMenu}
+              submited={submited}
+              handleLeave={handleLeave}
+            />
+          )}
 
-      {(activeMenu === "diagnosis" || activeMenu === "sumDiagnosis") && (
-        <DiagnosisOverlay
-          activeMenu={activeMenu}
-          overlayTop={overlayTop}
-          insets={insets}
-          patientDataForm={patientDataForm}
-          onSetPatientDataForm={onSetPatientDataForm}
-          onBackToMenu={() => setActiveMenu("menu")}
-          onReview={() => setActiveMenu("sumDiagnosis")}
-          onBackToDiagnosis={() => setActiveMenu("diagnosis")}
-          onSubmit={handlePatientSubmit}
-        />
-      )}
+          {(activeMenu === "diagnosis" || activeMenu === "sumDiagnosis") && (
+            <DiagnosisOverlay
+              activeMenu={activeMenu}
 
-      {activeMenu === "patient" && (
-        <PatientOverlay
-          overlayTop={overlayTop}
-          retryAt={retryAt}
-          cooldownLeft={cooldownLeft}
-          insets={insets}
-          patientInfo={patientInfo}
-          statusReq={statusReq}
-          patientData={patientMeasurement}
-          patientMockData={patientMockData}
-          onBackToMenu={() => setActiveMenu("menu")}
-          onRequestConsent={handleRequestPermission}
-        />
-      )}
+              patientDataForm={patientDataForm}
+              onSetPatientDataForm={onSetPatientDataForm}
+              onBackToMenu={() => setActiveMenu("menu")}
+              onReview={() => setActiveMenu("sumDiagnosis")}
+              onBackToDiagnosis={() => setActiveMenu("diagnosis")}
+              onSubmit={handlePatientSubmit}
+            />
+          )}
 
-      {activeMenu === "history" && (
-        <HistoryOverlay
-          overlayTop={overlayTop}
-          retryAt={retryAt}
-          cooldownLeft={cooldownLeft}
-          insets={insets}
-          patientInfo={patientInfo}
-          statusReq={statusReq}
-          medicalHistory={medicalHistory}
-          patientMockData={patientMockData}
-          onBackToMenu={() => setActiveMenu("menu")}
-          onRequestConsent={handleRequestPermission}
-          onPatientRecordPress={handleRecordPress}
-        />
-      )}
+          {activeMenu === "patient" && (
+            <PatientOverlay
+              overlayTop={overlayTop}
+              retryAt={retryAt}
+              cooldownLeft={cooldownLeft}
+              insets={insets}
+              patientInfo={patientInfo}
+              statusReq={statusReq}
+              patientData={patientMeasurement}
+              patientMockData={patientMockData}
+              onBackToMenu={() => setActiveMenu("menu")}
+              onRequestConsent={handleRequestPermission}
+            />
+          )}
 
-      {activeMenu === "showDetailHistory" && selectedRecord && (
-        <HistoryDetailOverlay
-          record={selectedRecord}
-          onBack={() => setActiveMenu("history")}
-        />
-      )}
+          {activeMenu === "history" && (
+            <HistoryOverlay
+              overlayTop={overlayTop}
+              retryAt={retryAt}
+              cooldownLeft={cooldownLeft}
+              insets={insets}
+              patientInfo={patientInfo}
+              statusReq={statusReq}
+              medicalHistory={medicalHistory}
+              patientMockData={patientMockData}
+              onBackToMenu={() => setActiveMenu("menu")}
+              onRequestConsent={handleRequestPermission}
+              onPatientRecordPress={handleRecordPress}
+            />
+          )}
+
+          {activeMenu === "showDetailHistory" && selectedRecord && (
+            <HistoryDetailOverlay
+              record={selectedRecord}
+              onBack={() => setActiveMenu("history")}
+            />
+          )}
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

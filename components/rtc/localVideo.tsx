@@ -12,7 +12,7 @@ interface LocalVideoProps {
 }
 
 const { width, height } = Dimensions.get("window");
-const PIP_WIDTH = width * 0.2;
+const PIP_WIDTH = (width > height ? height : width) * 0.2;
 const PIP_HEIGHT = (PIP_WIDTH / 3) * 4;
 
 function LocalVideo({

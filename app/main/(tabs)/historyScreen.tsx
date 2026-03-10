@@ -49,8 +49,8 @@ const HistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className={`flex-1 justify-center items-center ${BG.default} bg-gray-50`} >
-      <ScrollView className="flex p-4" style={{ width: BASE_WIDTH }}
+    <SafeAreaView className={`${BG.default} bg-secondary p-4 flex-1 justify-center items-center`}>
+      <ScrollView className="flex p-4 " style={{ width: BASE_WIDTH }}
         showsVerticalScrollIndicator={false}>
         <DiagnosisHistoryComp
           records={treatMent}
