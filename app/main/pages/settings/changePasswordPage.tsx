@@ -107,7 +107,7 @@ export default function ChangePasswordScreen() {
     ...rest
   }) => (
     <View className="mb-4">
-      <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+      <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-[24px] px-4 py-3 border border-blue-100 dark:border-gray-700">
         <FontAwesome name="lock" size={20} color="#60A5FA" />
         <TextInput
           className="flex-1 ml-3 text-gray-800 dark:text-white text-base"
@@ -198,7 +198,7 @@ export default function ChangePasswordScreen() {
           disabled={
             currentPassword === "" || newPassword === "" || confirmPassword === ""
           }
-          className={`bg-blue-500 rounded-xl py-4 m-4 items-center shadow-lg active:bg-blue-600 ${currentPassword === "" || newPassword === "" || confirmPassword === "" ? "opacity-50" : ""}`}
+          className={`bg-blue-500 rounded-[24px] py-4 m-4 items-center shadow-lg active:bg-blue-600 ${currentPassword === "" || newPassword === "" || confirmPassword === "" ? "opacity-50" : ""}`}
           onPress={handleChangePassword}
         >
           <Text className="text-white font-bold text-lg">

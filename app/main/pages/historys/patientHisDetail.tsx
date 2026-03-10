@@ -1,14 +1,17 @@
-import { TEXT_SIZE } from "@/constants/styles";
+import { BG, TEXT_SIZE } from "@/constants/styles";
 import Provider from "@/services/providerService";
 import { DiagnosisRecord } from "@/types/diagnosisHistory";
 import { FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { BackHandler, Pressable, ScrollView, Text, useColorScheme, View } from "react-native";
+import { BackHandler, Pressable, ScrollView, Text, useColorScheme, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const PatientHisDetail = () => {
+    const { height, width } = useWindowDimensions();
+
+    const BASE_WIDTH = width > height ? height : width;
     const { t } = useTranslation();
     const colorScheme = useColorScheme();
     const router = useRouter();
@@ -37,8 +40,8 @@ const PatientHisDetail = () => {
     }, []);
 
     return (
-        <SafeAreaView className="flex-1 h-full  bg-secondary dark:bg-gray-900 ">
-            <View className="flex w-full p-5 justify-start items-start">
+        <SafeAreaView className={`${BG.default} bg-secondary  flex-1 justify-center items-center`}>
+            <View className="flex p-4" style={{ width: BASE_WIDTH }}>
                 <Pressable
                     className="flex-row items-center justify-start px-3 rounded-full"
                     onPress={() => {
@@ -56,9 +59,10 @@ const PatientHisDetail = () => {
 
             {/* Content */}
             <ScrollView
-                className="flex-1 px-6"
+                className="flex-1 px-6 "
                 showsVerticalScrollIndicator={false}
                 contentContainerClassName="pb-8"
+                style={{ width: BASE_WIDTH }}
             >
                 {/* Card Container */}
                 <View className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden">
@@ -123,7 +127,7 @@ const PatientHisDetail = () => {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 

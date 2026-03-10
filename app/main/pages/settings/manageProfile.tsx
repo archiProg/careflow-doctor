@@ -110,7 +110,7 @@ const ManageProfilePage = () => {
               {t("profile.full-name")}
             </Text>
 
-            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-[24px] px-4 py-3 border border-blue-100 dark:border-gray-700">
               <TextInput
                 value={name}
                 onChangeText={setName}
@@ -124,7 +124,7 @@ const ManageProfilePage = () => {
               {t("profile.email")}
             </Text>
 
-            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-4 py-3 border border-blue-100 dark:border-gray-700">
+            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-[24px] px-4 py-3 border border-blue-100 dark:border-gray-700">
               <TextInput
                 value={email}
                 onChangeText={setEmail}
@@ -145,7 +145,7 @@ const ManageProfilePage = () => {
         <TouchableOpacity
           onPress={handleSave}
           disabled={isDisable}
-          className={`bg-blue-500 active:bg-blue-700 py-4 rounded-xl mb-4 mx-4 ${isDisable ? "opacity-50" : ""}`}
+          className={`bg-blue-500 active:bg-blue-700 py-4 rounded-[24px] mb-4 mx-4 ${isDisable ? "opacity-50" : ""}`}
         >
           <Text className="text-white text-base font-semibold text-center">
             {t("common.save")}
