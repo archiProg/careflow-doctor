@@ -1,6 +1,7 @@
 import LoadingComp from "@/components/loadingComp";
 import { UseCheckEmail } from "@/hooks/useCheckEmail";
 import { useInternet } from "@/hooks/useInternet";
+import { useServerAlert } from "@/hooks/useServerAlert";
 import Provider from "@/services/providerService";
 import { RequestApi } from "@/services/requestApiService";
 import { LoginResponse } from "@/types/loginModel";
@@ -26,6 +27,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const google_icon = require("@/assets/images/google_64.png");
 
+
+
 const LoginPage = () => {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
@@ -42,6 +45,16 @@ const LoginPage = () => {
 
   const BASE_WIDTH = width > height ? height : width;
 
+
+  const handleForgetPassword = (email: string) => {
+    router.push({
+      pathname: "/auth/ForgetPasswordPage",
+      params: {
+        email: email,
+      },
+    });
+  };
+
   const handleLogin = async () => {
     try {
       if (!isConnected) {
@@ -52,7 +65,7 @@ const LoginPage = () => {
       }
 
       if (!email || !password) {
-        Alert.alert(t("notification"), t("error.generalError"), [
+        Alert.alert(t("notification"), t("error.emailorpasswordIsnull"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
@@ -78,16 +91,17 @@ const LoginPage = () => {
 
       try {
         getResponse = JSON.parse(response.response);
+
         Provider.Token = getResponse.token;
       } catch {
-        Alert.alert(t("error.permission"), t("error.generalError"), [
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
       }
 
       if (!getResponse) {
-        Alert.alert(t("error.permission"), t("error.generalError"), [
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
@@ -103,7 +117,7 @@ const LoginPage = () => {
       } else {
         Alert.alert(
           t("notification"),
-          getResponse.message ?? t("error.generalError"),
+          useServerAlert(response.response) || t("error.generalError"),
           [{ text: t("ok"), style: "cancel" }],
         );
       }
@@ -118,6 +132,7 @@ const LoginPage = () => {
   const handleCheckEmail = async () => {
     try {
       let checkEmail = await UseCheckEmail(email);
+
       if (checkEmail.status == 0) {
         // router.replace({
         //   pathname: "/auth/RegisterPage",
@@ -126,6 +141,10 @@ const LoginPage = () => {
         //   },
         // });
         Alert.alert(t("notification"), t("email-not-found"));
+      } else if (checkEmail.status == -1) {
+
+        Alert.alert(t("notification"), useServerAlert(checkEmail.message));
+
       } else {
         setIsPasswordVisible(true);
       }
@@ -200,12 +219,19 @@ const LoginPage = () => {
                 {t("please_email")}
               </Text>
               <TextInput
-                className={`h-[56px] mb-[16px] rounded-[24px]  border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
+                className={`h-[56px] mb-[8px] rounded-[24px] px-4 border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
                 placeholder={t("placeholder_email")}
                 keyboardType="email-address"
                 value={email}
                 onChangeText={setEmail}
               />
+              <View className="flex justify-end items-end">
+                <Pressable onPress={() => handleForgetPassword(email)} className="mb-[16px] mx-2">
+                  <Text className="text-center text-gray-400 underline">
+                    {t("ForgetPassword")}
+                  </Text>
+                </Pressable>
+              </View>
               <Pressable
                 onPress={async () => {
                   await handleApi("CHECK_EMAIL");
@@ -215,10 +241,15 @@ const LoginPage = () => {
                 <Text className=" text-center text-white font-bold">
                   {t("continue")}
                 </Text>
+
               </Pressable>
-              <Text className="text-center text-gray-400 my-[24px]">
-                {t("or")}
-              </Text>
+              <View className="flex-row justify-center items-center mt-[16px] px-2">
+                <View className="flex-1 border-b border-gray-400"></View>
+                <Text className="text-center text-gray-400 my-[24px] px-8">
+                  {t("or")}
+                </Text>
+                <View className="flex-1 border-b border-gray-400"></View>
+              </View>
               <Pressable
                 onPress={async () => { }}
                 className={`h-[56px] w-full mb-16 rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
@@ -239,7 +270,7 @@ const LoginPage = () => {
               <Text className="font-bold text-black dark:text-white">
                 {email}
               </Text>
-              <View className="flex-row items-center h-[56px] mb-[16px] rounded-[24px] px-4 border border-gray-900 dark:border-gray-200 focus-within:border-[#2196F3] dark:focus-within:border-[#64B5F6]">
+              <View className="flex-row items-center h-[56px] mb-[8px] rounded-[24px] px-4 border border-gray-900 dark:border-gray-200 focus-within:border-[#2196F3] dark:focus-within:border-[#64B5F6]">
                 <TextInput
                   className="flex-1 text-black dark:text-white"
                   placeholder={t("placeholder_password")}
@@ -257,6 +288,13 @@ const LoginPage = () => {
                     className="text-gray-600 dark:text-gray-300"
                   />
                 </TouchableOpacity>
+              </View>
+              <View className="flex justify-end items-end">
+                <Pressable onPress={() => handleForgetPassword(email)} className="mb-[16px] mx-2">
+                  <Text className="text-center text-gray-400 underline">
+                    {t("ForgetPassword")}
+                  </Text>
+                </Pressable>
               </View>
               <Pressable
                 onPress={async () => {
@@ -287,6 +325,16 @@ const LoginPage = () => {
               </Pressable>
             </>
           )}
+          <View className="flex-row justify-center items-center mb-[16px]">
+            <View>
+              <Text className="text-center text-gray-400 my-[16px]">
+                {t("dont_have_account")}
+                <Text className="underline text-black dark:text-gray-400" onPress={() => router.push("/auth/SignupPage")}>
+                  {t("Signup")}
+                </Text>
+              </Text>
+            </View>
+          </View>
         </ScrollView>
       </SafeAreaView>
       {isLoading && (
