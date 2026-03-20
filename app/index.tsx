@@ -40,7 +40,7 @@ const StartupPage = () => {
     password: string
   ): Promise<boolean> => {
     if (!email || !password) {
-      Alert.alert(t("notification"), t("missing-credentials"));
+      Alert.alert(t("notification"), t("error.emailorpasswordIsnull"));
       return false;
     }
 
@@ -57,12 +57,14 @@ const StartupPage = () => {
     };
 
     const response = await api.postApi("/login", JSON.stringify(body));
-
+    console.log(response);
+    
     if (response.success) {
       let getResponse: LoginResponse;
 
       getResponse = JSON.parse(response.response);
-
+      console.log(getResponse);
+      
       if (getResponse != null) {
         if (getResponse.token != null) {
           await AsyncStorage.setItem("email", email);
