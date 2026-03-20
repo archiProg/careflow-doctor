@@ -111,6 +111,7 @@
   "manage_profile_description": "Manage your profile information",
   "manage_profile": "Manage Profile",
   "sendedHospital": "Send to Hospital",
+  "send": "Send",
   "no-data-available": "No data available",
   "measurement-history": "Measurement History",
   "no-history-available": "No history available",
@@ -179,7 +180,8 @@
     "saveFailed": "Failed to save data. Please try again.",
     "permission": "Permission denied",
     "audioFailed": "Failed to initialize audio system",
-    "generalError": "An error occurred. Please try again."
+    "generalError": "An error occurred. Please try again.",
+    "emailorpasswordIsnull": "Email or password is required."
   },
   "profile": {
     "full-name": "Full Name",
@@ -191,5 +193,15 @@
     "save": "Save",
     "close": "Close"
   },
-  "changePasswordDescription": "Please enter current password and new password."
+  "changePasswordDescription": "Please enter current password and new password.",
+  "dont_have_account": "Don't have an account? ",
+  "ForgetPassword": "Forget password?",
+  "Signup": "Sign Up",
+  "forget_password_title": "Forgot Password",
+  "forget_password_subtitle": "Please enter your email to reset your password",
+  "create_doctor_account_title": "Create Doctor Account",
+  "create_doctor_account_subtitle": "Create a doctor account to join the platform.",
+  "account_information": "Account Information",
+  "personal_information": "Personal Information",
+  "professional_information": "Professional Information"
 }

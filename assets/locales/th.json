@@ -76,6 +76,7 @@
   "medication": "ยาที่สั่งจ่าย",
   "needHospital": "ควรไปโรงพยาบาล",
   "sendedHospital": "ส่งโรงพยาบาล",
+  "send": "ส่ง",
   "review": "ทบทวน",
   "cancel": "ยกเลิก",
   "joinCall": "เข้าร่วม",
@@ -182,7 +183,8 @@
     "saveFailed": "ไม่สามารถบันทึกข้อมูลได้ โปรดลองอีกครั้ง",
     "permission": "ไม่ได้รับอนุญาต",
     "audioFailed": "ไม่สามารถเริ่มต้นระบบเสียงได้",
-    "generalError": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง"
+    "generalError": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
+    "emailorpasswordIsnull": "กรุณากรอกอีเมลหรือรหัสผ่าน"
   },
   "profile": {
     "full-name": "ชื่อ-นามสกุล",
@@ -194,5 +196,15 @@
     "save": "บันทึกข้อมูล",
     "close": "ปิด"
   },
-  "changePasswordDescription": "กรุณากรอกรหัสผ่านปัจจุบันและรหัสผ่านใหม่"
+  "changePasswordDescription": "กรุณากรอกรหัสผ่านปัจจุบันและรหัสผ่านใหม่",
+  "dont_have_account": "ยังไม่มีบัญชี? ",
+  "ForgetPassword": "ลืมรหัสผ่าน?",
+  "Signup": "ลงทะเบียน",
+  "forget_password_title": "กรุณากรอกอีเมลเพื่อรีเซ็ตรหัสผ่าน",
+  "forget_password_subtitle": "กรุณากรอกอีเมลเพื่อรีเซ็ตรหัสผ่าน",
+  "create_doctor_account_title": "สร้างบัญชีแพทย์",
+  "create_doctor_account_subtitle": "สร้างบัญชีแพทย์เพื่อลงทะเบียนบนแพลตฟอร์ม",
+  "account_information": "ข้อมูลบัญชี",
+  "personal_information": "ข้อมูลส่วนตัว",
+  "professional_information": "ข้อมูลวิชาชีพ"
 }
