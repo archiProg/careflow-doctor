@@ -203,5 +203,26 @@
   "create_doctor_account_subtitle": "Create a doctor account to join the platform.",
   "account_information": "Account Information",
   "personal_information": "Personal Information",
-  "professional_information": "Professional Information"
+  "professional_information": "Professional Information",
+  "id-card": "ID Card Number",
+  "date_of_birth": "Date of Birth",
+  "specialization": "Specialization",
+  "medical_license_number": "Medical License Number",
+  "experience": "Experience",
+  "affiliated_hospital": "Affiliated Hospital",
+  "profile_description": "Profile Description",
+  "handleRegister": {
+    "email": "Email is required",
+    "password": "Password is required",
+    "confirmPassword": "Password not match",
+    "password_confirmPassword": "Password not match",
+    "name": "Name is required",
+    "sex": "Gender is required",
+    "id_card": "ID Card is required",
+    "specialization_id": "Specialization is required",
+    "license_number": "Medical license number is required",
+    "years_of_experience": "Experience is required",
+    "affiliated_hospital": "Affiliated hospital is required",
+    "birthday": "Birthday is required"
+  }
 }
