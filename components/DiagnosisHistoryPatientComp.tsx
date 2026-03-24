@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { PatientMedicalHistory } from "@/types/diagnosisHistory";
+import { FontAwesome5 } from "@expo/vector-icons";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface DiagnosisHistoryPatientCompProps {
   PatientHistory: PatientMedicalHistory[];
@@ -48,35 +47,31 @@ const DiagnosisHistoryPatientComp: React.FC<
   };
 
   return (
-    <SafeAreaView className="flex-1 ">
+    <View className="flex-1">
       {/* Filter */}
-      <View className="">
+      <View className="flex-1">
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className={`px-4 py-2 rounded-full ${
-              selectedFilter === "all" ? "bg-blue-600" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded-full ${selectedFilter === "all" ? "bg-blue-600" : "bg-gray-200"
+              }`}
             onPress={() => setSelectedFilter("all")}
           >
             <Text
-              className={`font-semibold ${
-                selectedFilter === "all" ? "text-white" : "text-gray-700"
-              }`}
+              className={`font-semibold ${selectedFilter === "all" ? "text-white" : "text-gray-700"
+                }`}
             >
               {t("filterAll")} ({records.length})
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`px-4 py-2 rounded-full ${
-              selectedFilter === "hospital" ? "bg-orange-400" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded-full ${selectedFilter === "hospital" ? "bg-orange-400" : "bg-gray-200"
+              }`}
             onPress={() => setSelectedFilter("hospital")}
           >
             <Text
-              className={`font-semibold ${
-                selectedFilter === "hospital" ? "text-white" : "text-gray-700"
-              }`}
+              className={`font-semibold ${selectedFilter === "hospital" ? "text-white" : "text-gray-700"
+                }`}
             >
               {t("filterHospital")} (
               {records.filter((r) => r.needHospital).length})
@@ -125,7 +120,7 @@ const DiagnosisHistoryPatientComp: React.FC<
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,6 +1,7 @@
 import LoadingComp from "@/components/loadingComp";
 import { UseCheckEmail } from "@/hooks/useCheckEmail";
 import { useInternet } from "@/hooks/useInternet";
+import { useServerAlert } from "@/hooks/useServerAlert";
 import Provider from "@/services/providerService";
 import { RequestApi } from "@/services/requestApiService";
 import { LoginResponse } from "@/types/loginModel";
@@ -8,32 +9,51 @@ import { JWT } from "@/utilitys/jwt";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
   Image,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   useColorScheme,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const google_icon = require("@/assets/images/google_64.png");
 
+
+
 const LoginPage = () => {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
-  const [email, setEmail] = useState("dang@gmail.com");
-  const [password, setPassword] = useState("1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isConnected = useInternet();
   const router = useRouter();
+
+
+  const { height, width } = useWindowDimensions();
+
+  const BASE_WIDTH = width > height ? height : width;
+
+
+  const handleForgetPassword = (email: string) => {
+    router.push({
+      pathname: "/auth/ForgetPasswordPage",
+      params: {
+        email: email,
+      },
+    });
+  };
 
   const handleLogin = async () => {
     try {
@@ -45,7 +65,7 @@ const LoginPage = () => {
       }
 
       if (!email || !password) {
-        Alert.alert(t("notification"), t("error.generalError"), [
+        Alert.alert(t("notification"), t("error.emailorpasswordIsnull"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
@@ -71,16 +91,17 @@ const LoginPage = () => {
 
       try {
         getResponse = JSON.parse(response.response);
+
         Provider.Token = getResponse.token;
       } catch {
-        Alert.alert(t("error.permission"), t("error.generalError"), [
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
       }
 
       if (!getResponse) {
-        Alert.alert(t("error.permission"), t("error.generalError"), [
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
           { text: t("ok"), style: "cancel" },
         ]);
         return;
@@ -96,7 +117,7 @@ const LoginPage = () => {
       } else {
         Alert.alert(
           t("notification"),
-          getResponse.message ?? t("error.generalError"),
+          useServerAlert(response.response) || t("error.generalError"),
           [{ text: t("ok"), style: "cancel" }],
         );
       }
@@ -111,6 +132,7 @@ const LoginPage = () => {
   const handleCheckEmail = async () => {
     try {
       let checkEmail = await UseCheckEmail(email);
+
       if (checkEmail.status == 0) {
         // router.replace({
         //   pathname: "/auth/RegisterPage",
@@ -119,6 +141,10 @@ const LoginPage = () => {
         //   },
         // });
         Alert.alert(t("notification"), t("email-not-found"));
+      } else if (checkEmail.status == -1) {
+
+        Alert.alert(t("notification"), useServerAlert(checkEmail.message));
+
       } else {
         setIsPasswordVisible(true);
       }
@@ -149,9 +175,11 @@ const LoginPage = () => {
 
   return (
     <>
-      <SafeAreaView className="h-full p-4 bg-white dark:bg-gray-900">
-        <View>
-          <View className="flex flex-row justify-between items-center mb-8">
+      <SafeAreaView className={`h-full bg-white dark:bg-gray-900 justify-center items-center`}
+      >
+        <ScrollView className="flex p-4" style={{ width: BASE_WIDTH }}>
+          <View className="flex flex-row w-full justify-between items-center mb-8"
+          >
             <View>
               {isPasswordVisible && (
                 <Pressable
@@ -191,29 +219,40 @@ const LoginPage = () => {
                 {t("please_email")}
               </Text>
               <TextInput
-                className="h-[56px] mb-[16px] rounded-[24px]  border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 p-4 
-                dark:border-gray-200 dark:text-white"
+                className={`h-[56px] mb-[8px] rounded-[24px] px-4 border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
                 placeholder={t("placeholder_email")}
                 keyboardType="email-address"
                 value={email}
                 onChangeText={setEmail}
               />
+              <View className="flex justify-end items-end">
+                <Pressable onPress={() => handleForgetPassword(email)} className="mb-[16px] mx-2">
+                  <Text className="text-center text-gray-400 underline">
+                    {t("ForgetPassword")}
+                  </Text>
+                </Pressable>
+              </View>
               <Pressable
                 onPress={async () => {
                   await handleApi("CHECK_EMAIL");
                 }}
-                className="h-[56px] w-full rounded-[24px] bg-black items-center justify-center dark:bg-[#2196F3]"
+                className={`h-[56px] rounded-[24px] bg-black items-center justify-center dark:bg-[#2196F3]`}
               >
                 <Text className=" text-center text-white font-bold">
                   {t("continue")}
                 </Text>
+
               </Pressable>
-              <Text className="text-center text-gray-400 mt-[16px] mb-[16px]">
-                {t("or")}
-              </Text>
+              <View className="flex-row justify-center items-center mt-[16px] px-2">
+                <View className="flex-1 border-b border-gray-400"></View>
+                <Text className="text-center text-gray-400 my-[24px] px-8">
+                  {t("or")}
+                </Text>
+                <View className="flex-1 border-b border-gray-400"></View>
+              </View>
               <Pressable
-                onPress={async () => {}}
-                className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
+                onPress={async () => { }}
+                className={`h-[56px] w-full mb-16 rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
@@ -228,10 +267,10 @@ const LoginPage = () => {
             </>
           ) : (
             <>
-              <Text className="py-4  font-bold text-black dark:text-white">
+              <Text className="font-bold text-black dark:text-white">
                 {email}
               </Text>
-              <View className="flex-row items-center h-[56px] mb-[16px] rounded-[24px] px-4 border border-gray-900 dark:border-gray-200 focus-within:border-[#2196F3] dark:focus-within:border-[#64B5F6]">
+              <View className="flex-row items-center h-[56px] mb-[8px] rounded-[24px] px-4 border border-gray-900 dark:border-gray-200 focus-within:border-[#2196F3] dark:focus-within:border-[#64B5F6]">
                 <TextInput
                   className="flex-1 text-black dark:text-white"
                   placeholder={t("placeholder_password")}
@@ -250,6 +289,13 @@ const LoginPage = () => {
                   />
                 </TouchableOpacity>
               </View>
+              <View className="flex justify-end items-end">
+                <Pressable onPress={() => handleForgetPassword(email)} className="mb-[16px] mx-2">
+                  <Text className="text-center text-gray-400 underline">
+                    {t("ForgetPassword")}
+                  </Text>
+                </Pressable>
+              </View>
               <Pressable
                 onPress={async () => {
                   await handleApi("LOGIN");
@@ -260,12 +306,12 @@ const LoginPage = () => {
                   {t("login")}
                 </Text>
               </Pressable>
-              <Text className="text-center text-gray-400 mt-[16px] mb-[16px]">
+              <Text className="text-center text-gray-400 my-[24px]">
                 {t("or")}
               </Text>
               <Pressable
-                onPress={async () => {}}
-                className="h-[56px] w-full rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200"
+                onPress={async () => { }}
+                className={`h-[56px] mb-16 w-[${BASE_WIDTH}px] rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">
                   <Image
@@ -279,7 +325,17 @@ const LoginPage = () => {
               </Pressable>
             </>
           )}
-        </View>
+          <View className="flex-row justify-center items-center mb-[16px]">
+            <View>
+              <Text className="text-center text-gray-400 my-[16px]">
+                {t("dont_have_account")}
+                <Text className="underline text-black dark:text-gray-400" onPress={() => router.push("/auth/SignupPage")}>
+                  {t("Signup")}
+                </Text>
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
       {isLoading && (
         <SafeAreaView className="absolute w-full h-full flex items-center justify-center bg-black/50">

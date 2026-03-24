@@ -1,13 +1,13 @@
+import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
-  View,
-  Text,
-  ScrollView,
   Image,
   Pressable,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
 
 import MenuCard from "@/components/menuCard";
 import Provider from "@/services/providerService";
@@ -15,17 +15,15 @@ import { PatientInfo } from "@/types/patientData";
 
 interface PatientMenuSheetProps {
   activeMenu:
-    | "menu"
-    | "patient"
-    | "diagnosis"
-    | "sumDiagnosis"
-    | "history"
-    | "showDetailHistory";
+  | "menu"
+  | "patient"
+  | "diagnosis"
+  | "sumDiagnosis"
+  | "history"
+  | "showDetailHistory";
 
-  overlayTop: number;
-  insets: { bottom: number };
   patientInfo: PatientInfo | null;
-  submited:boolean;
+  submited: boolean;
 
   setActiveMenu: (
     menu:
@@ -43,8 +41,6 @@ interface PatientMenuSheetProps {
 
 const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
   activeMenu,
-  overlayTop,
-  insets,
   patientInfo,
   setActiveMenu,
   submited,
@@ -56,33 +52,29 @@ const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
 
   return (
     <View
-      className="flex flex-col justify-between absolute left-0 right-0 bg-white rounded-t-[16px]"
-      style={{
-        top: overlayTop,
-        bottom: insets.bottom,
-      }}
+      className="flex flex-col justify-between bg-white h-full"
     >
       <ScrollView className="p-4 pt-0 pb-12 mt-[16px]">
         {/* Profile */}
         <View className="flex-1 flex-row items-center mx-4 mt-4">
           <View className="">
             {patientInfo?.profile_image_url ? (
-            <View className="relative">
-              <Image
-                source={{
-                  uri: Provider.HostApi + patientInfo.profile_image_url,
-                }}
-                style={{ height: "100%", borderRadius: 16, position:"absolute" }}
-                resizeMode="contain"
-              />
-                    <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                    </View>
-                  </View>
+              <View className="relative">
+                <Image
+                  source={{
+                    uri: Provider.HostApi + patientInfo.profile_image_url,
+                  }}
+                  style={{ height: "100%", borderRadius: 16, position: "absolute" }}
+                  resizeMode="contain"
+                />
+                <View className="w-20 h-20 rounded-xl bg-blue-500  items-center justify-center">
+                  <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+                </View>
+              </View>
             ) : (
-                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                    <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
-                  </View>
+              <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                <Text className="text-white text-2xl font-bold">{patientInfo?.name?.charAt(0).toUpperCase()}</Text>
+              </View>
             )}
           </View>
 
@@ -122,18 +114,17 @@ const PatientMenuSheet: React.FC<PatientMenuSheetProps> = ({
       </ScrollView>
 
       {/* End Case */}
-<Pressable
-  disabled={!submited}
-  onPress={handleLeave}
-  className={`m-4 h-[56px] rounded-[16px] items-center justify-center ${
-    submited ? "bg-[#FB6469]" : "bg-[#d9d9d9]"
-  }`}
->
-  <View className="flex-row items-center gap-2">
-    <FontAwesome name="phone" size={18} color="white" />
-    <Text className="text-white">{t("end-case")}</Text>
-  </View>
-</Pressable>
+      <Pressable
+        disabled={!submited}
+        onPress={handleLeave}
+        className={`m-4 h-[56px] rounded-[16px] items-center justify-center ${submited ? "bg-[#FB6469]" : "bg-[#d9d9d9]"
+          }`}
+      >
+        <View className="flex-row items-center gap-2">
+          <FontAwesome name="phone" size={18} color="white" />
+          <Text className="text-white">{t("end-case")}</Text>
+        </View>
+      </Pressable>
 
     </View>
   );

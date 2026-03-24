@@ -156,7 +156,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                     <View className="mb-6">
                         <View className="flex-row items-center mb-2">
                             <Text className="text-gray-900 text-base font-semibold ml-2">
-                                {t('doctorNote')}{" "} 
+                                {t('doctorNote')}{" "}
                             </Text>
                         </View>
                         <TextInput
@@ -171,19 +171,20 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSetPatientDataForm, onRevie
                         />
                     </View>
 
-                    {/* ปุ่มดำเนินการ */}
-                    <View className="flex-row gap-3">
-                        <TouchableOpacity
-                            className="flex-1 flex-row items-center justify-center bg-blue-600 rounded-xl py-4"
-                            onPress={() => handleSave()}
-                            activeOpacity={0.8}
-                        >
-                            <Text className="text-white text-base font-semibold ml-2">
-                                {t("review")}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+
                 </ScrollView>
+                {/* ปุ่มดำเนินการ */}
+                <View className="flex-row gap-3 px-4 py-4">
+                    <TouchableOpacity
+                        className="flex-1 flex-row items-center justify-center bg-blue-600 rounded-xl py-4"
+                        onPress={() => handleSave()}
+                        activeOpacity={0.8}
+                    >
+                        <Text className="text-white text-base font-semibold ml-2">
+                            {t("review")}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </KeyboardAvoidingView>
         </View>
 

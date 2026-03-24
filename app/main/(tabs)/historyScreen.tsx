@@ -4,9 +4,13 @@ import { RequestApi } from "@/services/requestApiService";
 import { DiagnosisRecord } from "@/types/diagnosisHistory";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { ScrollView, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HistoryScreen: React.FC = () => {
+  const { height, width } = useWindowDimensions();
+
+  const BASE_WIDTH = width > height ? height : width;
   const router = useRouter();
   const [treatMent, setTreatMent] = useState([]);
 
@@ -45,11 +49,15 @@ const HistoryScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className={`flex-1 ${BG.default} bg-gray-50`}>
-      <DiagnosisHistoryComp
-        records={treatMent}
-        onRecordPress={handleRecordPress}
-      />
+    <SafeAreaView className={`${BG.default} bg-secondary p-4 flex-1 justify-center items-center`}>
+      <ScrollView className="flex p-4 " style={{ width: BASE_WIDTH }}
+        showsVerticalScrollIndicator={false}>
+        <DiagnosisHistoryComp
+          records={treatMent}
+          onRecordPress={handleRecordPress}
+        />
+      </ScrollView>
+
     </SafeAreaView>
   );
 };

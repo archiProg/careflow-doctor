@@ -10,10 +10,8 @@ import {
   Pressable,
   ScrollView,
   Text,
-  useColorScheme,
   View,
 } from "react-native";
-import { LineChart } from "react-native-gifted-charts";
 
 /* ---------- Color Palette (White–Blue) ---------- */
 const colors = {
@@ -81,37 +79,6 @@ const decodeBase64 = (str: string) => {
   }
 };
 
-
-
-const groupMeasurements = (data: any[]) => {
-  const result: Record<string, Measurement[]> = {};
-
-  data.forEach(item => {
-    const date = item.created_at;
-
-    Object.entries(item.values).forEach(([key, value]) => {
-
-      if (EXCLUDE_KEYWORDS.some((k) => key.includes(k))) return;
-
-      if(result[key] && !isValidValue(value)) return;
-
-      if (!result[key]) {
-        result[key] = [];
-      }
-
-      result[key].push({
-        value: Number(value),
-        date: date,
-        dataPointText: String(value),
-        label: formatDate(date),
-      });
-
-    });
-  });
-
-  return result;
-};
-
 const extractDisplayItems = (
   deviceType: string,
   values: any,
@@ -124,7 +91,6 @@ const extractDisplayItems = (
       if (!isValidValue(value)) return false;
       if (EXCLUDE_KEYWORDS.some((k) => key.includes(k))) return false;
 
-      // 🚫 ตอนนี้ไม่ต้องการ field ที่ต้อง decode
       if (shouldDecode(deviceType, key)) return false;
 
       return true;
@@ -245,27 +211,19 @@ const formatDate = (dateString?: string): string => {
   });
 };
 
-type Measurement = {
-  value: number;
-  dataPointText: string;
-  label: string;
-  date: string;
-};
-
 /* ---------- Component ---------- */
 export default function PatientDataCard({
   data,
   loading = false,
   patientInfo,
 }: Props) {
-  const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const type = data?.type;
   const values = data?.values;
   const created_at = data?.created_at;
   const type_id = data?.type_id;
   const patient_id = patientInfo?.patient_id;
-  const [history, setHistory] = useState<Record<string, Measurement[]>>({});
+  const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
@@ -305,10 +263,10 @@ export default function PatientDataCard({
 
       if (response.success && response.response) {
         const data = JSON.parse(response.response);
-        const groupedData = groupMeasurements(data);
-        console.log(groupedData);
-
-        setHistory(groupedData);
+        console.log("........................................................................");
+        console.log(data);
+        
+        setHistory(data);
         setShowHistory(true);
         setLoadingHistory(false);
       }
@@ -525,12 +483,12 @@ export default function PatientDataCard({
                 contentContainerStyle={{ paddingBottom: 20 }}
                 nestedScrollEnabled={true}
                 keyboardShouldPersistTaps="handled"
-              > 
+              >
                 {loadingHistory ? (
                   <View>
                     <LoadingMini />
                   </View>
-                ) : history == null ? (
+                ) : history.length === 0 ? (
                   <Text
                     style={{
                       textAlign: "center",
@@ -541,53 +499,66 @@ export default function PatientDataCard({
                     {t("no-history-available")}
                   </Text>
                 ) : (
-                  Object.entries(history).map(([key, items]: any, index) => {
+                  history.map((item, index) => {
+                    const items = extractDisplayItems(
+                      type,
+                      item.values,
+                      config.unit,
+                    );
+
                     return (
                       <View
                         key={index}
                         style={{
-                          marginBottom: 14,
-                          padding: 12,
-                          backgroundColor: colors.offWhite,
-                          borderRadius: 10,
                           borderWidth: 1,
                           borderColor: colors.border,
-                          overflow: "hidden",
+                          borderRadius: 12,
+                          padding: 12,
+                          marginBottom: 10,
                         }}
                       >
-                        <View style={{ flexDirection: "column", }}>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            marginBottom: 12,
+                            paddingBottom: 10,
+                            borderBottomWidth: 1,
+                            borderBottomColor: colors.blue100,
+                          }}
+                        >
+                          {/* Title */}
+                          <Text>{/* {config.label} */}</Text>
 
-                          {/* Y Axis Title */}
-                          <Text
+                          {/* Date badge */}
+                          <View
                             style={{
-                              marginRight: 10,
-                              fontSize: 20,
-                              color: colorScheme === 'dark' ? '#90ffff' : '#000',
+                              backgroundColor: colors.offWhite,
+                              borderWidth: 1,
+                              borderColor: colors.blue100,
+                              borderRadius: 6,
+                              paddingVertical: 2,
+                              paddingHorizontal: 8,
                             }}
                           >
-                            {prettifyKey(key)} {config.unit ?? ""}
-                          </Text>
-
-                          <LineChart
-                            data={history[key]}
-                            stepValue={Math.ceil(history[key].length>1 ? Number(Math.max(...history[key].map((item: any) => item.value)) / 5) : history[key][0].value )}
-                            rotateLabel={true}
-                            textFontSize={13}
-                            dataPointsColor1={colorScheme === 'dark' ? '#90ffff' : '#0000FF'}
-                            yAxisTextStyle={colorScheme === 'dark' ? { color: '#90ffff' } : { color: '#000' }}
-                            thickness={5}
-                            dataPointsColor={colorScheme === 'dark' ? '#fff' : '#000'}
-                            maxValue={history[key].reduce((max, item) => item.value > max ? item.value : max, 0) + (history[key].reduce((max, item) => item.value > max ? item.value : max, 0))}
-                            xAxisLabelTextStyle={colorScheme === 'dark' ? { color: '#90ffff' } : { color: '#000' }}
-                            showVerticalLines
-                            color={colorScheme === 'dark' ? '#0000FF' : '#90ffff'}
-                            textColor={colorScheme === 'dark' ? '#90ffff' : '#000'}
-                          />
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontWeight: "500",
+                                color: colors.textSecondary,
+                              }}
+                            >
+                              {formatDate(item.created_at)}
+                            </Text>
+                          </View>
                         </View>
+
+                        <GridMetrics items={items} />
                       </View>
                     );
-                  }))
-                }
+                  })
+                )}
               </ScrollView>
             </View>
           </View>

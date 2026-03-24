@@ -1,14 +1,14 @@
-import React from "react";
-import { View, Text, Pressable, ScrollView, Image } from "react-native";
-import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
-import { useTranslation } from "react-i18next";
-import { PatientMedicalHistory } from "@/types/diagnosisHistory";
 import LoadingMini from "@/components/loadingMini";
 import { TEXT } from "@/constants/styles";
 import Provider from "@/services/providerService";
-import PatientDataCard from "../patientDataCard";
+import { PatientMedicalHistory } from "@/types/diagnosisHistory";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import DiagnosisHistoryPatientComp from "../DiagnosisHistoryPatientComp";
+import PatientDataCard from "../patientDataCard";
 
 /* ---------- Types ---------- */
 
@@ -37,8 +37,6 @@ interface HistoryOverlayProps {
 /* ---------- Component ---------- */
 
 const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
-  overlayTop,
-  insets,
   patientInfo,
   statusReq,
   retryAt,
@@ -53,11 +51,7 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
 
   return (
     <View
-      className="flex flex-col absolute left-0 right-0 bg-white rounded-t-[16px]"
-      style={{
-        top: overlayTop,
-        bottom: insets.bottom,
-      }}
+      className="flex flex-col justify-between bg-white h-full"
     >
       {/* ---------- Header ---------- */}
       <View className="p-4 flex-row items-center">
@@ -133,8 +127,8 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
             </View>
           ) : (
             <View>
-    <LoadingMini/>
-            </View>          )
+              <LoadingMini />
+            </View>)
         ) : (
           <View>
             <View className="px-4 flex flex-row flex-wrap justify-between gap-y-4">
@@ -157,8 +151,8 @@ const HistoryOverlay: React.FC<HistoryOverlayProps> = ({
               >
                 <Text className="text-white">
                   {retryAt && cooldownLeft > 0
-      ? t("please_wait_seconds", { seconds: cooldownLeft })
-      :t("request-patient-consent")}
+                    ? t("please_wait_seconds", { seconds: cooldownLeft })
+                    : t("request-patient-consent")}
                 </Text>
               </Pressable>
             </View>

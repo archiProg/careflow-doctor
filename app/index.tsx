@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; // <-- ใช้ router จาก expo-router
+import * as ScreenOrientation from 'expo-screen-orientation';
 import React, { useEffect } from "react";
-import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import LoadingComp from "@/components/loadingComp";
@@ -39,7 +40,7 @@ const StartupPage = () => {
     password: string
   ): Promise<boolean> => {
     if (!email || !password) {
-      Alert.alert(t("notification"), t("missing-credentials"));
+      Alert.alert(t("notification"), t("error.emailorpasswordIsnull"));
       return false;
     }
 
@@ -56,12 +57,14 @@ const StartupPage = () => {
     };
 
     const response = await api.postApi("/login", JSON.stringify(body));
-
+    console.log(response);
+    
     if (response.success) {
       let getResponse: LoginResponse;
 
       getResponse = JSON.parse(response.response);
-
+      console.log(getResponse);
+      
       if (getResponse != null) {
         if (getResponse.token != null) {
           await AsyncStorage.setItem("email", email);
@@ -90,6 +93,7 @@ const StartupPage = () => {
     }
   };
 
+
   const initProfile = async () => {
     if (!isConnected) {
       Alert.alert(t("notification"), t("error.networkError"));
@@ -117,6 +121,15 @@ const StartupPage = () => {
       return false;
     }
   };
+
+
+  useEffect(() => {
+    const unlockScreenOerientation = async () => {
+      await ScreenOrientation.unlockAsync()
+    }
+    unlockScreenOerientation()
+  }, [])
+
 
   useEffect(() => {
     if (isConnected === null) return;

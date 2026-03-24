@@ -2,13 +2,15 @@ import { emitSocket } from "@/utilitys/socket";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ReComingCall() {
   const { consultId } = useLocalSearchParams<{
     consultId: string;
   }>();
+  const { height, width } = useWindowDimensions();
+  const BASE_WIDTH = width > height ? height : width;
   const { t } = useTranslation();
   const router = useRouter();
   const [timeLeft, setTimeLeft] = useState(60);
@@ -45,9 +47,9 @@ export default function ReComingCall() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end bg-black/40">
+    <SafeAreaView className="flex-1 justify-end bg-black/40 ">
       {/* Bottom Sheet */}
-      <View className="bg-white rounded-t-3xl px-6 pt-6 pb-8">
+      <View className="bg-white rounded-t-3xl px-6 pt-6 pb-8 items-center justify-center p-4">
         {/* Handle */}
         <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
 
@@ -71,24 +73,28 @@ export default function ReComingCall() {
         </View>
 
         {/* Accept Button */}
-        <Pressable
-          onPress={acceptCase}
-          className="bg-blue-500 py-4 rounded-2xl active:scale-95"
-        >
-          <Text className="text-white text-center text-lg font-semibold">
-            {t("comming-call-accept")}
-          </Text>
-        </Pressable>
+        <View className="flex-row items-center justify-center gap-4" style={{ width: BASE_WIDTH - 32 }}>
+          <Pressable
+            onPress={acceptCase}
+            className="bg-blue-500 py-4 rounded-2xl active:scale-95"
+            style={{ width: (BASE_WIDTH / 2) - 16 }}
+          >
+            <Text className="text-white text-center text-lg font-semibold">
+              {t("comming-call-accept")}
+            </Text>
+          </Pressable>
 
-        {/* Reject Button */}
-        <Pressable
-          onPress={rejectCase}
-          className="bg-red-300 py-4 rounded-2xl mt-3 active:scale-95"
-        >
-          <Text className="text-white text-center text-lg font-semibold">
-            {t("comming-call-decline")}
-          </Text>
-        </Pressable>
+          {/* Reject Button */}
+          <Pressable
+            onPress={rejectCase}
+            className="bg-red-300 py-4 rounded-2xl active:scale-95"
+            style={{ width: (BASE_WIDTH / 2) - 16 }}
+          >
+            <Text className="text-white text-center text-lg font-semibold">
+              {t("comming-call-decline")}
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );

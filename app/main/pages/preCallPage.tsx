@@ -10,19 +10,26 @@ import {
   Pressable,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediaStream, RTCView } from "react-native-webrtc";
 
+import { RootState } from "@/stores";
 import { useKeepAwake } from "expo-keep-awake";
 import { useTranslation } from "react-i18next";
-const PreCallPage: React.FC = () => {
+import { useSelector } from "react-redux";
+
+
+const PreCallPage = () => {
   useKeepAwake();
   const { consultId, type } = useLocalSearchParams<{
     consultId: string;
     type: string;
   }>();
+  const consultInfo = useSelector((state: RootState) => state.consult.info);
+  const { height, width } = useWindowDimensions();
   const router = useRouter();
   const { t } = useTranslation();
   const [settings, setSettings] = useState({ audio: true, video: true });
@@ -56,8 +63,8 @@ const PreCallPage: React.FC = () => {
     };
   }, []);
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-900 p-4">
-      <View className="flex-1">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-900 p-4 ">
+      <View className={`flex-1 ${height < width ? "flex-row" : "flex-col"}`}>
         {/* Video preview */}
         <View className="flex-1 pt-4 pb-16">
           <View className="bg-black rounded-3xl overflow-hidden flex-1">
@@ -118,9 +125,56 @@ const PreCallPage: React.FC = () => {
           </View>
         </View>
         {/* Bottom button – join call */}
-        <View className="px-6 pb-6 pt-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <View
+          className={`${height < width ? "flex-1 justify-center" : ""
+            } px-6 pb-6 pt-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800`}
+        >
+          {/* Title */}
+          <View className="mb-4">
+            <Text className="text-xl font-bold text-gray-900 dark:text-white text-center">
+              เตรียมความพร้อม
+            </Text>
+
+            {consultInfo?.patient?.name && (
+              <Text className="text-gray-500 text-center mt-1">
+                คนไข้: {consultInfo.patient.name}
+              </Text>
+            )}
+          </View>
+
+          {/* Status */}
+          <View className="flex-row justify-center mb-6">
+            <View className="flex-row items-center mr-4">
+              <FontAwesome
+                name={settings.audio ? "microphone" : "microphone-slash"}
+                size={18}
+                color={settings.audio ? "#cececeff" : "#ee4444"}
+              />
+              <Text className="ml-2 text-gray-700 dark:text-gray-300">
+                {settings.audio ? "Mic On" : "Mic Off"}
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <FontAwesome5
+                name={settings.video ? "video" : "video-slash"}
+                size={16}
+                color={settings.video ? "#cececeff" : "#ee4444"}
+              />
+              <Text className="ml-2 text-gray-700 dark:text-gray-300">
+                {settings.video ? "Camera On" : "Camera Off"}
+              </Text>
+            </View>
+          </View>
+
+          {/* Join Button */}
           <Pressable
             onPress={() => {
+              if (!consultId) {
+                Alert.alert("Consult not found");
+                return;
+              }
+
               router.push({
                 pathname: "/main/pages/videoCallPage",
                 params: {
@@ -132,9 +186,11 @@ const PreCallPage: React.FC = () => {
                 },
               });
             }}
-            className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-98 shadow-lg"
+            className="bg-blue-500 h-14 rounded-2xl justify-center items-center active:scale-95 shadow-lg"
           >
-            <Text className="text-white font-bold text-lg">{t("joinCall")}</Text>
+            <Text className="text-white font-bold text-lg">
+              {t("joinCall")}
+            </Text>
           </Pressable>
         </View>
       </View>

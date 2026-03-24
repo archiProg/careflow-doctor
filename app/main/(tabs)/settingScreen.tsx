@@ -12,6 +12,7 @@ import {
     Pressable,
     ScrollView,
     Text,
+    useWindowDimensions,
     View
 } from "react-native";
 import DeviceInfo from 'react-native-device-info';
@@ -21,6 +22,8 @@ import { useSelector } from "react-redux";
 
 
 export default function SettingsScreen() {
+    const { height, width } = useWindowDimensions();
+    const BASE_WIDTH = width > height ? height : width;
     const { t } = useTranslation();
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
@@ -50,29 +53,29 @@ export default function SettingsScreen() {
     }, []);
 
     return (
-        <SafeAreaView edges={['top', 'bottom']} className={`flex-1 ${BG.default} bg-gray-50 p-4`}>
-            <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 20 }}>
+        <SafeAreaView edges={['top', 'bottom']} className={`flex-1 justify-center items-center ${BG.default} bg-gray-50 p-4`}>
+            <ScrollView className="flex p-4" style={{ width: BASE_WIDTH }} contentContainerStyle={{ paddingBottom: 20 }}>
                 {/* Header */}
                 <View className="flex-row items-center bg-white rounded-2xl dark:bg-gray-800 p-4">
                     {/* Profile Image */}
                     <View className="relative">
-                {Provider.Profile?.profile_image_url ? (
-                  <View>
-                    <Image
-                      source={{
-                        uri: Provider.HostApi + Provider.Profile.profile_image_url,
-                      }}
-                      className="absolute w-20 h-20 rounded-xl z-10"
-                    />
-                    <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
-                    </View>
-                  </View>
-                ) : (
-                  <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
-                    <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
-                  </View>
-                )}
+                        {Provider.Profile?.profile_image_url ? (
+                            <View>
+                                <Image
+                                    source={{
+                                        uri: Provider.HostApi + Provider.Profile.profile_image_url,
+                                    }}
+                                    className="absolute w-20 h-20 rounded-xl z-10"
+                                />
+                                <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                                    <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                                </View>
+                            </View>
+                        ) : (
+                            <View className="w-20 h-20 rounded-xl bg-blue-500 items-center justify-center">
+                                <Text className="text-white text-2xl font-bold">{Provider.Profile?.name.charAt(0).toUpperCase()}</Text>
+                            </View>
+                        )}
                         {/* Status Indicator */}
                         <View
                             className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 z-20 ${status === "start_work"

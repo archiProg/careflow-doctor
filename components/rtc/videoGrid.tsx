@@ -13,7 +13,7 @@ export default function VideoGrid({
   const peerEntries = Object.entries(peers);
 
   return (
-    <View className="flex-1 justify-center">
+    <View className="flex-1 justify-center bg-black">
       <View
         className={`flex-row flex-wrap gap-2 ${peerEntries.length <= 1 ? "justify-center" : ""
           }`}
