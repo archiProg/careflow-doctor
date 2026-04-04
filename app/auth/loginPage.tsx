@@ -4,12 +4,12 @@ import { useInternet } from "@/hooks/useInternet";
 import { useServerAlert } from "@/hooks/useServerAlert";
 import Provider from "@/services/providerService";
 import { RequestApi } from "@/services/requestApiService";
-import { LoginResponse } from "@/types/loginModel";
+import { LoginResponse , Payload_Google} from "@/types/loginModel";
 import { JWT } from "@/utilitys/jwt";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
@@ -24,6 +24,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {GoogleSignin , isErrorWithCode} from '@react-native-google-signin/google-signin';
 
 const google_icon = require("@/assets/images/google_64.png");
 
@@ -91,7 +92,7 @@ const LoginPage = () => {
 
       try {
         getResponse = JSON.parse(response.response);
-
+        console.log(getResponse);
         Provider.Token = getResponse.token;
       } catch {
         Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
@@ -173,6 +174,92 @@ const LoginPage = () => {
     setIsLoading(false);
   };
 
+    useEffect(() => {
+      GoogleSignin.configure({
+        webClientId: Provider.auth_google_webClientId,
+      });
+    }, []);
+  
+    const GoogleLogin = async () => {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      const userInfo = await GoogleSignin.signIn();
+      return userInfo;
+    };
+  
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await GoogleLogin();
+  
+      const user = res?.data?.user;
+  
+      const payload : Payload_Google = {
+        sub: user?.id,
+        name: user?.name,
+        given_name: user?.givenName,
+        family_name: user?.familyName,
+        picture: user?.photo,
+        email: user?.email,
+        email_verified: true,
+      };
+  
+      console.log("payload =>", payload);
+  
+      const api = new RequestApi();
+
+      const response = await api.postApi("/logingoogle", JSON.stringify(payload));
+            if (!response.success) {
+        Alert.alert(t("error.permission"), t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
+        return;
+      }
+
+      let getResponse: LoginResponse;
+
+      try {
+        getResponse = JSON.parse(response.response);
+        Provider.Token = getResponse.token;
+      } catch {
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
+        return;
+      }
+
+      if (!getResponse) {
+        Alert.alert(t("error.permission"), useServerAlert(response.response) || t("error.generalError"), [
+          { text: t("ok"), style: "cancel" },
+        ]);
+        return;
+      }
+
+      if (getResponse.token && payload.sub) {        
+        await AsyncStorage.setItem("email", getResponse.user.email);
+        await AsyncStorage.setItem("googleId", payload?.sub || "");
+        await AsyncStorage.setItem("token", getResponse.token);
+        JWT.setToken(getResponse.token);
+        router.replace("/");        
+      } else {
+        Alert.alert(
+          t("notification"),
+          useServerAlert(response.response) || t("error.generalError"),
+          [{ text: t("ok"), style: "cancel" }],
+        );
+      }
+  
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        console.log(error.code);
+      }
+      console.log(error);
+      console.error("Login error:", error);
+      Alert.alert(t("error.permission"), t("error.generalError"), [
+        { text: t("ok"), style: "cancel" },
+      ]);
+    }
+  };
+
   return (
     <>
       <SafeAreaView className={`h-full bg-white dark:bg-gray-900 justify-center items-center`}
@@ -251,7 +338,7 @@ const LoginPage = () => {
                 <View className="flex-1 border-b border-gray-400"></View>
               </View>
               <Pressable
-                onPress={async () => { }}
+                onPress={async () => {handleGoogleLogin()}}
                 className={`h-[56px] w-full mb-16 rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
               >
                 <View className="flex flex-row items-center">

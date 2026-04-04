@@ -31,6 +31,7 @@ export interface User {
     id_card: string;
     name: string;
     sex: number;
+    google_id: string;
     email: string;
     password_hash: string;
     role: string;
@@ -38,6 +39,7 @@ export interface User {
     auth_image_url: string;
     birthday: string;
     address: string;
-    doctor_profile: DoctorProfile | null;
+    photo: string;
+    doctor_profile: DoctorProfile;
     patient_profile: PatientProfile | null;
 }

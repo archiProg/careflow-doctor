@@ -1,14 +1,9 @@
 import LoadingComp from "@/components/loadingComp";
-import { useServerAlert } from "@/hooks/useServerAlert";
 import i18n from "@/services/i18nService";
-import { RequestApi } from "@/services/requestApiService";
-import { JWT } from "@/utilitys/jwt";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Provider from "@/services/providerService";
 import {
   Alert,
   Image,
@@ -26,27 +21,15 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  GoogleSignin,
-  isErrorWithCode,
-} from "@react-native-google-signin/google-signin";
-import { LoginResponse, Payload_Google } from "@/types/loginModel";
 
-const google_icon = require("@/assets/images/google_64.png");
-
-const SignupPage = () => {
+const CreateProfile = () => {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const { height, width } = useWindowDimensions();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [idCard, setIdCard] = useState("");
-
   const [specialization, setSpecialization] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [experience, setExperience] = useState("");
@@ -65,81 +48,6 @@ const SignupPage = () => {
     setDatePickerVisibility(false);
   };
 
-  const handleRegister = async () => {
-    if (!email) return alert(t("handleRegister.email"));
-    if (!password) return alert(t("handleRegister.password"));
-    if (!confirmPassword) return alert(t("handleRegister.confirmPassword"));
-    if (password !== confirmPassword)
-      return alert(t("handleRegister.confirmPassword"));
-    // if (!fullName) return alert(t("handleRegister.name"));
-    // if (!idCard) return alert(t("handleRegister.id_card"));
-    // if (!gender) return alert(t("handleRegister.sex"));
-    // if (!specialization) return alert(t("handleRegister.specialization_id"));
-    // if (!licenseNumber) return alert(t("handleRegister.license_number"));
-    // if (!experience) return alert(t("handleRegister.years_of_experience"));
-    // if (!hospital) return alert(t("handleRegister.affiliated_hospital"));
-    // if (!birtDate) return alert(t("handleRegister.birthday"));
-
-    const api = new RequestApi();
-
-    const body = {
-      email: email,
-      password: password,
-      // name: fullName,
-      // sex: gender,
-      // id_card: idCard,
-      // specialization_id: specialization,
-      // license_number: licenseNumber,
-      // years_of_experience: experience,
-      // affiliated_hospital: hospital,
-      // profile_detail: profileDesc,
-      // birthday: birtDate,
-    };
-
-    try {
-      setIsLoading(true);
-      const response = await api.postApi(
-        "/registerdoctor",
-        JSON.stringify(body),
-      );
-
-      if (!response.success) {
-        Alert.alert(t("notification"), useServerAlert(response.response), [
-          { text: t("ok"), style: "cancel" },
-        ]);
-        return;
-      }
-      Alert.alert(t("notification"), "success", [
-        {
-          text: t("ok"),
-          onPress: () => router.back(),
-        },
-      ]);
-    } catch {
-      return alert(t("handleRegister.birthday"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleConfirm = (date: Date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    const formatted = `${month}/${day}/${year}`;
-
-    const formatted2 = date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-
-    setBirtdate(formatted);
-    setBirtdateShow(formatted2);
-    console.log(date);
-
-    hideDatePicker();
-  };
   const handleBack = () => {
     router.back();
   };
@@ -158,96 +66,23 @@ const SignupPage = () => {
     return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: Provider.auth_google_webClientId,
+    const handleConfirm = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const formatted = `${month}/${day}/${year}`;
+
+    const formatted2 = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
     });
-  }, []);
 
-  const GoogleLogin = async () => {
-    await GoogleSignin.hasPlayServices();
-    await GoogleSignin.signOut();
-    const userInfo = await GoogleSignin.signIn();
-    return userInfo;
-  };
+    setBirtdate(formatted);
+    setBirtdateShow(formatted2);
+    console.log(date);
 
-  const handleGoogleLogin = async () => {
-    try {
-      const res = await GoogleLogin();
-
-      const user = res?.data?.user;
-
-      const payload: Payload_Google = {
-        sub: user?.id,
-        name: user?.name,
-        given_name: user?.givenName,
-        family_name: user?.familyName,
-        picture: user?.photo,
-        email: user?.email,
-        email_verified: true,
-      };
-
-      console.log("payload =>", payload);
-
-      const api = new RequestApi();
-
-      const response = await api.postApi("/logingoogle", JSON.stringify(payload));
-
-      if (!response.success) {
-        Alert.alert(t("error.permission"), t("error.generalError"), [
-          { text: t("ok"), style: "cancel" },
-        ]);
-        return;
-      }
-
-      let getResponse: LoginResponse;
-
-      try {
-        getResponse = JSON.parse(response.response);
-        console.log(getResponse);
-        Provider.Token = getResponse.token;
-      } catch {
-        Alert.alert(
-          t("error.permission"),
-          useServerAlert(response.response) || t("error.generalError"),
-          [{ text: t("ok"), style: "cancel" }],
-        );
-        return;
-      }
-
-      if (!getResponse) {
-        Alert.alert(
-          t("error.permission"),
-          useServerAlert(response.response) || t("error.generalError"),
-          [{ text: t("ok"), style: "cancel" }],
-        );
-        return;
-      }
-
-      if (getResponse.token) {
-        await AsyncStorage.setItem("email", getResponse.user.email);
-        await AsyncStorage.setItem("googleId", payload?.sub || "");
-        await AsyncStorage.setItem("token", getResponse.token);
-        JWT.setToken(getResponse.token);
-
-        router.replace("/");
-      } else {
-        Alert.alert(
-          t("notification"),
-          useServerAlert(response.response) || t("error.generalError"),
-          [{ text: t("ok"), style: "cancel" }],
-        );
-      }
-    } catch (error) {
-      if (isErrorWithCode(error)) {
-        console.log(error.code);
-      }
-      console.log(error);
-      console.error("Login error:", error);
-      Alert.alert(t("error.permission"), t("error.generalError"), [
-        { text: t("ok"), style: "cancel" },
-      ]);
-    }
+    hideDatePicker();
   };
 
   return (
@@ -291,45 +126,8 @@ const SignupPage = () => {
               </Text>
             </View>
             <View className="flex-1 gap-y-4">
-              {/* Account */}
-              <Text className="text-lg font-bold text-gray-800 mt-4 mb-2 dark:text-white">
-                {t("account_information")}
-              </Text>
-              <View className="flex-1 gap-y-2">
-                <Text className="px-2 text-gray-600  dark:text-gray-300">
-                  {t("email")}
-                </Text>
-                <TextInput
-                  className={`h-[56px] mb-[8px] rounded-[24px] px-4 border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
-              <View className="flex-1 gap-y-2">
-                <Text className="px-2 text-gray-600  dark:text-gray-300">
-                  {t("password")}
-                </Text>
-                <TextInput
-                  className={`h-[56px] mb-[8px] rounded-[24px] px-4 border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
-              </View>
-              <View className="flex-1 gap-y-2">
-                <Text className="px-2 text-gray-600  dark:text-gray-300">
-                  {t("confirm_password")}
-                </Text>
-                <TextInput
-                  className={`h-[56px] mb-[8px] rounded-[24px] px-4 border-[1px] border-gray-900 focus:border-[#2196F3] focus:outline-none focus:ring-1 focus:ring-[#2196F3] placeholder:text-gray-400 dark:border-gray-200 dark:text-white`}
-                  secureTextEntry
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                />
-              </View>
               {/* Personal */}
-              {/* <Text className="text-lg font-bold text-gray-800 mt-6 mb-2 dark:text-white">
+              <Text className="text-lg font-bold text-gray-800 mt-6 mb-2 dark:text-white">
                 {t("personal_information")}
               </Text>
 
@@ -375,10 +173,10 @@ const SignupPage = () => {
                   value={gender}
                   onChangeText={setGender}
                 />
-              </View> */}
+              </View>
 
               {/* Professional */}
-              {/* <Text className="text-lg font-bold text-gray-800 mt-6 mb-2 dark:text-white">
+              <Text className="text-lg font-bold text-gray-800 mt-6 mb-2 dark:text-white">
                 {t("professional_information")}
               </Text>
 
@@ -425,42 +223,8 @@ const SignupPage = () => {
                   value={profileDesc}
                   onChangeText={setProfileDesc}
                 />
-              </View> */}
-            </View>
-
-            <TouchableOpacity
-              className={`bg-black py-4 my-8   rounded-[24px] h-[56px] items-center shadow-lg  dark:bg-[#2196F3]  `}
-              onPress={() => handleRegister()}
-              activeOpacity={0.8}
-            >
-              <Text className="text-white text-lg font-semibold">
-                {t("send")}
-              </Text>
-            </TouchableOpacity>
-
-            <View className="flex-row justify-center items-center mt-[16px] px-2">
-              <View className="flex-1 border-b border-gray-400"></View>
-              <Text className="text-center text-gray-400 my-[24px] px-8">
-                {t("or")}
-              </Text>
-              <View className="flex-1 border-b border-gray-400"></View>
-            </View>
-            <Pressable
-              onPress={async () => {
-                handleGoogleLogin();
-              }}
-              className={`h-[56px] w-full mb-16 rounded-[24px] bg-white border-[1px] border-gray-900 items-center justify-center dark:border-gray-200`}
-            >
-              <View className="flex flex-row items-center">
-                <Image
-                  source={google_icon}
-                  className="w-[24px] h-[24px] mr-4"
-                />
-                <Text className=" text-center text-black font-bold">
-                  {t("continue_google")}
-                </Text>
               </View>
-            </Pressable>
+            </View>
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
@@ -475,4 +239,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default CreateProfile;

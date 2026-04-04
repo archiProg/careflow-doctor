@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { isProfileIncomplete  } from "@/hooks/useCheckdata";
 import LoadingComp from "@/components/loadingComp";
 import { BG } from "@/constants/styles";
 import { useInternet } from "@/hooks/useInternet";
@@ -27,8 +27,12 @@ const StartupPage = () => {
     Provider.Token = "";
     const email = await AsyncStorage.getItem("email");
     const password = await AsyncStorage.getItem("password");
+    const googleId = await AsyncStorage.getItem("googleId")
     if (email != null && password != null) {
       let result = await TryLogin(email, password);
+      return result;
+    } else if (email != null && googleId != null) {
+      let result = await TryGoogleLogin(email, googleId);
       return result;
     } else {
       return false;
@@ -57,18 +61,70 @@ const StartupPage = () => {
     };
 
     const response = await api.postApi("/login", JSON.stringify(body));
-    console.log(response);
     
     if (response.success) {
       let getResponse: LoginResponse;
 
       getResponse = JSON.parse(response.response);
-      console.log(getResponse);
-      
       if (getResponse != null) {
         if (getResponse.token != null) {
           await AsyncStorage.setItem("email", email);
           await AsyncStorage.setItem("password", password);
+          await AsyncStorage.setItem("token", getResponse.token);
+          Provider.Token = getResponse.token;
+          JWT.setToken(getResponse.token);
+          return true;
+        } else {
+          if (getResponse.message == "Invalid email or password") {
+            Alert.alert(t("notification"), getResponse.message);
+          } else if (getResponse.message == "User not found or inactive") {
+            Alert.alert(t("notification"), getResponse.message);
+          } else {
+            Alert.alert(t("notification"), getResponse.message);
+          }
+          return false;
+        }
+      } else {
+        Alert.alert(t("notification"), JSON.stringify(response.response));
+        return false;
+      }
+    } else {
+      Alert.alert(t("notification"), JSON.stringify(response.response));
+      return false;
+    }
+  };
+
+  const TryGoogleLogin = async (
+    email: string,
+    googleId: string
+  ): Promise<boolean> => {
+    if (!email || !googleId) {
+      Alert.alert(t("notification"), t("error.emailorgoogleIdIsnull"));
+      return false;
+    }
+
+    if (!isConnected) {
+      Alert.alert(t("notification"), t("error.networkError"));
+      return false;
+    }
+
+    const api = new RequestApi();
+
+    const body = {
+      email: email,
+      sub: googleId,
+    };
+
+    const response = await api.postApi("/logingoogle", JSON.stringify(body));
+    
+    if (response.success) {
+      let getResponse: LoginResponse;
+
+      getResponse = JSON.parse(response.response);
+      if (getResponse != null) {
+        if (getResponse.token != null) {
+          await AsyncStorage.setItem("email", email);
+          await AsyncStorage.setItem("googleId", googleId);
           await AsyncStorage.setItem("token", getResponse.token);
           Provider.Token = getResponse.token;
           JWT.setToken(getResponse.token);
@@ -103,7 +159,6 @@ const StartupPage = () => {
     const api = new RequestApi();
 
     const response = await api.getApiJwt("/authme");
-
     if (response.success) {
       let getResponse: User;
 
@@ -131,7 +186,7 @@ const StartupPage = () => {
   }, [])
 
 
-  useEffect(() => {
+  useEffect(() => {    
     if (isConnected === null) return;
     const bootstrap = async () => {
       await initLang();
@@ -140,14 +195,16 @@ const StartupPage = () => {
         let resultProfile = await initProfile();
         if (resultProfile) {
           if (Provider.Profile != null) {
-            if (Provider.Profile.role == "doctor") {
-              router.replace("/main/(tabs)/homeScreen");
-              // if (Provider.Profile.role == "admin") {
-              //   router.replace("/admin/main/AdminHomeScreen");
-              // } else if (Provider.Profile.role == "patient") {
-              //   router.replace("/patient/main/PatientHomeScreen");
-              // } else if (Provider.Profile.role == "doctor") {
-              //   router.replace("/doctor/main/DoctorHomeScreen");
+            const ProfileIncomplete : boolean = isProfileIncomplete(Provider.Profile.doctor_profile)
+            if (Provider.Profile.role == "doctor" && ProfileIncomplete) {
+                  router.replace({
+                    pathname: "/main/pages/settings/manageProfile",
+                    params: {
+                      isProfileIncomplete: String(ProfileIncomplete),
+                    },
+                  });
+              } else if (Provider.Profile.role == "doctor") {
+                router.replace("/main/(tabs)/homeScreen");
             } else {
               router.replace("/");
             }
@@ -163,7 +220,7 @@ const StartupPage = () => {
     };
 
     bootstrap();
-  }, [isConnected]);
+  }, [isConnected , Provider.Token ]);
 
   return (
     <SafeAreaView className={`${BG.default} flex-1 px-6 pt-6`}>

@@ -161,7 +161,7 @@ const LanguagePage = () => {
       >
         <TouchableOpacity
           disabled={isApplyButtonDisabled}
-          className={`bg-black py-4   mb-4 mx-4 rounded-[24px] h-[56px] items-center shadow-lg mb-4 dark:bg-[#2196F3] ${isApplyButtonDisabled ? "opacity-50" : ""}`}
+          className={`bg-black py-4 mx-4 rounded-[24px] h-[56px] items-center shadow-lg mb-4 dark:bg-[#2196F3] ${isApplyButtonDisabled ? "opacity-50" : ""}`}
           onPress={isApplyButtonDisabled ? undefined : handleApply}
           activeOpacity={0.8}
         >

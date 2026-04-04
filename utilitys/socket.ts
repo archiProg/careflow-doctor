@@ -3,17 +3,17 @@ import { io, Socket } from "socket.io-client";
 
 let socket: Socket | null = null;
 
-
 export const getSocket = (): Socket => {
   if (!socket) {
     socket = io(Provider.HostSocketIo, {
-      transports: ["websocket"],
-      extraHeaders: {
-        Authorization: `Bearer ${Provider.Token}`,
+      transports: ["polling", "websocket"],
+      auth: {
+        token: Provider.Token,
       },
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
 
     socket.on("connect", () => {
@@ -32,7 +32,9 @@ export const getSocket = (): Socket => {
   return socket;
 };
 
-export const listenSocket = (events: { [event: string]: (...args: any[]) => void }) => {
+export const listenSocket = (events: {
+  [event: string]: (...args: any[]) => void;
+}) => {
   const s = getSocket();
   Object.entries(events).forEach(([event, callback]) => {
     s.on(event, callback);
@@ -43,14 +45,18 @@ export const offSocket = (event: string) => {
   socket?.off(event);
 };
 
-
 export const emitSocket = (event: string, data?: any) => {
   const s = getSocket();
-  console.log("emitSocket", event, data);
 
+  if (!s.connected) {
+    console.log("⚠️ socket not connected yet, connecting...");
+      s.connect();
+    return;
+  }
+
+  console.log("emitSocket", event, data);
   s.emit(event, data);
 };
-
 
 export const closeSocket = () => {
   socket?.disconnect();
